@@ -10330,3 +10330,128 @@ Fetching from Finnhub: /company-news { params: { symbol: 'IBM', from: '2025-07-2
 Fetching from Finnhub: /stock/recommendation { params: { symbol: 'IBM' } }
 Analyzing IBM with 1 agents...
  POST /api/analyze-stock-agents 200 in 8620ms
+ ✓ Compiled in 89ms
+ ✓ Compiled in 64ms
+ ✓ Compiled in 92ms
+ ✓ Compiled in 99ms
+ ✓ Compiled in 40ms
+ ✓ Compiled in 91ms
+ ✓ Compiled in 86ms
+ ✓ Compiled in 75ms
+ ✓ Compiled /stock-analysis in 16ms
+ GET /stock-analysis 200 in 81ms
+ GET /stock-analysis 200 in 80ms
+ ✓ Compiled /_not-found/page in 105ms
+ GET /apple-touch-icon-precomposed.png 404 in 146ms
+ GET /apple-touch-icon.png 404 in 33ms
+ ✓ Compiled /portfolio in 152ms
+ ⨯ ./components/portfolio/add-stock-dialog.tsx:16:1
+Export StockSelector doesn't exist in target module
+[0m [90m 14 |[39m [36mimport[39m { [33mLabel[39m } [36mfrom[39m [32m'@/components/ui/label'[39m
+ [90m 15 |[39m [36mimport[39m { usePortfolioStore } [36mfrom[39m [32m'@/lib/stores/portfolio-store'[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mStockSelector[39m } [36mfrom[39m [32m'@/components/stock-analysis/stock-selector'[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m [36mimport[39m { useToast } [36mfrom[39m [32m'@/hooks/use-toast'[39m
+ [90m 18 |[39m
+ [90m 19 |[39m [36minterface[39m [33mAddStockDialogProps[39m {[0m
+
+The export StockSelector was not found in module [project]/components/stock-analysis/stock-selector.tsx [app-client] (ecmascript).
+Did you mean to import default?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Server Component]
+
+
+
+./components/portfolio/add-stock-dialog.tsx:16:1
+Export StockSelector doesn't exist in target module
+[0m [90m 14 |[39m [36mimport[39m { [33mLabel[39m } [36mfrom[39m [32m'@/components/ui/label'[39m
+ [90m 15 |[39m [36mimport[39m { usePortfolioStore } [36mfrom[39m [32m'@/lib/stores/portfolio-store'[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mStockSelector[39m } [36mfrom[39m [32m'@/components/stock-analysis/stock-selector'[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m [36mimport[39m { useToast } [36mfrom[39m [32m'@/hooks/use-toast'[39m
+ [90m 18 |[39m
+ [90m 19 |[39m [36minterface[39m [33mAddStockDialogProps[39m {[0m
+
+The export StockSelector was not found in module [project]/components/stock-analysis/stock-selector.tsx [app-ssr] (ecmascript).
+Did you mean to import default?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Server Component]
+
+
+ ✓ Compiled /_error in 390ms
+ GET /portfolio 500 in 617ms
+ ⨯ ./components/portfolio/add-stock-dialog.tsx:16:1
+Export StockSelector doesn't exist in target module
+[0m [90m 14 |[39m [36mimport[39m { [33mLabel[39m } [36mfrom[39m [32m'@/components/ui/label'[39m
+ [90m 15 |[39m [36mimport[39m { usePortfolioStore } [36mfrom[39m [32m'@/lib/stores/portfolio-store'[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mStockSelector[39m } [36mfrom[39m [32m'@/components/stock-analysis/stock-selector'[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m [36mimport[39m { useToast } [36mfrom[39m [32m'@/hooks/use-toast'[39m
+ [90m 18 |[39m
+ [90m 19 |[39m [36minterface[39m [33mAddStockDialogProps[39m {[0m
+
+The export StockSelector was not found in module [project]/components/stock-analysis/stock-selector.tsx [app-client] (ecmascript).
+Did you mean to import default?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Server Component]
+
+
+
+./components/portfolio/add-stock-dialog.tsx:16:1
+Export StockSelector doesn't exist in target module
+[0m [90m 14 |[39m [36mimport[39m { [33mLabel[39m } [36mfrom[39m [32m'@/components/ui/label'[39m
+ [90m 15 |[39m [36mimport[39m { usePortfolioStore } [36mfrom[39m [32m'@/lib/stores/portfolio-store'[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mStockSelector[39m } [36mfrom[39m [32m'@/components/stock-analysis/stock-selector'[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m [36mimport[39m { useToast } [36mfrom[39m [32m'@/hooks/use-toast'[39m
+ [90m 18 |[39m
+ [90m 19 |[39m [36minterface[39m [33mAddStockDialogProps[39m {[0m
+
+The export StockSelector was not found in module [project]/components/stock-analysis/stock-selector.tsx [app-ssr] (ecmascript).
+Did you mean to import default?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Client Component Browser]
+    ./app/portfolio/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/portfolio/add-stock-dialog.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Client Component SSR]
+    ./app/portfolio/page.tsx [Server Component]
+
+
+ GET /portfolio 500 in 15ms
+[?25h

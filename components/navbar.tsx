@@ -23,6 +23,18 @@ export function Navbar() {
               Home
             </Link>
             <Link
+              href="/portfolio"
+              className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              Portfolio
+            </Link>
+            <Link
+              href="/finchat"
+              className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              FinChat
+            </Link>
+            <Link
               href="/stock-analysis"
               className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground"
             >

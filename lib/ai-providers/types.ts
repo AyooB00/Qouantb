@@ -5,6 +5,7 @@ export interface AIProvider {
   name: string;
   parsePrompt(prompt: string): Promise<SearchCriteria>;
   analyzeStocks(stocks: StockData[], criteria: SearchCriteria): Promise<TradingOpportunity[]>;
+  generateCompletion(prompt: string, responseFormat?: 'text' | 'json_object'): Promise<string>;
 }
 
 // Configuration for AI providers
@@ -44,6 +45,7 @@ export abstract class BaseAIProvider implements AIProvider {
 
   abstract parsePrompt(prompt: string): Promise<SearchCriteria>;
   abstract analyzeStocks(stocks: StockData[], criteria: SearchCriteria): Promise<TradingOpportunity[]>;
+  abstract generateCompletion(prompt: string, responseFormat?: 'text' | 'json_object'): Promise<string>;
 
   // Common validation method
   protected validateTradingOpportunity(opportunity: TradingOpportunity): boolean {

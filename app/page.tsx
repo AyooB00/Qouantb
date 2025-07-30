@@ -12,16 +12,22 @@ export default function Home() {
           <h2 className="text-2xl font-semibold">Available Tools</h2>
           <div className="flex flex-col sm:flex-row gap-4">
             <a
+              href="/portfolio"
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium text-center"
+            >
+              Portfolio Tracker
+            </a>
+            <a
               href="/swing-trading"
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium text-center"
             >
-              Swing Trading Opportunities
+              Swing Trading
             </a>
             <a
               href="/stock-analysis"
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium text-center"
             >
-              AI Investment Analysis
+              Stock Analysis
             </a>
           </div>
         </div>

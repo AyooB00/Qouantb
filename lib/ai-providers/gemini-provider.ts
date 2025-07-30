@@ -21,4 +21,10 @@ export class GeminiProvider extends BaseAIProvider {
     console.warn('Gemini provider not yet implemented');
     return [];
   }
+
+  async generateCompletion(_prompt: string, _responseFormat?: 'text' | 'json_object'): Promise<string> {
+    // TODO: Implement Gemini-specific completion
+    console.warn('Gemini provider not yet implemented');
+    return JSON.stringify({ error: 'Gemini provider not implemented' });
+  }
 }

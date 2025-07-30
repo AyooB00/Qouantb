@@ -212,4 +212,34 @@ For each opportunity, ensure:
 - Risk/reward ratio is calculated as (Target1 - Entry) / (Entry - StopLoss)
 `;
   }
+
+  async generateCompletion(prompt: string, responseFormat: 'text' | 'json_object' = 'text'): Promise<string> {
+    try {
+      const response = await this.client.chat.completions.create({
+        model: this.model || 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful financial analysis assistant. Provide accurate, concise responses.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        response_format: responseFormat === 'json_object' ? { type: 'json_object' } : undefined
+      });
+
+      const content = response.choices[0].message.content;
+      if (!content) {
+        throw new Error('No response from OpenAI');
+      }
+
+      return content;
+    } catch (error) {
+      console.error('Error generating completion:', error);
+      throw new Error('Failed to generate AI completion');
+    }
+  }
 }
