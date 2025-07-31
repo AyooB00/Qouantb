@@ -42,16 +42,15 @@ export function ConversationSidebar({ isOpen, onClose, onNewChat }: Conversation
       <div className="p-4 space-y-2">
         <Button 
           onClick={handleNewChat} 
-          className="w-full justify-start"
-          variant="outline"
+          className="w-full justify-start gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="h-4 w-4" />
           New Chat
         </Button>
       </div>
 
-      <ScrollArea className="flex-1 px-4">
-        <div className="space-y-2 pb-4">
+      <ScrollArea className="flex-1 px-2">
+        <div className="space-y-1 pb-4">
           {conversations.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
               No conversations yet
@@ -61,17 +60,24 @@ export function ConversationSidebar({ isOpen, onClose, onNewChat }: Conversation
               <div
                 key={conversation.id}
                 className={cn(
-                  "group flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer hover:bg-accent transition-colors",
-                  currentConversationId === conversation.id && "bg-accent"
+                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 mx-2 cursor-pointer transition-all duration-200",
+                  currentConversationId === conversation.id 
+                    ? "bg-primary/10 text-primary hover:bg-primary/15" 
+                    : "hover:bg-muted/50"
                 )}
                 onClick={() => handleSelectConversation(conversation.id)}
               >
-                <MessageSquare className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                <div className="flex-1 truncate">
+                <MessageSquare className={cn(
+                  "h-4 w-4 flex-shrink-0",
+                  currentConversationId === conversation.id 
+                    ? "text-primary" 
+                    : "text-muted-foreground"
+                )} />
+                <div className="flex-1 min-w-0 overflow-hidden">
                   <p className="text-sm font-medium truncate">
                     {conversation.title}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground truncate">
                     {new Date(conversation.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -105,9 +111,27 @@ export function ConversationSidebar({ isOpen, onClose, onNewChat }: Conversation
     </>
   )
 
-  // Mobile sidebar
+  // For desktop, return fixed sidebar
+  const desktopSidebar = (
+    <div className="w-64 h-full flex flex-col border-r bg-background flex-shrink-0">
+      <div className="px-4 py-3 border-b bg-muted/5 flex-shrink-0">
+        <h2 className="font-semibold">Chat History</h2>
+      </div>
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {sidebarContent}
+      </div>
+    </div>
+  )
+
+  // Return both desktop sidebar and mobile sheet
   return (
     <>
+      {/* Desktop sidebar - always visible on lg+ */}
+      <div className="hidden lg:flex">
+        {desktopSidebar}
+      </div>
+
+      {/* Mobile sidebar - sheet based */}
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent side="left" className="w-80 p-0">
           <SheetHeader className="px-4 py-4 border-b">
@@ -116,14 +140,6 @@ export function ConversationSidebar({ isOpen, onClose, onNewChat }: Conversation
           {sidebarContent}
         </SheetContent>
       </Sheet>
-
-      {/* Desktop sidebar */}
-      <div className="hidden lg:flex lg:flex-col lg:w-80 lg:border-r">
-        <div className="px-4 py-4 border-b">
-          <h2 className="font-semibold">Conversations</h2>
-        </div>
-        {sidebarContent}
-      </div>
     </>
   )
 }

@@ -32,7 +32,7 @@ export default function PromptSearchForm({ onSearch, isLoading }: PromptSearchFo
           <button
             key={index}
             onClick={() => handleExampleClick(example)}
-            className="text-left p-3 rounded-lg bg-secondary/50 hover:bg-secondary text-sm transition-colors"
+            className="text-left p-3 rounded-lg bg-secondary/50 hover:bg-secondary text-sm transition-all duration-200 hover:scale-105 hover:shadow-md"
             disabled={isLoading}
           >
             {example}
@@ -52,19 +52,21 @@ export default function PromptSearchForm({ onSearch, isLoading }: PromptSearchFo
         <Button 
           type="submit" 
           disabled={isLoading || !prompt.trim()} 
-          className="w-full"
+          className={`w-full transition-all duration-300 ${
+            isLoading ? 'animate-pulse bg-gradient-to-r from-blue-500 via-teal-500 to-green-500' : ''
+          }`}
           size="lg"
         >
           {isLoading ? (
-            <>
+            <div className="flex items-center justify-center">
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Analyzing...
-            </>
+              <span className="animate-pulse">Analyzing market conditions...</span>
+            </div>
           ) : (
-            <>
-              <Search className="mr-2 h-5 w-5" />
-              Search Stocks
-            </>
+            <div className="flex items-center justify-center group">
+              <Search className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
+              <span>Search Stocks</span>
+            </div>
           )}
         </Button>
       </form>

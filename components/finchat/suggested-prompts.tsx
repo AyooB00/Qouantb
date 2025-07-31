@@ -33,14 +33,17 @@ export function SuggestedPrompts({ prompts, onSelectPrompt, className }: Suggest
         return (
           <Card
             key={index}
-            className="p-4 cursor-pointer hover:bg-accent transition-colors group"
+            className="p-4 cursor-pointer bg-card/50 backdrop-blur border-border/50 hover:bg-card/80 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
             onClick={() => onSelectPrompt(prompt)}
           >
             <div className="flex items-start gap-3">
               <div className="mt-0.5">
-                <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <div className="p-2 rounded-full bg-gradient-to-br from-teal-500/10 to-blue-500/10 group-hover:from-teal-500/20 group-hover:to-blue-500/20 transition-all duration-300">
+                  <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-all duration-300 group-hover:scale-110" />
+                </div>
               </div>
-              <p className="text-sm leading-relaxed flex-1">{prompt}</p>
+              <p className="text-sm leading-relaxed flex-1 group-hover:text-foreground transition-colors">{prompt}</p>
             </div>
           </Card>
         )

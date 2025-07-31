@@ -3,6 +3,78 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom animations for typing indicator */
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-typing-bounce {
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+/* Animation delays */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Stagger animation for cards */
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-stagger {
+  animation: stagger-fade-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-stagger-1 { animation-delay: 100ms; }
+.animate-stagger-2 { animation-delay: 200ms; }
+.animate-stagger-3 { animation-delay: 300ms; }
+.animate-stagger-4 { animation-delay: 400ms; }
+.animate-stagger-5 { animation-delay: 500ms; }
+.animate-stagger-6 { animation-delay: 600ms; }
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -63,11 +135,11 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-1: oklch(0.55 0.15 195);
+  --chart-2: oklch(0.60 0.20 230);
+  --chart-3: oklch(0.65 0.18 155);
+  --chart-4: oklch(0.48 0.17 195);
+  --chart-5: oklch(0.58 0.20 155);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -76,6 +148,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Custom color palette */
+  --teal-500: oklch(0.55 0.15 195);
+  --teal-600: oklch(0.48 0.17 195);
+  --green-500: oklch(0.65 0.18 155);
+  --green-600: oklch(0.58 0.20 155);
+  --blue-500: oklch(0.60 0.20 230);
+  --blue-600: oklch(0.53 0.22 230);
 }
 
 .dark {
@@ -97,19 +177,27 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --chart-1: oklch(0.55 0.15 195);
+  --chart-2: oklch(0.60 0.20 230);
+  --chart-3: oklch(0.65 0.18 155);
+  --chart-4: oklch(0.48 0.17 195);
+  --chart-5: oklch(0.58 0.20 155);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.55 0.15 195);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  
+  /* Custom color palette */
+  --teal-500: oklch(0.55 0.15 195);
+  --teal-600: oklch(0.48 0.17 195);
+  --green-500: oklch(0.65 0.18 155);
+  --green-600: oklch(0.58 0.20 155);
+  --blue-500: oklch(0.60 0.20 230);
+  --blue-600: oklch(0.53 0.22 230);
 }
 
 @layer base {
@@ -118,5 +206,71 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Custom color utilities */
+@layer utilities {
+  .text-teal-500 { color: var(--teal-500); }
+  .text-teal-600 { color: var(--teal-600); }
+  .bg-teal-500 { background-color: var(--teal-500); }
+  .bg-teal-600 { background-color: var(--teal-600); }
+  .bg-teal-500\/10 { background-color: oklch(from var(--teal-500) l c h / 0.1); }
+  .bg-teal-500\/20 { background-color: oklch(from var(--teal-500) l c h / 0.2); }
+  .from-teal-500 { --tw-gradient-from: var(--teal-500); }
+  .from-teal-600 { --tw-gradient-from: var(--teal-600); }
+  .to-teal-500 { --tw-gradient-to: var(--teal-500); }
+  .to-teal-600 { --tw-gradient-to: var(--teal-600); }
+  .via-teal-500 { --tw-gradient-via: var(--teal-500); }
+
+  /* Animation delays */
+  .animate-stagger-1 {
+    animation-delay: 100ms;
+  }
+  .animate-stagger-2 {
+    animation-delay: 200ms;
+  }
+  .animate-stagger-3 {
+    animation-delay: 300ms;
+  }
+  .animate-stagger-4 {
+    animation-delay: 400ms;
+  }
+  .animate-stagger-5 {
+    animation-delay: 500ms;
+  }
+  .animate-stagger-6 {
+    animation-delay: 600ms;
+  }
+
+  /* Additional animation delays */
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+
+  /* Smooth transitions */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Diagram element animations */
+  .diagram-element {
+    transition: all 0.5s ease-out;
+  }
+
+  .diagram-element.animate-in {
+    opacity: 1 !important;
+    transform: translateX(0) scale(1) !important;
   }
 }

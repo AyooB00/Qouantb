@@ -1,5 +1,7 @@
 import { FinnhubQuote, FinnhubCompanyProfile, StockData } from '@/lib/types/trading';
 import { ExtendedStockData } from '@/lib/types/agents';
+import { stockQuoteCache, stockProfileCache, createCacheKey } from '@/lib/cache/stockCache';
+import { finnhubRateLimiter } from '@/lib/middleware/finnhubRateLimiter';
 
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 
@@ -13,43 +15,63 @@ export class FinnhubClient {
     this.apiKey = apiKey;
   }
 
-  private async fetchFromFinnhub(endpoint: string, params: Record<string, string> = {}) {
-    const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
-    url.searchParams.append('token', this.apiKey);
-    
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
-    });
-
-    console.log(`Fetching from Finnhub: ${endpoint}`, { params });
-    const response = await fetch(url.toString());
-    
-    if (!response.ok) {
-      console.error(`Finnhub API error for ${endpoint}:`, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries())
+  private async fetchFromFinnhub(endpoint: string, params: Record<string, string> = {}, priority: number = 0) {
+    // Use rate limiter to queue the request
+    return finnhubRateLimiter.addRequest(async () => {
+      const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
+      url.searchParams.append('token', this.apiKey);
+      
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
       });
-      
-      // Check for specific error cases
-      if (response.status === 403) {
-        throw new Error(`Finnhub API key is invalid or has exceeded rate limits. Please check your API key at https://finnhub.io/dashboard`);
-      } else if (response.status === 429) {
-        throw new Error(`Finnhub API rate limit exceeded. Please wait and try again.`);
-      }
-      
-      throw new Error(`Finnhub API error: ${response.status} ${response.statusText}`);
-    }
 
-    return response.json();
+      console.log(`Fetching from Finnhub: ${endpoint}`, { params });
+      const response = await fetch(url.toString());
+      
+      if (!response.ok) {
+        console.error(`Finnhub API error for ${endpoint}:`, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+        
+        // Check for specific error cases
+        if (response.status === 403) {
+          throw new Error(`Finnhub API key is invalid. Please check your API key at https://finnhub.io/dashboard`);
+        } else if (response.status === 429) {
+          throw new Error(`Finnhub API rate limit exceeded.`);
+        }
+        
+        throw new Error(`Finnhub API error: ${response.status} ${response.statusText}`);
+      }
+
+      return response.json();
+    }, priority, params.symbol);
   }
 
   async getQuote(symbol: string): Promise<FinnhubQuote> {
-    return this.fetchFromFinnhub('/quote', { symbol });
+    const cacheKey = createCacheKey('quote', symbol);
+    const cached = stockQuoteCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache hit for quote: ${symbol}`);
+      return cached as FinnhubQuote;
+    }
+
+    const quote = await this.fetchFromFinnhub('/quote', { symbol }, 10); // High priority for quotes
+    stockQuoteCache.set(cacheKey, quote, 300000); // Cache for 5 minutes
+    return quote;
   }
 
   async getCompanyProfile(symbol: string): Promise<FinnhubCompanyProfile> {
-    const data = await this.fetchFromFinnhub('/stock/profile2', { symbol });
+    const cacheKey = createCacheKey('profile', symbol);
+    const cached = stockProfileCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache hit for profile: ${symbol}`);
+      return cached as FinnhubCompanyProfile;
+    }
+
+    const data = await this.fetchFromFinnhub('/stock/profile2', { symbol }, 5); // Medium priority
+    stockProfileCache.set(cacheKey, data, 3600000); // Cache for 1 hour
     return data;
   }
 
@@ -120,6 +142,13 @@ export class FinnhubClient {
   }
 
   async getStockData(symbol: string): Promise<StockData> {
+    const cacheKey = createCacheKey('stockData', symbol);
+    const cached = stockQuoteCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache hit for stock data: ${symbol}`);
+      return cached as StockData;
+    }
+
     try {
       const [quote, profile] = await Promise.all([
         this.getQuote(symbol),
@@ -136,7 +165,7 @@ export class FinnhubClient {
         }
       };
 
-      return {
+      const stockData: StockData = {
         symbol,
         companyName: profile.name,
         currentPrice: quote.c,
@@ -148,6 +177,10 @@ export class FinnhubClient {
         sector: profile.finnhubIndustry,
         technicalIndicators
       };
+
+      // Cache the combined data with 5 minute TTL
+      stockQuoteCache.set(cacheKey, stockData, 300000); // 5 minutes
+      return stockData;
     } catch (error) {
       console.error(`Error fetching data for ${symbol}:`, error);
       throw error;
@@ -166,15 +199,54 @@ export class FinnhubClient {
     const from = new Date();
     from.setDate(from.getDate() - days);
     
-    return this.fetchFromFinnhub('/company-news', {
+    const result = await this.fetchFromFinnhub('/company-news', {
       symbol,
       from: from.toISOString().split('T')[0],
       to: to.toISOString().split('T')[0]
     });
+    
+    // Ensure we always return an array
+    return Array.isArray(result) ? result : [];
   }
 
   async getRecommendations(symbol: string): Promise<any[]> {
-    return this.fetchFromFinnhub('/stock/recommendation', { symbol });
+    const result = await this.fetchFromFinnhub('/stock/recommendation', { symbol });
+    // Ensure we always return an array
+    return Array.isArray(result) ? result : [];
+  }
+
+  async getCandles(
+    symbol: string,
+    resolution: string,
+    from: number,
+    to: number
+  ): Promise<{
+    c: number[];  // Close prices
+    h: number[];  // High prices
+    l: number[];  // Low prices
+    o: number[];  // Open prices
+    s: string;    // Status
+    t: number[];  // Timestamps
+    v: number[];  // Volume
+  }> {
+    // Cache candles for longer periods
+    const cacheKey = createCacheKey('candles', symbol, resolution, from, to);
+    const cached = stockQuoteCache.get(cacheKey);
+    if (cached) {
+      console.log(`Cache hit for candles: ${symbol}`);
+      return cached as any;
+    }
+
+    const data = await this.fetchFromFinnhub('/stock/candle', {
+      symbol,
+      resolution,
+      from: from.toString(),
+      to: to.toString()
+    }, 5); // Medium priority
+    
+    // Cache for 30 minutes for historical data
+    stockQuoteCache.set(cacheKey, data, 1800000);
+    return data;
   }
 
   async getExtendedStockData(symbol: string): Promise<ExtendedStockData> {
@@ -182,8 +254,14 @@ export class FinnhubClient {
       const [basicData, financials, news, recommendations] = await Promise.all([
         this.getStockData(symbol),
         this.getBasicFinancials(symbol).catch(() => null),
-        this.getCompanyNews(symbol, 7).catch(() => []),
-        this.getRecommendations(symbol).catch(() => [])
+        this.getCompanyNews(symbol, 7).catch((error) => {
+          console.error('Error fetching company news:', error);
+          return [];
+        }),
+        this.getRecommendations(symbol).catch((error) => {
+          console.error('Error fetching recommendations:', error);
+          return [];
+        })
       ]);
 
       // Extract financial metrics if available
@@ -191,7 +269,7 @@ export class FinnhubClient {
       
       // Calculate analyst consensus from recommendations
       let analystRating = undefined;
-      if (recommendations && recommendations.length > 0) {
+      if (recommendations && Array.isArray(recommendations) && recommendations.length > 0) {
         const latestRecs = recommendations.slice(0, 5);
         const avgTarget = latestRecs.reduce((sum, rec) => sum + (rec.targetMean || 0), 0) / latestRecs.length;
         
@@ -211,8 +289,9 @@ export class FinnhubClient {
         };
       }
 
-      // Process news for sentiment (simplified)
-      const processedNews = news.slice(0, 5).map(article => ({
+      // Process news for sentiment (simplified) - ensure news is an array
+      const newsArray = Array.isArray(news) ? news : [];
+      const processedNews = newsArray.slice(0, 5).map(article => ({
         title: article.headline,
         summary: article.summary,
         url: article.url,

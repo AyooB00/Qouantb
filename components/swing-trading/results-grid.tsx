@@ -116,8 +116,13 @@ export default function ResultsGrid({ results }: ResultsGridProps) {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedOpportunities.map((opportunity) => (
-          <OpportunityCard key={opportunity.symbol} opportunity={opportunity} />
+        {sortedOpportunities.map((opportunity, index) => (
+          <div 
+            key={opportunity.symbol} 
+            className={`animate-stagger animate-stagger-${Math.min(index + 1, 6)}`}
+          >
+            <OpportunityCard opportunity={opportunity} />
+          </div>
         ))}
       </div>
     </div>

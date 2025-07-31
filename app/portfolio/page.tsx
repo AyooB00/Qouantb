@@ -127,17 +127,16 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">My Portfolio</h1>
-            <p className="text-muted-foreground text-lg">
-              Track your investments with AI-powered insights
-            </p>
-          </div>
-          
-          <div className="flex gap-3">
+    <div className="max-w-7xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">My Portfolio</h1>
+          <p className="text-muted-foreground">
+            Track your investments with AI-powered insights
+          </p>
+        </div>
+        
+        <div className="flex gap-3">
             <Button
               onClick={handleUpdateAnalysis}
               disabled={items.length === 0 || isUpdating}
@@ -233,12 +232,11 @@ export default function PortfolioPage() {
           onOpenChange={setIsAddDialogOpen}
         />
 
-        <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
-          <p>
-            Portfolio tracking and analysis for educational purposes only. 
-            Real-time prices may be delayed. Not financial advice.
-          </p>
-        </div>
+      <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
+        <p>
+          Portfolio tracking and analysis for educational purposes only. 
+          Real-time prices may be delayed. Not financial advice.
+        </p>
       </div>
     </div>
   )

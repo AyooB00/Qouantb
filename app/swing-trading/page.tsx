@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AnalysisResult } from '@/lib/types/trading';
 import PromptSearchForm from '@/components/swing-trading/prompt-search-form';
 import ResultsGrid from '@/components/swing-trading/results-grid';
-import { ResultsGridSkeleton } from '@/components/swing-trading/loading-skeleton';
+import { AnalysisLoadingState } from '@/components/swing-trading/analysis-loading-state';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
@@ -42,12 +42,11 @@ export default function SwingTradingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Find Trading Opportunities</h1>
-          <p className="text-muted-foreground text-lg">
-            Use AI to discover swing trading opportunities
+    <div className="max-w-7xl mx-auto">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold">Find Trading Opportunities</h1>
+        <p className="text-muted-foreground">
+          Use AI to discover swing trading opportunities
           </p>
         </div>
 
@@ -62,12 +61,12 @@ export default function SwingTradingPage() {
 
         {isLoading && (
           <div className="mt-12">
-            <ResultsGridSkeleton />
+            <AnalysisLoadingState />
           </div>
         )}
 
         {results && !isLoading && (
-          <div className="mt-12 space-y-6">
+          <div className="mt-12 space-y-6 animate-fade-in">
             <div className="text-center">
               <h2 className="text-2xl font-semibold">
                 {results.opportunities.length} Opportunities Found
@@ -81,9 +80,8 @@ export default function SwingTradingPage() {
           </div>
         )}
 
-        <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
-          <p>Trading involves risk. This tool is for educational purposes only.</p>
-        </div>
+      <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
+        <p>Trading involves risk. This tool is for educational purposes only.</p>
       </div>
     </div>
   );

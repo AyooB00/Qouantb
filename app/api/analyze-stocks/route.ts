@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { SearchCriteria, AnalysisResult, StockData } from '@/lib/types/trading';
+import { NextRequest } from 'next/server';
+import { AnalysisResult, StockData } from '@/lib/types/trading';
 import { FinnhubClient } from '@/lib/finnhub';
 import { analyzeStocksWithAI, validateTradingOpportunity } from '@/lib/openai';
+import { withRateLimit } from '@/lib/middleware/rateLimiter';
+import { successResponse, errorResponse, ApiError, ErrorCodes, validateEnvVars } from '@/lib/api/response';
+import { searchCriteriaSchema } from '@/lib/validation/schemas';
 
 // Popular US stocks for demonstration - in production, you'd use a stock screener
 const DEMO_STOCK_SYMBOLS = [
@@ -11,18 +14,26 @@ const DEMO_STOCK_SYMBOLS = [
 ];
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const rateLimitResponse = await withRateLimit(request, {
+    windowMs: 60 * 1000, // 1 minute
+    max: 10 // 10 requests per minute for this expensive operation
+  });
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
-    const criteria: SearchCriteria = await request.json();
+    // Validate request body
+    const body = await request.json();
+    const criteria = searchCriteriaSchema.parse(body);
     
     // Validate API keys
-    if (!process.env.FINNHUB_API_KEY || !process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'API keys not configured' },
-        { status: 500 }
-      );
+    try {
+      validateEnvVars(['FINNHUB_API_KEY', 'OPENAI_API_KEY']);
+    } catch (error) {
+      return errorResponse(error as ApiError);
     }
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY);
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!);
     
     // Filter stocks based on criteria
     const stocksToAnalyze: StockData[] = [];
@@ -79,9 +90,10 @@ export async function POST(request: NextRequest) {
     }
     
     if (stocksToAnalyze.length === 0) {
-      return NextResponse.json(
-        { error: 'No stocks found matching your criteria. Try adjusting your filters.' },
-        { status: 404 }
+      throw new ApiError(
+        ErrorCodes.NOT_FOUND,
+        'No stocks found matching your criteria. Try adjusting your filters.',
+        404
       );
     }
     
@@ -105,21 +117,38 @@ export async function POST(request: NextRequest) {
       totalAnalyzed: stocksToAnalyze.length
     };
     
-    return NextResponse.json(result);
+    return successResponse(result, {
+      totalAnalyzed: stocksToAnalyze.length,
+      opportunitiesFound: validOpportunities.length
+    });
     
   } catch (error) {
     console.error('Error in analyze-stocks API:', error);
     
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+    // Handle Zod validation errors
+    if (error instanceof Error && error.name === 'ZodError') {
+      return errorResponse(
+        new ApiError(
+          ErrorCodes.VALIDATION_ERROR,
+          'Invalid request data',
+          400,
+          error
+        )
       );
     }
     
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
+    // Handle API errors
+    if (error instanceof ApiError) {
+      return errorResponse(error);
+    }
+    
+    // Generic error
+    return errorResponse(
+      new ApiError(
+        ErrorCodes.INTERNAL_ERROR,
+        error instanceof Error ? error.message : 'An unexpected error occurred',
+        500
+      )
     );
   }
 }

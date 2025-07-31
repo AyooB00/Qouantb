@@ -5,6 +5,7 @@ import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { QueueIndicator } from '@/components/ui/queue-indicator'
 
 interface StockCardProps {
   symbol: string
@@ -26,35 +27,43 @@ export function StockCard({ symbol, className }: StockCardProps) {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetchStockData()
-  }, [symbol])
-
-  const fetchStockData = async () => {
-    try {
-      setLoading(true)
-      setError(false)
-      
-      // In a real implementation, this would fetch from the API
-      // For now, we'll simulate with mock data
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // Mock data - replace with actual API call
-      const mockData: StockData = {
-        symbol: symbol.toUpperCase(),
-        companyName: getCompanyName(symbol),
-        currentPrice: 100 + Math.random() * 200,
-        change: (Math.random() - 0.5) * 10,
-        changePercent: (Math.random() - 0.5) * 5,
-        volume: Math.floor(Math.random() * 10000000)
+    const fetchStockData = async () => {
+      try {
+        setLoading(true)
+        setError(false)
+        
+        // Fetch real stock data from API
+        const response = await fetch(`/api/finchat/stock-quote?symbol=${symbol}`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch stock data')
+        }
+        
+        const data = await response.json()
+        
+        // Transform the API response to match our StockData interface
+        const transformedData: StockData = {
+          symbol: symbol.toUpperCase(),
+          companyName: data.profile?.name || getCompanyName(symbol),
+          currentPrice: data.quote?.c || 0,
+          change: data.quote?.d || 0,
+          changePercent: data.quote?.dp || 0,
+          volume: data.quote?.v
+        }
+        
+        setStockData(transformedData)
+      } catch (err) {
+        console.error('Error fetching stock data:', err)
+        setError(true)
+      } finally {
+        setLoading(false)
       }
-      
-      setStockData(mockData)
-    } catch (err) {
-      setError(true)
-    } finally {
-      setLoading(false)
     }
-  }
+
+    if (symbol) {
+      fetchStockData()
+    }
+  }, [symbol])
 
   const getCompanyName = (symbol: string): string => {
     const companies: Record<string, string> = {
@@ -71,9 +80,14 @@ export function StockCard({ symbol, className }: StockCardProps) {
 
   if (loading) {
     return (
-      <Card className={cn("p-3 flex items-center gap-2", className)}>
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span className="text-sm">Loading...</span>
+      <Card className={cn("p-3", className)}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm">Loading {symbol}...</span>
+          </div>
+          <QueueIndicator symbol={symbol} showDetails={false} />
+        </div>
       </Card>
     )
   }

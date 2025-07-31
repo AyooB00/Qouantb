@@ -35,9 +35,9 @@ export class AIProviderFactory {
     }
 
     // Initialize Gemini provider if configured
-    if (process.env.GOOGLE_API_KEY) {
+    if (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY) {
       this.providers.set('gemini', new GeminiProvider(
-        process.env.GOOGLE_API_KEY,
+        process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
         process.env.GEMINI_MODEL
       ));
     }
@@ -52,20 +52,37 @@ export class AIProviderFactory {
   }
 
   getProvider(providerName?: string): AIProvider {
-    const name = providerName || this.currentProvider;
-    const provider = this.providers.get(name);
+    // Check for user preference in browser context
+    let preferredProvider = providerName || this.currentProvider;
+    
+    // In browser context, check localStorage for user preference
+    if (typeof window !== 'undefined' && !providerName) {
+      const userPreference = localStorage.getItem('preferredAIProvider');
+      if (userPreference && userPreference !== 'auto') {
+        preferredProvider = userPreference;
+      }
+    }
+    
+    const provider = this.providers.get(preferredProvider);
     
     if (!provider) {
       // Try fallback provider
       if (this.fallbackProvider) {
         const fallback = this.providers.get(this.fallbackProvider);
         if (fallback) {
-          console.warn(`Primary provider ${name} not available, using fallback ${this.fallbackProvider}`);
+          console.warn(`Primary provider ${preferredProvider} not available, using fallback ${this.fallbackProvider}`);
           return fallback;
         }
       }
       
-      throw new Error(`AI provider ${name} not configured. Please check your environment variables.`);
+      // If no specific provider works, return any available provider
+      const availableProviders = Array.from(this.providers.values());
+      if (availableProviders.length > 0) {
+        console.warn(`Requested provider ${preferredProvider} not available, using first available provider`);
+        return availableProviders[0];
+      }
+      
+      throw new Error(`AI provider ${preferredProvider} not configured. Please check your environment variables.`);
     }
     
     return provider;

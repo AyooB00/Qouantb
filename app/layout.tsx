@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Navbar } from "@/components/navbar";
-import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QuoantB - AI-Powered Swing Trading Analysis",
-  description: "Discover swing trading opportunities with AI-powered stock analysis using OpenAI and real-time market data",
+  title: "QuoantB - AI-Powered Stock Trading Platform",
+  description: "Real-time market analysis, portfolio management, and AI-driven investment insights",
 };
 
 export default function RootLayout({
@@ -30,20 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="min-h-screen bg-background">
-            <Navbar />
-            <main className="container mx-auto px-4 py-8">
-              {children}
-            </main>
-          </div>
-          <Toaster richColors position="bottom-right" />
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, KeyboardEvent } from 'react'
-import { Send, Paperclip } from 'lucide-react'
+import { Send, Paperclip, Mic, MicOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
@@ -20,6 +20,8 @@ export function MessageInput({
   className 
 }: MessageInputProps) {
   const [message, setMessage] = useState('')
+  const [isRecording, setIsRecording] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSend = () => {
@@ -51,35 +53,83 @@ export function MessageInput({
     }
   }
 
+  const toggleRecording = () => {
+    setIsRecording(!isRecording)
+    // Voice recording logic would go here
+  }
+
   return (
     <div className={cn("relative", className)}>
-      <div className="flex items-end gap-2">
+      <div className={cn(
+        "flex items-end gap-2 p-2 rounded-2xl transition-all duration-300",
+        isFocused 
+          ? "bg-gradient-to-br from-teal-50/50 to-blue-50/50 dark:from-teal-950/30 dark:to-blue-950/30 shadow-lg ring-2 ring-teal-500/20" 
+          : "bg-card/50 backdrop-blur"
+      )}>
         <div className="flex-1 relative">
           <Textarea
             ref={textareaRef}
             value={message}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             placeholder={placeholder}
             disabled={disabled}
-            className="min-h-[60px] max-h-[200px] pr-12 resize-none"
+            className={cn(
+              "min-h-[60px] max-h-[200px] pr-24 resize-none bg-transparent border-0 focus:ring-0",
+              "placeholder:text-muted-foreground/60"
+            )}
             rows={1}
           />
           
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute bottom-1 right-1 h-8 w-8"
-            onClick={handleSend}
-            disabled={!message.trim() || disabled}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+          <div className="absolute bottom-1 right-1 flex items-center gap-1">
+            <Button
+              size="icon"
+              variant="ghost"
+              className={cn(
+                "h-8 w-8 rounded-full transition-all duration-200",
+                isRecording 
+                  ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
+              )}
+              onClick={toggleRecording}
+              disabled={disabled}
+              type="button"
+            >
+              {isRecording ? (
+                <MicOff className="h-4 w-4" />
+              ) : (
+                <Mic className="h-4 w-4" />
+              )}
+            </Button>
+            
+            <Button
+              size="icon"
+              variant="ghost"
+              className={cn(
+                "h-8 w-8 rounded-full transition-all duration-200",
+                message.trim() 
+                  ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:shadow-lg hover:scale-105" 
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
+              )}
+              onClick={handleSend}
+              disabled={!message.trim() || disabled}
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
       
-      <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-        <span>Press Enter to send, Shift+Enter for new line</span>
+      <div className="flex items-center justify-between mt-2 px-2">
+        <span className="text-xs text-muted-foreground/60">Press Enter to send, Shift+Enter for new line</span>
+        {isRecording && (
+          <span className="text-xs text-red-500 animate-pulse flex items-center gap-1">
+            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+            Recording...
+          </span>
+        )}
       </div>
     </div>
   )

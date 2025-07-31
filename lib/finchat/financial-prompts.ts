@@ -78,10 +78,10 @@ export const allFinancialPrompts = financialPromptCategories.flatMap(cat => cat.
 
 // Featured prompts for the main interface
 export const featuredPrompts = [
-  "What's the market outlook for tech stocks?",
-  "Analyze AAPL's recent performance",
-  "Find undervalued dividend stocks",
-  "How should I diversify my portfolio?"
+  "Get real-time quote and analysis for AAPL",
+  "Compare MSFT, GOOGL, and META performance",
+  "Show me the latest market overview",
+  "Calculate position size for NVDA with $10,000 account"
 ]
 
 // Context-aware prompt suggestions based on user's current conversation
