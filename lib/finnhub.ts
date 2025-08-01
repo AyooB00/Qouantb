@@ -303,25 +303,25 @@ export class FinnhubClient {
         summary: article.summary,
         url: article.url,
         publishedAt: new Date(article.datetime * 1000).toISOString(),
-        sentiment: article.sentiment > 0 ? 'positive' : article.sentiment < 0 ? 'negative' : 'neutral'
+        sentiment: article.sentiment > 0 ? 'positive' as const : article.sentiment < 0 ? 'negative' as const : 'neutral' as const
       }));
 
       return {
         ...basicData,
-        peRatio: metrics.peBasicExclExtraTTM || metrics.peExclExtraTTM,
-        pegRatio: metrics.pegRatio,
-        priceToBook: metrics.pbQuarterly || metrics.pbAnnual,
-        debtToEquity: metrics.totalDebtToEquityQuarterly || metrics.totalDebtToEquityAnnual,
-        roe: metrics.roeRfy || metrics.roeTTM,
-        revenueGrowth: metrics.revenueGrowth3Y || metrics.revenueGrowth5Y,
-        earningsGrowth: metrics.epsGrowth3Y || metrics.epsGrowth5Y,
-        profitMargin: metrics.netProfitMarginTTM,
-        freeCashFlow: metrics.freeCashFlowTTM,
-        dividendYield: metrics.dividendYieldIndicatedAnnual,
-        beta: metrics.beta,
-        institutionalOwnership: metrics.institutionalOwnershipPercentage,
-        insiderOwnership: metrics.insiderOwnershipPercentage,
-        shortInterest: metrics.shortInterestRatio,
+        peRatio: Number(metrics.peBasicExclExtraTTM || metrics.peExclExtraTTM || 0),
+        pegRatio: Number(metrics.pegRatio || 0),
+        priceToBook: Number(metrics.pbQuarterly || metrics.pbAnnual || 0),
+        debtToEquity: Number(metrics.totalDebtToEquityQuarterly || metrics.totalDebtToEquityAnnual || 0),
+        roe: Number(metrics.roeRfy || metrics.roeTTM || 0),
+        revenueGrowth: Number(metrics.revenueGrowth3Y || metrics.revenueGrowth5Y || 0),
+        earningsGrowth: Number(metrics.epsGrowth3Y || metrics.epsGrowth5Y || 0),
+        profitMargin: Number(metrics.netProfitMarginTTM || 0),
+        freeCashFlow: Number(metrics.freeCashFlowTTM || 0),
+        dividendYield: Number(metrics.dividendYieldIndicatedAnnual || 0),
+        beta: Number(metrics.beta || 0),
+        institutionalOwnership: Number(metrics.institutionalOwnershipPercentage || 0),
+        insiderOwnership: Number(metrics.insiderOwnershipPercentage || 0),
+        shortInterest: Number(metrics.shortInterestRatio || 0),
         analystRating,
         news: processedNews
       };

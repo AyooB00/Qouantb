@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const body: PortfolioAnalysisRequest = await request.json()
     const { symbols } = body
 
-    validateRequired(body, ['symbols'])
+    validateRequired(body as unknown as Record<string, unknown>, ['symbols'])
     if (!symbols || symbols.length === 0) {
       throw new APIError('No symbols provided', 400, 'NO_SYMBOLS')
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Validate API keys
     validateAPIKeys(['FINNHUB_API_KEY', 'OPENAI_API_KEY'])
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY)
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!)
     const aiFactory = AIProviderFactory.getInstance()
     const provider = aiFactory.getProvider()
 

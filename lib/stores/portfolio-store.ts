@@ -1,49 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-
-export interface PortfolioItem {
-  id: string
-  symbol: string
-  companyName: string
-  quantity: number
-  avgCost: number
-  addedDate: string
-  lastUpdated: string
-  currentPrice?: number
-  totalValue?: number
-  profitLoss?: number
-  profitLossPercent?: number
-  // Enhanced fields
-  sector?: string
-  industry?: string
-  marketCap?: number
-  beta?: number
-  peRatio?: number
-  dividendYield?: number
-  fiftyTwoWeekHigh?: number
-  fiftyTwoWeekLow?: number
-  dayChange?: number
-  dayChangePercent?: number
-  volume?: number
-  avgVolume?: number
-  lastAnalysis?: {
-    timestamp: string
-    tips: string[]
-    forecast: {
-      sevenDay: number
-      thirtyDay: number
-      confidence: number
-    }
-    sentiment: 'bullish' | 'bearish' | 'neutral'
-    technicalIndicators?: {
-      rsi: number
-      sma50: number
-      sma200: number
-      support: number
-      resistance: number
-    }
-  }
-}
+import { PortfolioItem } from '@/lib/types/portfolio'
 
 interface PortfolioStore {
   items: PortfolioItem[]

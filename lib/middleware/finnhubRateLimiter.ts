@@ -46,14 +46,14 @@ export class FinnhubRateLimiter extends EventEmitter {
         const existing = this.pendingRequests.get(symbol)
         if (existing) {
           // Return the same promise for duplicate requests
-          return existing.execute().then(resolve).catch(reject)
+          return existing.execute().then(resolve as (value: unknown) => void).catch(reject)
         }
       }
 
-      const request: QueuedRequest = {
+      const request: QueuedRequest<T> = {
         id,
         execute,
-        resolve,
+        resolve: resolve as (value: T | PromiseLike<T>) => void,
         reject,
         priority,
         timestamp: Date.now(),

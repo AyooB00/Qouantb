@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const { symbol, agentIds, locale = 'en' } = body;
 
     // Validate inputs
-    validateRequired(body, ['symbol', 'agentIds']);
+    validateRequired(body as unknown as Record<string, unknown>, ['symbol', 'agentIds']);
     if (agentIds.length === 0) {
       throw new APIError('At least one agent must be selected', 400, 'NO_AGENTS_SELECTED');
     }
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Validate API keys
     validateAPIKeys(['FINNHUB_API_KEY', 'OPENAI_API_KEY']);
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY);
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!);
 
     // Fetch extended stock data
     console.log(`Fetching extended data for ${symbol}...`);

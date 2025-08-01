@@ -17,7 +17,7 @@ export function SmartComponentRenderer({
   onAction,
   className 
 }: SmartComponentRendererProps) {
-  const [Component, setComponent] = useState<React.ComponentType<any> | null>(null)
+  const [Component, setComponent] = useState<React.ComponentType<{ data: unknown; onAction?: (action: unknown) => void; className?: string }> | null>(null)
   const [loading, setLoading] = useState(true)
   
   useEffect(() => {

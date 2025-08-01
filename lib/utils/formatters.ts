@@ -157,7 +157,8 @@ export const formatTradingHours = (marketStatus: string, locale: string = 'en') 
     }
   }
   
-  return translations[locale === 'ar' ? 'ar' : 'en'][marketStatus] || marketStatus
+  const langKey = locale === 'ar' ? 'ar' : 'en'
+  return translations[langKey][marketStatus as 'open' | 'closed' | 'pre-market' | 'after-hours'] || marketStatus
 }
 
 /**

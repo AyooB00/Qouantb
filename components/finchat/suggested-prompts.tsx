@@ -10,7 +10,7 @@ interface SuggestedPromptsProps {
   className?: string
 }
 
-const promptIcons: Record<string, any> = {
+const promptIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   'market': TrendingUp,
   'stock': BarChart,
   'portfolio': DollarSign,

@@ -6,7 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { useTranslations, useLocale } from 'next-intl'
 
-const getSteps = (t: any) => [
+type TranslationFunction = {
+  (key: string): string
+  raw(key: string): string[] | string
+}
+
+const getSteps = (t: TranslationFunction) => [
   {
     number: '1',
     title: t('steps.0.title'),

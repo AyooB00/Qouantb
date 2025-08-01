@@ -223,7 +223,7 @@ export default function OnboardingPage() {
           <Progress value={(currentStep + 1) / steps.length * 100} className="mb-4" />
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>
-            {t('step', { current: currentStep + 1, total: steps.length })}
+            {t.rich('step', { current: currentStep + 1, total: steps.length })}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

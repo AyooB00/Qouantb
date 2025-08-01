@@ -71,7 +71,7 @@ export function RecentActivity() {
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       icon: BrainCircuit,
       link: '/stock-analysis',
-      metadata: { rating: 'buy' },
+      metadata: { symbol: 'NVDA' },
     })
 
     // Sort by timestamp
@@ -165,15 +165,6 @@ export function RecentActivity() {
                       {getRelativeTime(activity.timestamp)}
                     </span>
                   </div>
-                  
-                  {activity.metadata?.rating && (
-                    <Badge 
-                      variant={activity.metadata.rating === 'buy' ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {activity.metadata.rating.toUpperCase()}
-                    </Badge>
-                  )}
                 </div>
               </div>
             )

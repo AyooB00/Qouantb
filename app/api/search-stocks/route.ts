@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     // Validate API keys
     validateAPIKeys(['FINNHUB_API_KEY']);
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY);
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!);
     const results = await finnhub.searchStocks(query);
 
     // Filter to only show common stocks and ETFs, limit results

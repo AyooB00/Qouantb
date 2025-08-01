@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const criteria = await provider.parsePrompt(prompt);
     console.log('Parsed criteria:', criteria);
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY);
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!);
     
     // Filter stocks based on criteria
     const stocksToAnalyze: StockData[] = [];
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
             // Flexible sector matching
             const sectorMatch = criteria.sectors.some(requestedSector => {
               const normalizedRequested = requestedSector.toLowerCase();
-              const normalizedActual = stockData.sector.toLowerCase();
+              const normalizedActual = stockData.sector!.toLowerCase();
               
               // Map technology-related sectors
               const techRelatedSectors = [

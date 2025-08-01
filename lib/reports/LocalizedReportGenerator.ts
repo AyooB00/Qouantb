@@ -122,7 +122,7 @@ export class LocalizedReportGenerator {
     this.pdf.text(totalValueLabel, this.margin + 5, summaryY)
     
     this.pdf.setFont('helvetica', 'normal')
-    const totalValue = formatCurrency(portfolio.totalValue, currency, locale)
+    const totalValue = formatCurrency(portfolio.totalValue, currency, locale === 'ar')
     this.pdf.text(totalValue, this.margin + 60, summaryY)
     
     // Total Return
@@ -134,7 +134,7 @@ export class LocalizedReportGenerator {
     this.pdf.setFont('helvetica', 'normal')
     const returnColor = portfolio.totalProfitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
     this.pdf.setTextColor(...returnColor)
-    const totalReturn = `${formatCurrency(portfolio.totalProfitLoss, currency, locale)} (${formatPercentage(portfolio.totalProfitLossPercent, locale)})`
+    const totalReturn = `${formatCurrency(portfolio.totalProfitLoss, currency, locale === 'ar')} (${formatPercentage(portfolio.totalProfitLossPercent, locale === 'ar')})`
     this.pdf.text(totalReturn, this.margin + 60, returnY)
     this.pdf.setTextColor(0, 0, 0)
     
@@ -204,12 +204,12 @@ export class LocalizedReportGenerator {
       xPos += columnWidths[1]
       
       // Current Price
-      this.pdf.text(formatCurrency(item.currentPrice, currency, locale), xPos, this.yPosition)
+      this.pdf.text(formatCurrency(item.currentPrice, currency, locale === 'ar'), xPos, this.yPosition)
       xPos += columnWidths[2]
       
       // Total Value
       const totalValue = item.quantity * item.currentPrice
-      this.pdf.text(formatCurrency(totalValue, currency, locale), xPos, this.yPosition)
+      this.pdf.text(formatCurrency(totalValue, currency, locale === 'ar'), xPos, this.yPosition)
       xPos += columnWidths[3]
       
       // P&L
@@ -218,7 +218,7 @@ export class LocalizedReportGenerator {
       const plColor = profitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
       this.pdf.setTextColor(...plColor)
       this.pdf.text(
-        `${formatCurrency(profitLoss, currency, locale)} (${formatPercentage(profitLossPercent, locale)})`,
+        `${formatCurrency(profitLoss, currency, locale === 'ar')} (${formatPercentage(profitLossPercent, locale === 'ar')})`,
         xPos,
         this.yPosition
       )

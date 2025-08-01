@@ -194,7 +194,7 @@
       "features": [
         {
           "title": "Bank-Grade Security",
-          "description": "End-to-end encryption for all portfolio data with SOC 2 compliance"
+          "description": "End-to-end encryption for all portfolio data with local LLMs for secure company data"
         },
         {
           "title": "Seamless Integration",
@@ -282,9 +282,9 @@
         "title": "Performance Metrics"
       },
       "trust": {
-        "soc2": {
-          "title": "SOC 2 Compliant",
-          "description": "Audited security controls"
+        "localLLM": {
+          "title": "Local LLMs",
+          "description": "Secure company data protection"
         },
         "encryption": {
           "title": "End-to-End Encryption",
@@ -319,7 +319,7 @@
         {
           "title": "Security & Privacy",
           "description": "Data protection and encryption",
-          "items": ["Data Encryption", "Privacy Policy", "SOC 2 Compliance", "Access Controls"]
+          "items": ["Data Encryption", "Privacy Policy", "Local LLMs for Secure Data", "Access Controls"]
         }
       ],
       "videoTutorials": {
@@ -381,7 +381,7 @@
         "compliance": "Compliance"
       },
       "copyright": "© 2024 QuantumBoard. All rights reserved. Not financial advice.",
-      "socCompliant": "SOC 2 Compliant",
+      "socCompliant": "Local LLMs for Secure Data",
       "email": "support@quoantb.com"
     }
   },

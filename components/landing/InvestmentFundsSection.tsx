@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 
-const getFeatures = (t: any) => [
+const getFeatures = (t: (key: string) => string) => [
   {
     icon: Shield,
     title: t('features.0.title'),
@@ -30,7 +30,7 @@ const getFeatures = (t: any) => [
   },
 ]
 
-const getBenefits = (t: any) => [
+const getBenefits = (t: (key: string) => string) => [
   t('benefits.0'),
   t('benefits.1'),
   t('benefits.2'),

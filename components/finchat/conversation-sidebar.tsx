@@ -146,7 +146,7 @@ export function ConversationSidebar({ isOpen, onClose, onNewChat }: Conversation
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              onClick={() => handleDeleteClick(event as any, conversation.id)}
+              onClick={(e) => handleDeleteClick(e, conversation.id)}
               className="text-destructive"
             >
               {t('actions.delete')}

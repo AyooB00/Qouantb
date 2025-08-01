@@ -41,7 +41,7 @@ export interface StockAnalysisResponse {
   symbol: string;
   companyName: string;
   currentPrice: number;
-  stockData: StockData;
+  stockData: ExtendedStockData;
   analyses: AgentAnalysis[];
   timestamp: string;
 }

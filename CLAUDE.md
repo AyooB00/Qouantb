@@ -151,7 +151,7 @@ Copy `.env.example` to `.env` and configure:
    - Bulk portfolio analysis capabilities
    - API integration for automated workflows
    - White-label solutions available
-   - SOC 2 compliance
+   - Local LLMs for secure company data
 
 2. **Data Processing Architecture**
    - Multiple data sources: Market APIs, Financial Statements, News, Technical Indicators

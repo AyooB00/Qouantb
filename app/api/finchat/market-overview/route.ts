@@ -7,7 +7,7 @@ export async function GET() {
     const marketData = await finChatTools.get_market_overview()
     
     if ('error' in marketData) {
-      throw new APIError(marketData.error, 500, 'MARKET_DATA_ERROR')
+      throw new APIError(marketData.error || 'Unknown error', 500, 'MARKET_DATA_ERROR')
     }
     
     return NextResponse.json(marketData)

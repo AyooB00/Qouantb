@@ -37,7 +37,9 @@ async function handleOpenAIChat(messages: OpenAI.Chat.ChatCompletionMessageParam
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
   
   // Build financial context
-  const financialContext = await buildFinancialContext(messages[messages.length - 1].content)
+  const lastMessage = messages[messages.length - 1]
+  const content = typeof lastMessage.content === 'string' ? lastMessage.content : ''
+  const financialContext = await buildFinancialContext(content)
 
   // Language instructions based on locale
   const languageInstruction = locale === 'ar' 
@@ -45,8 +47,8 @@ async function handleOpenAIChat(messages: OpenAI.Chat.ChatCompletionMessageParam
     : 'Respond in English.'
 
   // Create system prompt
-  const systemMessage = {
-    role: 'system',
+  const systemMessage: OpenAI.Chat.ChatCompletionSystemMessageParam = {
+    role: 'system' as const,
     content: `You are FinChat, an expert financial AI assistant with access to real-time market data and analysis tools.
 
 ${languageInstruction}
@@ -87,7 +89,7 @@ ${financialContext}
 Remember: You provide educational information only, not personalized financial advice.`
   }
 
-  const allMessages = [systemMessage, ...messages]
+  const allMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [systemMessage, ...messages]
 
   if (!stream) {
     // Non-streaming response with function calling
@@ -104,12 +106,13 @@ Remember: You provide educational information only, not personalized financial a
     const toolCalls = message.tool_calls || []
 
     // Execute tool calls if any
+    let toolResults: Array<{ role: 'tool', tool_call_id: string, content: string }> = []
     if (toolCalls.length > 0) {
-      const toolResults = await Promise.all(
+      toolResults = await Promise.all(
         toolCalls.map(async (toolCall) => {
           const result = await executeToolCall(toolCall as ToolCall)
           return {
-            role: 'tool',
+            role: 'tool' as const,
             tool_call_id: toolCall.id,
             content: JSON.stringify(result)
           }
@@ -228,7 +231,7 @@ Remember: You provide educational information only, not personalized financial a
             toolCalls.map(async (toolCall) => {
               const result = await executeToolCall(toolCall)
               return {
-                role: 'tool',
+                role: 'tool' as const,
                 tool_call_id: toolCall.id,
                 content: JSON.stringify(result)
               }
@@ -264,9 +267,9 @@ Remember: You provide educational information only, not personalized financial a
           }
 
           // Get final response with tool results
-          const finalMessages = [
+          const finalMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
             ...allMessages,
-            { role: 'assistant', tool_calls: toolCalls },
+            { role: 'assistant' as const, tool_calls: toolCalls },
             ...toolResults
           ]
 
@@ -320,7 +323,9 @@ async function handleRegularChat(messages: OpenAI.Chat.ChatCompletionMessagePara
   const aiProvider = aiFactory.getProvider(provider)
 
   // Build financial context
-  const financialContext = await buildFinancialContext(messages[messages.length - 1].content)
+  const lastMessage = messages[messages.length - 1]
+  const content = typeof lastMessage.content === 'string' ? lastMessage.content : ''
+  const financialContext = await buildFinancialContext(content)
 
   // Language instructions based on locale
   const languageInstruction = locale === 'ar' 
@@ -328,8 +333,8 @@ async function handleRegularChat(messages: OpenAI.Chat.ChatCompletionMessagePara
     : 'Respond in English.'
 
   // Create system prompt
-  const systemMessage = {
-    role: 'system',
+  const systemMessage: OpenAI.Chat.ChatCompletionSystemMessageParam = {
+    role: 'system' as const,
     content: `You are FinChat, an expert financial AI assistant specialized in stock market analysis, investment strategies, and financial planning.
 
 ${languageInstruction} 
@@ -348,10 +353,11 @@ ${financialContext}
 Remember: You provide educational information only, not personalized financial advice.`
   }
 
-  const allMessages = [systemMessage, ...messages]
+  const allMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [systemMessage, ...messages]
 
   if (!stream) {
-    const prompt = allMessages[allMessages.length - 1].content
+    const lastMessageContent = allMessages[allMessages.length - 1].content
+    const prompt = typeof lastMessageContent === 'string' ? lastMessageContent : ''
     const response = await aiProvider.generateCompletion(prompt, 'text')
 
     return NextResponse.json({ 
@@ -365,7 +371,12 @@ Remember: You provide educational information only, not personalized financial a
   const readable = new ReadableStream({
     async start(controller) {
       try {
-        const prompt = formatMessagesForCompletion(allMessages)
+        const prompt = allMessages
+          .map(msg => {
+            const content = typeof msg.content === 'string' ? msg.content : ''
+            return `${msg.role}: ${content}`
+          })
+          .join('\n\n')
         const fullResponse = await aiProvider.generateCompletion(prompt, 'text')
         const metadata = extractMetadata(fullResponse)
         const words = fullResponse.split(' ')
@@ -409,7 +420,7 @@ async function buildFinancialContext(userMessage: string): Promise<string> {
   
   if (stockSymbols.length > 0 && process.env.FINNHUB_API_KEY) {
     try {
-      const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY)
+      const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!)
       
       for (const symbol of stockSymbols.slice(0, 3)) { // Limit to 3 stocks
         try {

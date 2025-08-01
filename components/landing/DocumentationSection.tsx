@@ -48,7 +48,7 @@ const docCategories = [
     items: [
       { title: 'Data Encryption', href: '/docs/security/encryption' },
       { title: 'Privacy Policy', href: '/docs/security/privacy' },
-      { title: 'SOC 2 Compliance', href: '/docs/security/compliance' },
+      { title: 'Local LLMs for Secure Data', href: '/docs/security/local-llms' },
       { title: 'Access Controls', href: '/docs/security/access' },
     ],
   },

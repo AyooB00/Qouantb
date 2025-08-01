@@ -8,7 +8,7 @@ interface MessageListProps {
   messages: ChatMessage[]
   isLoading?: boolean
   streamingMessageId?: string | null
-  onAction?: (action: any) => void
+  onAction?: (action: { type: string; data?: unknown }) => void
 }
 
 export function MessageList({ messages, isLoading, streamingMessageId, onAction }: MessageListProps) {

@@ -88,8 +88,7 @@ export function ChatInterface() {
     // Add placeholder assistant message
     const assistantMessageId = addMessage({
       role: 'assistant',
-      content: '',
-      metadata: { isThinking: true }
+      content: ''
     })
     
     let accumulatedComponents: SmartComponent[] = []
@@ -149,8 +148,7 @@ export function ChatInterface() {
                     tools: parsed.toolCalls
                   }
                   updateMessage(assistantMessageId, { 
-                    content: accumulatedContent,
-                    metadata: { toolStatus, isThinking: false }
+                    content: accumulatedContent
                   })
                 }
                 
@@ -159,7 +157,7 @@ export function ChatInterface() {
                   accumulatedContent += parsed.content
                   updateMessage(assistantMessageId, { 
                     content: accumulatedContent,
-                    metadata: { toolStatus: null, isThinking: false }
+                    metadata: {}
                   })
                 }
                 
@@ -168,9 +166,8 @@ export function ChatInterface() {
                   accumulatedComponents = [...accumulatedComponents, ...parsed.components]
                   updateMessage(assistantMessageId, {
                     content: accumulatedContent,
-                    components: accumulatedComponents,
-                    metadata: { toolStatus: null, isThinking: false }
-                  } as any)
+                    metadata: {}
+                  })
                 }
                 
                 // Handle context
@@ -178,20 +175,16 @@ export function ChatInterface() {
                   messageContext = parsed.context
                   updateMessage(assistantMessageId, {
                     content: accumulatedContent,
-                    components: accumulatedComponents,
-                    context: messageContext,
-                    metadata: { toolStatus: null, isThinking: false }
-                  } as any)
+                    metadata: {}
+                  })
                 }
                 
                 // Handle metadata
                 if (parsed.metadata) {
                   updateMessage(assistantMessageId, { 
                     content: accumulatedContent,
-                    components: accumulatedComponents,
-                    context: messageContext,
-                    metadata: { ...parsed.metadata, toolStatus: null, isThinking: false }
-                  } as any)
+                    metadata: { ...parsed.metadata }
+                  })
                 }
               } catch (e) {
                 console.error('Error parsing streaming data:', e)
@@ -204,7 +197,7 @@ export function ChatInterface() {
       console.error('Chat error:', error)
       updateMessage(assistantMessageId, {
         content: 'Sorry, I encountered an error. Please try again.',
-        metadata: { error: true, isThinking: false }
+        metadata: { error: true }
       })
       useChatStore.setState({ 
         error: error instanceof Error ? error.message : 'An error occurred' 
@@ -221,15 +214,15 @@ export function ChatInterface() {
     createConversation()
   }
   
-  const handleQuickAction = (action: QuickAction) => {
+  const handleQuickAction = (action: { type: string; data?: unknown }) => {
     // Handle quick actions from smart components
-    if (action.action === 'send-message' && action.data?.message) {
-      handleSendMessage(action.data.message)
-    } else if (action.action === 'analyze' && action.data?.symbol) {
-      handleSendMessage(`Analyze ${action.data.symbol} in detail`)
-    } else if (action.action === 'compare' && action.data?.symbols) {
-      handleSendMessage(`Compare ${action.data.symbols.join(', ')}`)
-    } else if (action.action === 'watchlist' && action.data) {
+    if (action.type === 'send-message' && action.data && typeof action.data === 'object' && 'message' in action.data) {
+      handleSendMessage((action.data as { message: string }).message)
+    } else if (action.type === 'analyze' && action.data && typeof action.data === 'object' && 'symbol' in action.data) {
+      handleSendMessage(`Analyze ${(action.data as { symbol: string }).symbol} in detail`)
+    } else if (action.type === 'compare' && action.data && typeof action.data === 'object' && 'symbols' in action.data) {
+      handleSendMessage(`Compare ${((action.data as { symbols: string[] }).symbols).join(', ')}`)
+    } else if (action.type === 'watchlist' && action.data) {
       // TODO: Implement watchlist functionality
       console.log('Add to watchlist:', action.data)
     }

@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(mockResponse)
     }
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY)
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!)
 
     // Fetch both quote and company profile in parallel
     const [quote, profile] = await Promise.all([

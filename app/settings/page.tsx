@@ -122,7 +122,7 @@ export default function SettingsPage() {
                 <Label htmlFor="ai-provider">{t('providers.preferred')}</Label>
                 <Select
                   value={settings.aiProvider}
-                  onValueChange={(value) => handleSettingChange('aiProvider', value)}
+                  onValueChange={(value) => handleSettingChange('aiProvider', value as 'openai' | 'gemini' | 'auto')}
                 >
                   <SelectTrigger id="ai-provider">
                     <SelectValue placeholder="Select AI provider" />
@@ -192,7 +192,7 @@ export default function SettingsPage() {
                 <Label htmlFor="theme">{t('appearance.theme')}</Label>
                 <Select
                   value={settings.theme}
-                  onValueChange={(value) => handleSettingChange('theme', value)}
+                  onValueChange={(value) => handleSettingChange('theme', value as 'light' | 'dark' | 'system')}
                 >
                   <SelectTrigger id="theme">
                     <SelectValue placeholder="Select theme" />

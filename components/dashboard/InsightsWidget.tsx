@@ -67,7 +67,7 @@ export function InsightsWidget() {
           id: '3',
           type: 'tip',
           title: t('hittingHighsTitle', { symbol: topGainer.symbol }),
-          description: t('hittingHighsDesc', { percent: topGainer.profitLossPercent?.toFixed(1) }),
+          description: t('hittingHighsDesc', { percent: topGainer.profitLossPercent?.toFixed(1) ?? '0' }),
           impact: 'medium',
           relatedSymbol: topGainer.symbol,
           timestamp: new Date(),

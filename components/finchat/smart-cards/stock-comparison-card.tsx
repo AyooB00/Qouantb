@@ -61,22 +61,26 @@ export default function StockComparisonCard({ data, onAction, className }: Compo
     return (aVal > bVal ? 1 : -1) * multiplier
   })
 
-  const formatValue = (value: any, key: string): string => {
+  const formatValue = (value: number | string | null | undefined, key: string): string => {
     if (value === null || value === undefined) return 'N/A'
+    
+    const numValue = typeof value === 'number' ? value : parseFloat(value as string)
+    
+    if (isNaN(numValue)) return value.toString()
     
     switch (key) {
       case 'price':
-        return `$${value.toFixed(2)}`
+        return `$${numValue.toFixed(2)}`
       case 'changePercent':
       case 'dividendYield':
-        return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`
+        return `${numValue >= 0 ? '+' : ''}${numValue.toFixed(2)}%`
       case 'marketCap':
-        return `$${(value / 1e9).toFixed(2)}B`
+        return `$${(numValue / 1e9).toFixed(2)}B`
       case 'volume':
-        return `${(value / 1e6).toFixed(2)}M`
+        return `${(numValue / 1e6).toFixed(2)}M`
       case 'pe':
       case 'beta':
-        return value.toFixed(2)
+        return numValue.toFixed(2)
       default:
         return value.toString()
     }

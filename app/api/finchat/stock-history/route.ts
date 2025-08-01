@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(cached.data)
     }
 
-    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY)
+    const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY!)
     
     // Calculate date range
     const endDate = new Date()

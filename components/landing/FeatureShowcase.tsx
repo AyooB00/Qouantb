@@ -21,7 +21,7 @@ const chartData = [
   { name: 'Jun', value: 4800 },
 ]
 
-const getFeatures = (t: any, locale: string) => [
+const getFeatures = (t: (key: string) => string, locale: string) => [
   {
     title: t('cards.0.title'),
     description: t('cards.0.description'),
@@ -57,7 +57,7 @@ const getFeatures = (t: any, locale: string) => [
   },
 ]
 
-const getAdditionalFeatures = (t: any) => [
+const getAdditionalFeatures = (t: (key: string) => string) => [
   {
     icon: Shield,
     title: t('additional.0.title'),
