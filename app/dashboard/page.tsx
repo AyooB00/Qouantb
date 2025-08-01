@@ -1,23 +1,35 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { MetricsOverview } from '@/components/dashboard/MetricsOverview'
 import { InsightsWidget } from '@/components/dashboard/InsightsWidget'
 import { MarketOverview } from '@/components/dashboard/MarketOverview'
 import { QuickActions } from '@/components/dashboard/QuickActions'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
+import { PageLoader } from '@/components/ui/page-loader'
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard')
   const { items, initializeWithDefaults } = usePortfolioStore()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Initialize portfolio if empty
     if (items.length === 0) {
       initializeWithDefaults()
     }
+    // Add a small delay to show loading animation
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+    
+    return () => clearTimeout(timer)
   }, [items.length, initializeWithDefaults])
+
+  if (isLoading) {
+    return <PageLoader />
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">

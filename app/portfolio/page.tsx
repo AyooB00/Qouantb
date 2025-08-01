@@ -13,11 +13,13 @@ import { AddStockDialog } from '@/components/portfolio/add-stock-dialog'
 import { PortfolioInsights } from '@/components/portfolio/portfolio-insights'
 import { RiskAnalysis } from '@/components/portfolio/risk-analysis'
 import { DiversificationScore } from '@/components/portfolio/diversification-score'
+import { PageLoader } from '@/components/ui/page-loader'
 
 export default function PortfolioPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isPageLoading, setIsPageLoading] = useState(true)
   const t = useTranslations('portfolio')
   const tCommon = useTranslations('common')
   const isUpdatingPrices = useRef(false)
@@ -80,15 +82,21 @@ export default function PortfolioPage() {
   // Initialize with example stocks on first load
   useEffect(() => {
     initializeWithDefaults()
+    // Add a small delay to show loading animation
+    const timer = setTimeout(() => {
+      setIsPageLoading(false)
+    }, 500)
+    
+    return () => clearTimeout(timer)
   }, [initializeWithDefaults])
 
   // Initial price update when component mounts
   useEffect(() => {
-    if (items.length > 0) {
+    if (items.length > 0 && !isPageLoading) {
       updateCurrentPrices()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Only run once on mount
+  }, [isPageLoading]) // Run after page loading is complete
   
   // Set up interval for periodic updates
   useEffect(() => {
@@ -172,6 +180,10 @@ export default function PortfolioPage() {
     } finally {
       setIsUpdating(false)
     }
+  }
+
+  if (isPageLoading) {
+    return <PageLoader />
   }
 
   return (

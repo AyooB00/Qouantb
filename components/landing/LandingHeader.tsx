@@ -75,7 +75,7 @@ export function LandingHeader() {
             </Button>
             
             <Button asChild>
-              <Link href={`/${locale}/dashboard`}>
+              <Link href={'/dashboard'}>
                 <LogIn className="mr-2 h-4 w-4" />
                 {locale === 'ar' ? 'ابدأ الآن' : 'Get Started'}
               </Link>

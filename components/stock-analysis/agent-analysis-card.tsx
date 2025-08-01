@@ -45,9 +45,16 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
   };
 
   const formatRecommendation = (rec: string) => {
-    return rec.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    // Use translation if available, otherwise fallback to formatted string
+    const translationKey = `recommendations.${rec}` as const;
+    try {
+      return t(translationKey);
+    } catch {
+      // Fallback to formatted string if translation not found
+      return rec.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+    }
   };
 
   const calculatePriceChange = (target: number) => {
@@ -61,7 +68,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
         <div className="flex items-start justify-between">
           <div>
             <CardTitle className="text-xl">{analysis.agentName}</CardTitle>
-            <CardDescription>Investment Analysis</CardDescription>
+            <CardDescription>{t('investmentAnalysis')}</CardDescription>
           </div>
           <Badge 
             className={cn(
@@ -87,9 +94,9 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
 
         <Tabs defaultValue="analysis" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="analysis">Analysis</TabsTrigger>
-            <TabsTrigger value="factors">Factors</TabsTrigger>
-            <TabsTrigger value="strategy">Strategy</TabsTrigger>
+            <TabsTrigger value="analysis">{t('analysisTab')}</TabsTrigger>
+            <TabsTrigger value="factors">{t('factorsTab')}</TabsTrigger>
+            <TabsTrigger value="strategy">{t('strategyTab')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="analysis" className="space-y-3">
@@ -109,7 +116,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
             <div className="space-y-2">
               <h4 className="text-sm font-semibold flex items-center gap-1">
                 <TrendingUp className="h-4 w-4 text-green-500" />
-                Key Factors
+                {t('keyFactors')}
               </h4>
               <ul className="space-y-1">
                 {analysis.keyFactors.map((factor, idx) => (
@@ -124,7 +131,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
             <div className="space-y-2">
               <h4 className="text-sm font-semibold flex items-center gap-1">
                 <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                Risks
+                {t('risks')}
               </h4>
               <ul className="space-y-1">
                 {analysis.risks.map((risk, idx) => (
@@ -139,7 +146,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
             <div className="space-y-2">
               <h4 className="text-sm font-semibold flex items-center gap-1">
                 <Target className="h-4 w-4 text-blue-500" />
-                Opportunities
+                {t('opportunities')}
               </h4>
               <ul className="space-y-1">
                 {analysis.opportunities.map((opp, idx) => (
@@ -157,7 +164,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
               <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Time Horizon</span>
+                  <span className="text-sm font-medium">{t('timeHorizon')}</span>
                 </div>
                 <span className="text-sm">{analysis.timeHorizon}</span>
               </div>
@@ -182,14 +189,14 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
 
               {analysis.entryStrategy && (
                 <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">Entry Strategy</h4>
+                  <h4 className="text-sm font-semibold">{t('entryStrategy')}</h4>
                   <p className="text-sm text-muted-foreground">{analysis.entryStrategy}</p>
                 </div>
               )}
 
               {analysis.exitStrategy && (
                 <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">Exit Strategy</h4>
+                  <h4 className="text-sm font-semibold">{t('exitStrategy')}</h4>
                   <p className="text-sm text-muted-foreground">{analysis.exitStrategy}</p>
                 </div>
               )}
