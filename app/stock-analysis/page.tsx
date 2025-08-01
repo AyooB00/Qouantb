@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Loader2, TrendingUp, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -20,10 +21,13 @@ export default function StockAnalysisPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<StockAnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations('stockAnalysis');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
 
   const handleAnalyze = async () => {
     if (!selectedStock || selectedAgents.length === 0) {
-      setError('Please select a stock and at least one analyst');
+      setError(t('error'));
       return;
     }
 
@@ -40,6 +44,7 @@ export default function StockAnalysisPage() {
         body: JSON.stringify({
           symbol: selectedStock,
           agentIds: selectedAgents,
+          locale,
         }),
       });
 
@@ -65,17 +70,17 @@ export default function StockAnalysisPage() {
     const sellCount = recommendations.filter(r => r.includes('sell')).length;
     const holdCount = recommendations.filter(r => r === 'hold').length;
     
-    if (buyCount > sellCount + holdCount) return 'Bullish';
-    if (sellCount > buyCount + holdCount) return 'Bearish';
-    return 'Mixed';
+    if (buyCount > sellCount + holdCount) return tCommon('bullish');
+    if (sellCount > buyCount + holdCount) return tCommon('bearish');
+    return tCommon('mixed');
   };
 
   return (
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold">AI Investment Analysis</h1>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Get stock analysis from legendary investors powered by AI
+          {t('subtitle')}
         </p>
       </div>
 
@@ -87,10 +92,10 @@ export default function StockAnalysisPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
-                  Select Stock
+                  {t('selectStock')}
                 </CardTitle>
                 <CardDescription>
-                  Choose a stock to analyze
+                  {t('selectStockDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
@@ -107,10 +112,10 @@ export default function StockAnalysisPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  Select Investment Analysts
+                  {t('selectAnalysts')}
                 </CardTitle>
                 <CardDescription>
-                  Choose one or more legendary investors
+                  {t('selectAnalystsDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
@@ -133,10 +138,10 @@ export default function StockAnalysisPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analyzing...
+                  {t('analyzing')}
                 </>
               ) : (
-                'Analyze Stock'
+                t('analyzeButton')
               )}
             </Button>
           </div>
@@ -172,7 +177,7 @@ export default function StockAnalysisPage() {
                         {analysisResult.symbol} - {analysisResult.companyName}
                       </CardTitle>
                       <CardDescription className="mt-2">
-                        Current Price: ${analysisResult.currentPrice.toFixed(2)}
+                        {t('currentPrice')}: ${analysisResult.currentPrice.toFixed(2)}
                         {analysisResult.stockData.changePercent && (
                           <span className={
                             analysisResult.stockData.changePercent > 0 
@@ -186,7 +191,7 @@ export default function StockAnalysisPage() {
                       </CardDescription>
                     </div>
                     <Badge variant="outline" className="text-lg px-3 py-1">
-                      Consensus: {getConsensusRecommendation()}
+                      {t('consensus')}: {getConsensusRecommendation()}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -194,13 +199,13 @@ export default function StockAnalysisPage() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {analysisResult.stockData.peRatio && (
                       <div>
-                        <p className="text-sm text-muted-foreground">P/E Ratio</p>
+                        <p className="text-sm text-muted-foreground">{t('peRatio')}</p>
                         <p className="text-lg font-semibold">{analysisResult.stockData.peRatio.toFixed(2)}</p>
                       </div>
                     )}
                     {analysisResult.stockData.marketCap && (
                       <div>
-                        <p className="text-sm text-muted-foreground">Market Cap</p>
+                        <p className="text-sm text-muted-foreground">{t('marketCap')}</p>
                         <p className="text-lg font-semibold">
                           ${(analysisResult.stockData.marketCap / 1e9).toFixed(2)}B
                         </p>
@@ -208,13 +213,13 @@ export default function StockAnalysisPage() {
                     )}
                     {analysisResult.stockData.beta && (
                       <div>
-                        <p className="text-sm text-muted-foreground">Beta</p>
+                        <p className="text-sm text-muted-foreground">{t('beta')}</p>
                         <p className="text-lg font-semibold">{analysisResult.stockData.beta.toFixed(2)}</p>
                       </div>
                     )}
                     {analysisResult.stockData.dividendYield && (
                       <div>
-                        <p className="text-sm text-muted-foreground">Dividend Yield</p>
+                        <p className="text-sm text-muted-foreground">{t('dividendYield')}</p>
                         <p className="text-lg font-semibold">{analysisResult.stockData.dividendYield.toFixed(2)}%</p>
                       </div>
                     )}
@@ -224,7 +229,7 @@ export default function StockAnalysisPage() {
 
               {/* Agent Analyses */}
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Investment Analyses</h2>
+                <h2 className="text-2xl font-semibold mb-4">{t('investmentAnalyses')}</h2>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                   {analysisResult.analyses.map((analysis) => (
                     <AgentAnalysisCompact
@@ -241,8 +246,7 @@ export default function StockAnalysisPage() {
 
       <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
         <p>
-          This analysis is generated by AI based on the investment philosophies of famous investors. 
-          It is for educational purposes only and should not be considered as financial advice.
+          {t('disclaimer')}
         </p>
       </div>
     </div>

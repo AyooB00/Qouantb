@@ -8,6 +8,10 @@ interface QueueInfo {
   isProcessing: boolean
 }
 
+interface QueueEventData {
+  symbol: string
+}
+
 export function useFinnhubQueue(symbol?: string) {
   const [queueInfo, setQueueInfo] = useState<QueueInfo>({
     position: 0,
@@ -37,13 +41,13 @@ export function useFinnhubQueue(symbol?: string) {
       updateQueueInfo()
     }
 
-    const handleProcessing = (data: any) => {
+    const handleProcessing = (data: QueueEventData) => {
       if (data.symbol === symbol) {
         setQueueInfo(prev => ({ ...prev, isProcessing: true, position: 0 }))
       }
     }
 
-    const handleComplete = (data: any) => {
+    const handleComplete = (data: QueueEventData) => {
       if (data.symbol === symbol) {
         setQueueInfo(prev => ({ ...prev, isProcessing: false }))
       }

@@ -101,3 +101,28 @@ export interface OpenAIAnalysisRequest {
 export interface OpenAIAnalysisResponse {
   opportunities: TradingOpportunity[];
 }
+
+export interface FinnhubNewsArticle {
+  headline: string;
+  summary: string;
+  url: string;
+  datetime: number;
+  source: string;
+  related?: string;
+}
+
+export interface FinnhubRecommendation {
+  buy: number;
+  hold: number;
+  period: string;
+  sell: number;
+  strongBuy: number;
+  strongSell: number;
+  symbol: string;
+}
+
+export interface FinnhubFinancialMetrics {
+  metric: Record<string, number | string>;
+  metricType: string;
+  symbol: string;
+}

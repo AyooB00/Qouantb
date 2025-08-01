@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events'
 
-interface QueuedRequest {
+interface QueuedRequest<T = unknown> {
   id: string
-  execute: () => Promise<any>
-  resolve: (value: any) => void
-  reject: (error: any) => void
+  execute: () => Promise<T>
+  resolve: (value: T) => void
+  reject: (error: Error) => void
   priority: number
   timestamp: number
   retries: number
@@ -18,13 +18,13 @@ interface RateLimiterOptions {
 }
 
 export class FinnhubRateLimiter extends EventEmitter {
-  private queue: QueuedRequest[] = []
+  private queue: QueuedRequest<unknown>[] = []
   private processing = false
   private lastRequestTime = 0
   private requestInterval: number
   private maxRetries: number
   private enableDeduplication: boolean
-  private pendingRequests = new Map<string, QueuedRequest>()
+  private pendingRequests = new Map<string, QueuedRequest<unknown>>()
 
   constructor(options: RateLimiterOptions) {
     super()
@@ -129,9 +129,10 @@ export class FinnhubRateLimiter extends EventEmitter {
           symbol: request.symbol,
           success: true
         })
-      } catch (error: any) {
+      } catch (error) {
         // Check if it's a rate limit error
-        if (error.message?.includes('rate limit') && request.retries < this.maxRetries) {
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        if (errorMessage.includes('rate limit') && request.retries < this.maxRetries) {
           request.retries++
           
           // Calculate exponential backoff
@@ -156,14 +157,14 @@ export class FinnhubRateLimiter extends EventEmitter {
 
           await this.delay(backoffDelay)
         } else {
-          request.reject(error)
+          request.reject(error instanceof Error ? error : new Error(String(error)))
           
           // Emit error event
           this.emit('requestComplete', {
             id: request.id,
             symbol: request.symbol,
             success: false,
-            error: error.message
+            error: errorMessage
           })
         }
       }

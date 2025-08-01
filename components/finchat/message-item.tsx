@@ -11,11 +11,14 @@ import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { Badge } from '@/components/ui/badge'
-import { ComponentRegistry } from '@/lib/finchat/component-registry'
 import { ResponseParser } from '@/lib/finchat/response-parser'
 import { SmartComponent, EnhancedChatMessage, QuickAction } from '@/lib/types/finchat'
-import { Card } from '@/components/ui/card'
 import { SmartComponentErrorBoundary } from './smart-component-error-boundary'
+import { SmartComponentRenderer } from './smart-component-renderer'
+import { SmartCardSkeleton } from './smart-card-skeleton'
+import { SmartComponentGrid } from './smart-component-grid'
+import { useTranslations } from 'next-intl'
+import { useLocale } from '@/lib/locale-context'
 
 interface MessageItemProps {
   message: ChatMessage | EnhancedChatMessage
@@ -23,39 +26,6 @@ interface MessageItemProps {
   onAction?: (action: QuickAction) => void
 }
 
-// Loading component for smart cards
-function SmartCardSkeleton() {
-  return (
-    <Card className="animate-pulse">
-      <div className="p-4 space-y-3">
-        <div className="h-4 bg-muted rounded w-3/4" />
-        <div className="h-20 bg-muted rounded" />
-        <div className="h-4 bg-muted rounded w-1/2" />
-      </div>
-    </Card>
-  )
-}
-
-// Smart component renderer
-function SmartComponentRenderer({ component, onAction }: { component: SmartComponent, onAction?: (action: QuickAction) => void }) {
-  const [Component, setComponent] = useState<React.ComponentType<any> | null>(null)
-  const [loading, setLoading] = useState(true)
-  
-  useEffect(() => {
-    const loadComponent = async () => {
-      const registry = ComponentRegistry.getInstance()
-      const comp = await registry.getComponent(component.type)
-      setComponent(() => comp)
-      setLoading(false)
-    }
-    loadComponent()
-  }, [component.type])
-  
-  if (loading) return <SmartCardSkeleton />
-  if (!Component) return null
-  
-  return <Component data={component.data} onAction={onAction} />
-}
 
 export function MessageItem({ message, isStreaming, onAction }: MessageItemProps) {
   const [copied, setCopied] = useState(false)
@@ -64,12 +34,15 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
   const isError = message.metadata?.error
   const isThinking = message.metadata?.isThinking
   const toolStatus = message.metadata?.toolStatus
+  const t = useTranslations('finChat.messageItem')
+  const toolsT = useTranslations('finChat.tools')
+  const locale = useLocale()
 
   // Parse message content for smart components
   useEffect(() => {
-    if (!isUser && message.content && !isStreaming) {
+    if (!isUser && !isStreaming) {
       const parser = ResponseParser.getInstance()
-      const { components } = parser.parseResponse(message.content, message.metadata?.toolResults)
+      const { components } = parser.parseResponse(message.content || '', message.metadata?.toolResults)
       
       // Merge with any components already in the message
       const messageComponents = (message as EnhancedChatMessage).components || []
@@ -82,7 +55,7 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
       
       setParsedComponents(uniqueComponents)
     }
-  }, [message.content, isUser, isStreaming, message])
+  }, [message.content, isUser, isStreaming, message.metadata?.toolResults, (message as EnhancedChatMessage).components])
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.content)
@@ -100,6 +73,16 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
     if (toolName.includes('news')) return Newspaper
     if (toolName.includes('calculate')) return Calculator
     return TrendingUp
+  }
+
+  // Get tool display name
+  const getToolDisplayName = (toolName: string) => {
+    if (toolName.includes('stock_quote')) return toolsT('stockQuote')
+    if (toolName.includes('technical')) return toolsT('technicalAnalysis')
+    if (toolName.includes('news')) return toolsT('newsAnalysis')
+    if (toolName.includes('compare')) return toolsT('compare')
+    if (toolName.includes('fundamentals')) return toolsT('fundamentals')
+    return toolName
   }
 
   return (
@@ -218,6 +201,7 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
                 "h-7 w-7 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg rounded-full"
               )}
               onClick={handleCopy}
+              title={copied ? t('copied') : t('copy')}
             >
               {copied ? (
                 <Check className="h-3 w-3 text-green-500" />
@@ -235,14 +219,23 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
 
         {/* Smart Components */}
         {!isUser && parsedComponents.length > 0 && (
-          <div className="space-y-3 mt-3 max-w-[85%]">
-            {parsedComponents.map((component) => (
-              <SmartComponentErrorBoundary key={component.id} componentType={component.type}>
+          <div className="mt-3 max-w-[85%]">
+            {parsedComponents.length > 1 ? (
+              <SmartComponentGrid 
+                components={parsedComponents}
+                onAction={onAction}
+                maxColumns={2}
+              />
+            ) : (
+              <SmartComponentErrorBoundary componentType={parsedComponents[0].type}>
                 <Suspense fallback={<SmartCardSkeleton />}>
-                  <SmartComponentRenderer component={component} onAction={onAction} />
+                  <SmartComponentRenderer 
+                    component={parsedComponents[0]} 
+                    onAction={onAction} 
+                  />
                 </Suspense>
               </SmartComponentErrorBoundary>
-            ))}
+            )}
           </div>
         )}
 
@@ -284,7 +277,7 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
 
         {/* Timestamp */}
         <p className="text-xs text-muted-foreground/60 px-2 animate-fade-in animation-delay-200">
-          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
         </p>
       </div>
     </div>

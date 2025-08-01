@@ -18,6 +18,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatCurrency, formatPercentage, formatDate } from '@/lib/utils/formatters'
 
 interface HoldingCardProps {
   holding: PortfolioItem
@@ -27,19 +29,9 @@ export function HoldingCard({ holding }: HoldingCardProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const { removeItem } = usePortfolioStore()
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value)
-  }
-
-  const formatPercent = (value: number) => {
-    return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`
-  }
+  const t = useTranslations('portfolio.holding')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
 
   const profitLoss = holding.profitLoss || 0
   const profitLossPercent = holding.profitLossPercent || 0
@@ -57,12 +49,12 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                     <h3 className="text-lg font-semibold">{holding.symbol}</h3>
                     <p className="text-sm text-muted-foreground">{holding.companyName}</p>
                   </div>
-                  <Badge variant="outline">{holding.quantity} shares</Badge>
+                  <Badge variant="outline">{holding.quantity} {t('shares')}</Badge>
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="text-lg font-semibold">{formatCurrency(totalValue)}</p>
+                    <p className="text-lg font-semibold">{formatCurrency(totalValue, locale)}</p>
                     <p className={cn(
                       "text-sm flex items-center gap-1",
                       profitLoss >= 0 ? "text-green-600" : "text-red-600"
@@ -72,7 +64,7 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                       ) : (
                         <TrendingDown className="h-3 w-3" />
                       )}
-                      {formatCurrency(Math.abs(profitLoss))} ({formatPercent(profitLossPercent)})
+                      {formatCurrency(Math.abs(profitLoss), locale)} ({formatPercentage(profitLossPercent, locale)})
                     </p>
                   </div>
                   
@@ -92,25 +84,25 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                 {/* Price Details */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-xs text-muted-foreground">Current Price</p>
+                    <p className="text-xs text-muted-foreground">{t('currentPrice')}</p>
                     <p className="text-sm font-medium">
-                      {holding.currentPrice ? formatCurrency(holding.currentPrice) : 'Loading...'}
+                      {holding.currentPrice ? formatCurrency(holding.currentPrice, locale) : t('loading')}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Avg Cost</p>
-                    <p className="text-sm font-medium">{formatCurrency(holding.avgCost)}</p>
+                    <p className="text-xs text-muted-foreground">{t('avgCost')}</p>
+                    <p className="text-sm font-medium">{formatCurrency(holding.avgCost, locale)}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Cost</p>
+                    <p className="text-xs text-muted-foreground">{t('totalCost')}</p>
                     <p className="text-sm font-medium">
-                      {formatCurrency(holding.quantity * holding.avgCost)}
+                      {formatCurrency(holding.quantity * holding.avgCost, locale)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Added</p>
+                    <p className="text-xs text-muted-foreground">{t('added')}</p>
                     <p className="text-sm font-medium">
-                      {new Date(holding.addedDate).toLocaleDateString()}
+                      {formatDate(holding.addedDate, locale, { dateStyle: 'medium' })}
                     </p>
                   </div>
                 </div>
@@ -120,24 +112,24 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                   <div className="space-y-3">
                     {/* Forecast */}
                     <div className="bg-muted/50 rounded-lg p-3">
-                      <h4 className="text-sm font-medium mb-2">AI Forecast</h4>
+                      <h4 className="text-sm font-medium mb-2">{t('aiForecast')}</h4>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <p className="text-xs text-muted-foreground">7-Day Target</p>
+                          <p className="text-xs text-muted-foreground">{t('sevenDayTarget')}</p>
                           <p className="text-sm font-medium">
-                            {formatCurrency(holding.lastAnalysis.forecast.sevenDay)}
+                            {formatCurrency(holding.lastAnalysis.forecast.sevenDay, locale)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">30-Day Target</p>
+                          <p className="text-xs text-muted-foreground">{t('thirtyDayTarget')}</p>
                           <p className="text-sm font-medium">
-                            {formatCurrency(holding.lastAnalysis.forecast.thirtyDay)}
+                            {formatCurrency(holding.lastAnalysis.forecast.thirtyDay, locale)}
                           </p>
                         </div>
                       </div>
                       <div className="mt-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground">Confidence</span>
+                          <span className="text-xs text-muted-foreground">{t('confidence')}</span>
                           <span className="text-xs font-medium">
                             {holding.lastAnalysis.forecast.confidence}%
                           </span>
@@ -154,7 +146,7 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                     {/* Tips */}
                     {holding.lastAnalysis.tips.length > 0 && (
                       <div>
-                        <h4 className="text-sm font-medium mb-2">AI Tips</h4>
+                        <h4 className="text-sm font-medium mb-2">{t('aiTips')}</h4>
                         <ul className="space-y-1">
                           {holding.lastAnalysis.tips.slice(0, 3).map((tip, index) => (
                             <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -168,13 +160,13 @@ export function HoldingCard({ holding }: HoldingCardProps) {
 
                     {/* Sentiment Badge */}
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Market Sentiment:</span>
+                      <span className="text-xs text-muted-foreground">{t('marketSentiment')}:</span>
                       <Badge variant={
                         holding.lastAnalysis.sentiment === 'bullish' ? 'default' :
                         holding.lastAnalysis.sentiment === 'bearish' ? 'destructive' :
                         'secondary'
                       }>
-                        {holding.lastAnalysis.sentiment}
+                        {tCommon(holding.lastAnalysis.sentiment)}
                       </Badge>
                     </div>
                   </div>
@@ -184,7 +176,7 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                 <div className="flex gap-2 pt-2">
                   <Button variant="outline" size="sm" className="flex-1">
                     <Edit2 className="h-4 w-4 mr-2" />
-                    Edit
+                    {t('edit')}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -193,7 +185,7 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                     onClick={() => setShowDeleteDialog(true)}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Remove
+                    {t('remove')}
                   </Button>
                 </div>
               </div>
@@ -206,21 +198,20 @@ export function HoldingCard({ holding }: HoldingCardProps) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove {holding.symbol} from portfolio?</AlertDialogTitle>
+            <AlertDialogTitle>{t('removeConfirmTitle', { symbol: holding.symbol })}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove {holding.quantity} shares of {holding.companyName} from your portfolio. 
-              This action cannot be undone.
+              {t('removeConfirmMessage', { quantity: holding.quantity, companyName: holding.companyName })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 removeItem(holding.id)
                 setShowDeleteDialog(false)
               }}
             >
-              Remove
+              {t('remove')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

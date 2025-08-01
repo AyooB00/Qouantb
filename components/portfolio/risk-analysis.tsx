@@ -7,6 +7,8 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatPercentage } from '@/lib/utils/formatters'
 
 interface RiskMetrics {
   overallRisk: 'low' | 'medium' | 'high'
@@ -30,6 +32,8 @@ interface RiskMetrics {
 export function RiskAnalysis() {
   const { items, totalValue } = usePortfolioStore()
   const [metrics, setMetrics] = useState<RiskMetrics | null>(null)
+  const t = useTranslations('portfolio.risk')
+  const locale = useLocale()
 
   useEffect(() => {
     calculateRiskMetrics()
@@ -139,30 +143,30 @@ export function RiskAnalysis() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
-          Risk Analysis
+          {t('title')}
         </CardTitle>
         <CardDescription>
-          Portfolio risk metrics and warnings
+          {t('subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Risk Score */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Overall Risk Score</span>
+            <span className="text-sm font-medium">{t('overallScore')}</span>
             <Badge 
               variant="outline" 
               className={cn(getRiskBgColor(metrics.overallRisk), getRiskColor(metrics.overallRisk))}
             >
-              {metrics.overallRisk.toUpperCase()}
+              {t(`levels.${metrics.overallRisk}`)}
             </Badge>
           </div>
           <Progress value={metrics.riskScore} className="h-2" />
           <p className="text-xs text-muted-foreground">
             {metrics.riskScore}/100 - {
-              metrics.overallRisk === 'low' ? 'Well-balanced portfolio' :
-              metrics.overallRisk === 'medium' ? 'Moderate risk exposure' :
-              'High risk - consider diversification'
+              metrics.overallRisk === 'low' ? t('wellBalanced') :
+              metrics.overallRisk === 'medium' ? t('moderateExposure') :
+              t('considerDiversification')
             }
           </p>
         </div>
@@ -172,38 +176,38 @@ export function RiskAnalysis() {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Activity className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Volatility</span>
+              <span className="text-sm text-muted-foreground">{t('volatility')}</span>
             </div>
-            <p className="text-lg font-semibold">{metrics.volatility.toFixed(1)}%</p>
-            <p className="text-xs text-muted-foreground">Annual</p>
+            <p className="text-lg font-semibold">{formatPercentage(metrics.volatility, locale)}</p>
+            <p className="text-xs text-muted-foreground">{t('annual')}</p>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <TrendingDown className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Max Drawdown</span>
+              <span className="text-sm text-muted-foreground">{t('maxDrawdown')}</span>
             </div>
             <p className="text-lg font-semibold text-red-600">
-              {metrics.maxDrawdown.toFixed(1)}%
+              {formatPercentage(metrics.maxDrawdown, locale)}
             </p>
-            <p className="text-xs text-muted-foreground">From peak</p>
+            <p className="text-xs text-muted-foreground">{t('fromPeak')}</p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-sm text-muted-foreground">Portfolio Beta</span>
+            <span className="text-sm text-muted-foreground">{t('portfolioBeta')}</span>
             <p className="text-lg font-semibold">{metrics.beta.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground">
-              {metrics.beta > 1.2 ? 'High volatility' : 
-               metrics.beta < 0.8 ? 'Low volatility' : 
-               'Market average'}
+              {metrics.beta > 1.2 ? t('highVolatility') : 
+               metrics.beta < 0.8 ? t('lowVolatility') : 
+               t('marketAverage')}
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-sm text-muted-foreground">Sharpe Ratio</span>
+            <span className="text-sm text-muted-foreground">{t('sharpeRatio')}</span>
             <p className="text-lg font-semibold">{metrics.sharpeRatio.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground">
-              {metrics.sharpeRatio > 1 ? 'Good risk-adjusted returns' : 'Below average'}
+              {metrics.sharpeRatio > 1 ? t('goodReturns') : t('belowAverage')}
             </p>
           </div>
         </div>
@@ -214,10 +218,10 @@ export function RiskAnalysis() {
             <div className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
               <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-medium">High Position Concentration</p>
+                <p className="text-sm font-medium">{t('concentrationWarning')}</p>
                 <p className="text-xs text-muted-foreground">
-                  {metrics.concentrationRisk.topHolding} represents {metrics.concentrationRisk.percentage.toFixed(1)}% 
-                  of your portfolio. Consider reducing position size.
+                  {metrics.concentrationRisk.topHolding} {locale === 'ar' ? 'يمثل' : 'represents'} {formatPercentage(metrics.concentrationRisk.percentage, locale)} 
+                  {locale === 'ar' ? 'من محفظتك.' : 'of your portfolio.'} {t('reducePosition')}
                 </p>
               </div>
             </div>
@@ -227,10 +231,10 @@ export function RiskAnalysis() {
             <div className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
               <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-medium">Sector Concentration Risk</p>
+                <p className="text-sm font-medium">{t('sectorConcentration')}</p>
                 <p className="text-xs text-muted-foreground">
-                  {metrics.sectorConcentration.percentage.toFixed(1)}% in {metrics.sectorConcentration.sector}. 
-                  Diversify across sectors to reduce risk.
+                  {formatPercentage(metrics.sectorConcentration.percentage, locale)} {locale === 'ar' ? 'في' : 'in'} {metrics.sectorConcentration.sector}. 
+                  {t('diversifyAcrossSectors')}
                 </p>
               </div>
             </div>

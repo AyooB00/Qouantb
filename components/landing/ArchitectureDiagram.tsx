@@ -4,9 +4,11 @@ import { useEffect, useRef } from 'react'
 import { Database, Brain, Cpu, Shield, Globe, FileText, TrendingUp, Zap } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useTranslations } from 'next-intl'
 
 export function ArchitectureDiagram() {
   const canvasRef = useRef<HTMLDivElement>(null)
+  const t = useTranslations('landing.architecture')
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,14 +34,13 @@ export function ArchitectureDiagram() {
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4">
             <Cpu className="mr-2 h-3 w-3" />
-            Advanced Architecture
+            {t('badge') || 'Advanced Architecture'}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            How Our AI Engine Works
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[700px] text-lg text-muted-foreground">
-            Multiple data sources, intelligent processing, and AI-powered analysis 
-            combine to deliver the most accurate investment insights
+            {t('subtitle')}
           </p>
         </div>
 
@@ -47,7 +48,7 @@ export function ArchitectureDiagram() {
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Data Sources */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold mb-4 text-center">Data Sources</h3>
+              <h3 className="text-lg font-semibold mb-4 text-center">{t('dataSources.title')}</h3>
               
               <Card className="diagram-element p-4 opacity-0 transition-all duration-500 translate-x-[-20px]">
                 <div className="flex items-center gap-3">
@@ -55,8 +56,8 @@ export function ArchitectureDiagram() {
                     <Globe className="h-5 w-5 text-blue-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Market Data APIs</p>
-                    <p className="text-sm text-muted-foreground">Real-time prices & volumes</p>
+                    <p className="font-medium">{t('dataSources.items.0')}</p>
+                    <p className="text-sm text-muted-foreground">{t('dataSources.descriptions.0') || 'Real-time prices & volumes'}</p>
                   </div>
                 </div>
               </Card>
@@ -67,8 +68,8 @@ export function ArchitectureDiagram() {
                     <FileText className="h-5 w-5 text-green-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Financial Statements</p>
-                    <p className="text-sm text-muted-foreground">SEC filings & reports</p>
+                    <p className="font-medium">{t('dataSources.items.1')}</p>
+                    <p className="text-sm text-muted-foreground">{t('dataSources.descriptions.1') || 'SEC filings & reports'}</p>
                   </div>
                 </div>
               </Card>
@@ -79,8 +80,8 @@ export function ArchitectureDiagram() {
                     <Database className="h-5 w-5 text-purple-500" />
                   </div>
                   <div>
-                    <p className="font-medium">News & Sentiment</p>
-                    <p className="text-sm text-muted-foreground">Global news analysis</p>
+                    <p className="font-medium">{t('dataSources.items.2')}</p>
+                    <p className="text-sm text-muted-foreground">{t('dataSources.descriptions.2') || 'Global news analysis'}</p>
                   </div>
                 </div>
               </Card>
@@ -91,8 +92,8 @@ export function ArchitectureDiagram() {
                     <TrendingUp className="h-5 w-5 text-orange-500" />
                   </div>
                   <div>
-                    <p className="font-medium">Technical Indicators</p>
-                    <p className="text-sm text-muted-foreground">Charts & patterns</p>
+                    <p className="font-medium">{t('dataSources.items.3')}</p>
+                    <p className="text-sm text-muted-foreground">{t('dataSources.descriptions.3') || 'Charts & patterns'}</p>
                   </div>
                 </div>
               </Card>
@@ -100,7 +101,7 @@ export function ArchitectureDiagram() {
 
             {/* Processing Layer */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold mb-4 text-center">Data Engineering</h3>
+              <h3 className="text-lg font-semibold mb-4 text-center">{t('processing.title')}</h3>
               
               <Card className="diagram-element p-6 opacity-0 transition-all duration-500 delay-400 scale-95 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                 <div className="text-center space-y-4">
@@ -108,16 +109,16 @@ export function ArchitectureDiagram() {
                     <Cpu className="h-8 w-8 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-lg">Context Engineering</p>
+                    <p className="font-semibold text-lg">{t('processing.title')}</p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Data normalization, validation, and enrichment
+                      {t('processing.description') || 'Data normalization, validation, and enrichment'}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2 justify-center mt-4">
-                    <Badge variant="secondary" className="text-xs">Deduplication</Badge>
-                    <Badge variant="secondary" className="text-xs">Validation</Badge>
-                    <Badge variant="secondary" className="text-xs">Normalization</Badge>
-                    <Badge variant="secondary" className="text-xs">Enrichment</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('processing.items.0') || 'Deduplication'}</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('processing.items.1') || 'Validation'}</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('processing.items.2') || 'Normalization'}</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('processing.items.3') || 'Enrichment'}</Badge>
                   </div>
                 </div>
               </Card>
@@ -133,7 +134,7 @@ export function ArchitectureDiagram() {
 
             {/* AI Analysis */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold mb-4 text-center">AI Analysis</h3>
+              <h3 className="text-lg font-semibold mb-4 text-center">{t('aiAnalysis.title')}</h3>
               
               <Card className="diagram-element p-6 opacity-0 transition-all duration-500 delay-600 translate-x-[20px] bg-gradient-to-br from-teal-500/5 to-blue-500/5 border-teal-500/20">
                 <div className="text-center space-y-4">
@@ -141,9 +142,9 @@ export function ArchitectureDiagram() {
                     <Brain className="h-8 w-8 text-teal-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-lg">Multi-Agent AI</p>
+                    <p className="font-semibold text-lg">{t('aiAnalysis.title')}</p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      5 specialized investment agents analyzing in parallel
+                      {t('aiAnalysis.description') || '5 specialized investment agents analyzing in parallel'}
                     </p>
                   </div>
                 </div>
@@ -151,12 +152,12 @@ export function ArchitectureDiagram() {
 
               <div className="grid grid-cols-2 gap-2">
                 <Card className="diagram-element p-3 opacity-0 transition-all duration-500 delay-700 translate-x-[20px]">
-                  <p className="text-xs font-medium">Short-term Trading</p>
-                  <p className="text-xs text-muted-foreground">1-30 days</p>
+                  <p className="text-xs font-medium">{t('aiAnalysis.shortTerm') || 'Short-term Trading'}</p>
+                  <p className="text-xs text-muted-foreground">{t('aiAnalysis.shortTermDuration') || '1-30 days'}</p>
                 </Card>
                 <Card className="diagram-element p-3 opacity-0 transition-all duration-500 delay-800 translate-x-[20px]">
-                  <p className="text-xs font-medium">Long-term Investing</p>
-                  <p className="text-xs text-muted-foreground">1-10+ years</p>
+                  <p className="text-xs font-medium">{t('aiAnalysis.longTerm') || 'Long-term Investing'}</p>
+                  <p className="text-xs text-muted-foreground">{t('aiAnalysis.longTermDuration') || '1-10+ years'}</p>
                 </Card>
               </div>
 
@@ -164,8 +165,8 @@ export function ArchitectureDiagram() {
                 <div className="flex items-center gap-3">
                   <Zap className="h-5 w-5 text-green-500" />
                   <div>
-                    <p className="font-medium">Insights & Actions</p>
-                    <p className="text-sm text-muted-foreground">Buy/Sell recommendations</p>
+                    <p className="font-medium">{t('output.title')}</p>
+                    <p className="text-sm text-muted-foreground">{t('output.items.0')}</p>
                   </div>
                 </div>
               </Card>
@@ -195,10 +196,10 @@ export function ArchitectureDiagram() {
           <div className="inline-flex items-center gap-4 rounded-full bg-primary/10 px-6 py-3">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-sm font-medium">Processing 1M+ data points/second</span>
+              <span className="text-sm font-medium">{t('performance.processing') || 'Processing 1M+ data points/second'}</span>
             </div>
             <div className="h-4 w-px bg-border" />
-            <span className="text-sm font-medium">Sub-100ms response time</span>
+            <span className="text-sm font-medium">{t('performance.latency')}</span>
           </div>
         </div>
       </div>

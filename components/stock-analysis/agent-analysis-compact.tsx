@@ -19,6 +19,8 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useTranslations, useLocale } from 'next-intl';
+import { formatCurrency, formatPercentageChange } from '@/lib/utils/formatters';
 
 interface AgentAnalysisCompactProps {
   analysis: AgentAnalysis;
@@ -27,6 +29,8 @@ interface AgentAnalysisCompactProps {
 
 export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAnalysisCompactProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const t = useTranslations('stockAnalysis.analysis');
+  const locale = useLocale();
 
   const getRecommendationColor = (recommendation: string) => {
     switch (recommendation) {
@@ -46,9 +50,7 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
   };
 
   const formatRecommendation = (rec: string) => {
-    return rec.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    return t(`recommendations.${rec}`);
   };
 
   const calculatePriceChange = (target: number) => {
@@ -77,7 +79,7 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="space-y-1">
-                <p className="text-xs text-muted-foreground">Confidence</p>
+                <p className="text-xs text-muted-foreground">{t('confidence')}</p>
                 <div className="flex items-center gap-2">
                   <Progress value={analysis.confidence} className="h-1.5 w-20" />
                   <span className="text-sm font-medium">{analysis.confidence}%</span>
@@ -86,14 +88,14 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
               
               {analysis.targetPrice && (
                 <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Target</p>
+                  <p className="text-xs text-muted-foreground">{t('target')}</p>
                   <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium">${analysis.targetPrice.toFixed(2)}</span>
+                    <span className="text-sm font-medium">{formatCurrency(analysis.targetPrice, locale)}</span>
                     <span className={cn(
                       "text-xs",
                       analysis.targetPrice > currentPrice ? "text-green-600" : "text-red-600"
                     )}>
-                      ({analysis.targetPrice > currentPrice ? '+' : ''}{calculatePriceChange(analysis.targetPrice)}%)
+                      ({formatPercentageChange(parseFloat(calculatePriceChange(analysis.targetPrice)), locale).text})
                     </span>
                   </div>
                 </div>
@@ -120,12 +122,12 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center gap-1.5">
             <Clock className="h-3 w-3 text-muted-foreground" />
-            <span className="text-muted-foreground">Horizon:</span>
+            <span className="text-muted-foreground">{t('horizon')}:</span>
             <span className="font-medium">{analysis.timeHorizon}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Target className="h-3 w-3 text-muted-foreground" />
-            <span className="text-muted-foreground">Factors:</span>
+            <span className="text-muted-foreground">{t('factors')}:</span>
             <span className="font-medium">{analysis.keyFactors.length}</span>
           </div>
         </div>
@@ -133,7 +135,7 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="sm" className="w-full justify-between px-0 h-8">
-              <span className="text-xs">View Details</span>
+              <span className="text-xs">{t('viewDetails')}</span>
               {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </Button>
           </CollapsibleTrigger>
@@ -141,7 +143,7 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
             <div className="space-y-2">
               <h4 className="text-xs font-semibold flex items-center gap-1">
                 <TrendingUp className="h-3 w-3 text-green-500" />
-                Key Factors
+                {t('keyFactors')}
               </h4>
               <ul className="space-y-0.5">
                 {analysis.keyFactors.map((factor, idx) => (
@@ -156,7 +158,7 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
             <div className="space-y-2">
               <h4 className="text-xs font-semibold flex items-center gap-1">
                 <AlertTriangle className="h-3 w-3 text-yellow-500" />
-                Risks
+                {t('risks')}
               </h4>
               <ul className="space-y-0.5">
                 {analysis.risks.map((risk, idx) => (
@@ -172,13 +174,13 @@ export default function AgentAnalysisCompact({ analysis, currentPrice }: AgentAn
               <div className="space-y-2 pt-2 border-t">
                 {analysis.entryStrategy && (
                   <div>
-                    <h4 className="text-xs font-semibold mb-1">Entry Strategy</h4>
+                    <h4 className="text-xs font-semibold mb-1">{t('entryStrategy')}</h4>
                     <p className="text-xs text-muted-foreground">{analysis.entryStrategy}</p>
                   </div>
                 )}
                 {analysis.exitStrategy && (
                   <div>
-                    <h4 className="text-xs font-semibold mb-1">Exit Strategy</h4>
+                    <h4 className="text-xs font-semibold mb-1">{t('exitStrategy')}</h4>
                     <p className="text-xs text-muted-foreground">{analysis.exitStrategy}</p>
                   </div>
                 )}

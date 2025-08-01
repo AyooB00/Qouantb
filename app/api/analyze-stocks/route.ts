@@ -6,11 +6,12 @@ import { withRateLimit } from '@/lib/middleware/rateLimiter';
 import { successResponse, errorResponse, ApiError, ErrorCodes, validateEnvVars } from '@/lib/api/response';
 import { searchCriteriaSchema } from '@/lib/validation/schemas';
 
-// Popular US stocks for demonstration - in production, you'd use a stock screener
-const DEMO_STOCK_SYMBOLS = [
-  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA', 'NVDA', 'JPM', 'V', 'JNJ',
-  'WMT', 'PG', 'MA', 'UNH', 'HD', 'DIS', 'BAC', 'ADBE', 'CRM', 'NFLX',
-  'PFE', 'KO', 'PEP', 'ABBV', 'TMO', 'CSCO', 'VZ', 'CMCSA', 'INTC', 'ORCL'
+// NASDAQ stocks for demonstration - focused on NASDAQ-listed companies
+const NASDAQ_STOCK_SYMBOLS = [
+  // NASDAQ 100 components
+  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 'ADBE', 'NFLX', 'CSCO',
+  'INTC', 'AMD', 'QCOM', 'TXN', 'AVGO', 'ORCL', 'COST', 'PYPL', 'SBUX', 'BKNG',
+  'INTU', 'ISRG', 'VRTX', 'REGN', 'ATVI', 'MU', 'LRCX', 'AMAT', 'ADI', 'MRVL'
 ];
 
 export async function POST(request: NextRequest) {
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Fetch data for demo stocks (in production, use a proper stock screener)
-    for (const symbol of DEMO_STOCK_SYMBOLS) {
+    for (const symbol of NASDAQ_STOCK_SYMBOLS) {
       try {
         // Add a small delay to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 100));

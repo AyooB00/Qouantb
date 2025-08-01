@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Clock, TrendingUp, MessageSquare, BrainCircuit, Plus, ArrowRight } from 'lucide-react'
+import { Clock, TrendingUp, MessageSquare, BrainCircuit, Plus, ArrowRight, type LucideIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import { useChatStore } from '@/lib/stores/chat-store'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface Activity {
   id: string
@@ -16,15 +17,20 @@ interface Activity {
   title: string
   description: string
   timestamp: Date
-  icon: any
+  icon: LucideIcon
   link?: string
-  metadata?: any
+  metadata?: {
+    symbol?: string
+    quantity?: number
+    price?: number
+  }
 }
 
 export function RecentActivity() {
   const { items } = usePortfolioStore()
   const { conversations } = useChatStore()
   const [activities, setActivities] = useState<Activity[]>([])
+  const t = useTranslations('dashboard.activity')
 
   useEffect(() => {
     // Generate activities based on portfolio and chat data
@@ -35,8 +41,8 @@ export function RecentActivity() {
       recentActivities.push({
         id: `portfolio-${item.id}`,
         type: 'portfolio',
-        title: `Added ${item.symbol} to portfolio`,
-        description: `${item.quantity} shares at $${item.avgCost}`,
+        title: t('addedToPortfolio', { symbol: item.symbol }),
+        description: t('sharesAtPrice', { quantity: item.quantity, price: item.avgCost }),
         timestamp: new Date(item.addedDate),
         icon: Plus,
         link: '/portfolio',
@@ -49,7 +55,7 @@ export function RecentActivity() {
         id: `chat-${conv.id}`,
         type: 'chat',
         title: conv.title,
-        description: `${conv.messages.length} messages`,
+        description: t('messages', { count: conv.messages.length }),
         timestamp: new Date(conv.updatedAt),
         icon: MessageSquare,
         link: '/finchat',
@@ -60,8 +66,8 @@ export function RecentActivity() {
     recentActivities.push({
       id: 'analysis-1',
       type: 'analysis',
-      title: 'Analyzed NVDA',
-      description: 'AI consensus: Strong Buy',
+      title: t('analyzedStock', { symbol: 'NVDA' }),
+      description: t('aiConsensus', { rating: t('strongBuy') }),
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       icon: BrainCircuit,
       link: '/stock-analysis',
@@ -81,10 +87,10 @@ export function RecentActivity() {
     const hours = Math.floor(minutes / 60)
     const days = Math.floor(hours / 24)
 
-    if (days > 0) return `${days}d ago`
-    if (hours > 0) return `${hours}h ago`
-    if (minutes > 0) return `${minutes}m ago`
-    return 'Just now'
+    if (days > 0) return t('relativeTime.daysAgo', { days })
+    if (hours > 0) return t('relativeTime.hoursAgo', { hours })
+    if (minutes > 0) return t('relativeTime.minutesAgo', { minutes })
+    return t('relativeTime.justNow')
   }
 
   const getActivityColor = (type: Activity['type']) => {
@@ -102,17 +108,18 @@ export function RecentActivity() {
 
   if (activities.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your latest actions and updates</CardDescription>
+      <Card className="overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30 dark:from-amber-950/20 dark:to-orange-950/20" />
+        <CardHeader className="relative">
+          <CardTitle className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">{t('title')}</CardTitle>
+          <CardDescription>{t('subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <Clock className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <p className="text-muted-foreground">No recent activity</p>
+            <Clock className="h-12 w-12 text-amber-400/30 mx-auto mb-4" />
+            <p className="text-muted-foreground">{t('noActivity')}</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Start by adding stocks to your portfolio or chatting with AI
+              {t('noActivityDescription')}
             </p>
           </div>
         </CardContent>
@@ -121,10 +128,11 @@ export function RecentActivity() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
-        <CardDescription>Your latest actions and updates</CardDescription>
+    <Card className="overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30 dark:from-amber-950/20 dark:to-orange-950/20" />
+      <CardHeader className="relative">
+        <CardTitle className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">{t('title')}</CardTitle>
+        <CardDescription>{t('subtitle')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -134,7 +142,7 @@ export function RecentActivity() {
               <div
                 key={activity.id}
                 className={cn(
-                  "flex items-start gap-3 pb-4 last:pb-0 last:border-0 border-b",
+                  "flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-all duration-300 last:pb-0 last:border-0 border-b",
                   `animate-stagger animate-stagger-${index + 1}`
                 )}
               >
@@ -175,7 +183,7 @@ export function RecentActivity() {
         <div className="mt-6 pt-4 border-t">
           <Button variant="ghost" className="w-full group" asChild>
             <Link href="/portfolio">
-              View all activity
+              {t('viewAll')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>

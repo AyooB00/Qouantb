@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { 
   TrendingUp, 
   BarChart3, 
@@ -14,52 +15,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const analysisStages = [
-  {
-    icon: Database,
-    text: "Fetching stock data...",
-    color: "text-blue-500"
-  },
-  {
-    icon: Users,
-    text: "Connecting to AI analysts...",
-    color: "text-teal-500"
-  },
-  {
-    icon: Calculator,
-    text: "Running fundamental analysis...",
-    color: "text-green-500"
-  },
-  {
-    icon: BarChart3,
-    text: "Evaluating technical indicators...",
-    color: "text-green-600"
-  },
-  {
-    icon: Brain,
-    text: "Processing AI insights...",
-    color: "text-blue-600"
-  },
-  {
-    icon: TrendingUp,
-    text: "Generating recommendations...",
-    color: "text-teal-600"
-  },
-  {
-    icon: FileText,
-    text: "Compiling analysis report...",
-    color: "text-green-500"
-  }
-];
-
-const tips = [
-  "Each AI analyst brings unique investment philosophy to the analysis",
-  "We analyze both fundamental metrics and technical patterns",
-  "Historical data helps predict future price movements",
-  "Multiple perspectives provide more balanced recommendations",
-  "Real-time market data ensures up-to-date analysis"
-];
-
 interface StockAnalysisLoadingStateProps {
   symbol?: string;
   analysts?: string[];
@@ -69,6 +24,53 @@ export function StockAnalysisLoadingState({ symbol, analysts }: StockAnalysisLoa
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
   const [currentTip, setCurrentTip] = useState(0);
+  const t = useTranslations('stockAnalysis.loading');
+
+  const analysisStages = [
+    {
+      icon: Database,
+      text: t('stages.fetchingData'),
+      color: "text-blue-500"
+    },
+    {
+      icon: Users,
+      text: t('stages.connectingAnalysts'),
+      color: "text-teal-500"
+    },
+    {
+      icon: Calculator,
+      text: t('stages.fundamentalAnalysis'),
+      color: "text-green-500"
+    },
+    {
+      icon: BarChart3,
+      text: t('stages.technicalIndicators'),
+      color: "text-green-600"
+    },
+    {
+      icon: Brain,
+      text: t('stages.processingInsights'),
+      color: "text-blue-600"
+    },
+    {
+      icon: TrendingUp,
+      text: t('stages.generatingRecommendations'),
+      color: "text-teal-600"
+    },
+    {
+      icon: FileText,
+      text: t('stages.compilingReport'),
+      color: "text-green-500"
+    }
+  ];
+
+  const tips = [
+    t('tips.uniquePhilosophy'),
+    t('tips.fundamentalAndTechnical'),
+    t('tips.historicalData'),
+    t('tips.multiplePerspectives'),
+    t('tips.realTimeData')
+  ];
 
   useEffect(() => {
     const stageInterval = setInterval(() => {
@@ -109,11 +111,11 @@ export function StockAnalysisLoadingState({ symbol, analysts }: StockAnalysisLoa
         {symbol && (
           <div className="text-center">
             <h2 className="text-2xl font-bold">
-              Analyzing {symbol}
+              {t('analyzingSymbol', { symbol })}
             </h2>
             {analysts && analysts.length > 0 && (
               <p className="text-sm text-muted-foreground mt-1">
-                with {analysts.length} legendary {analysts.length === 1 ? 'investor' : 'investors'}
+                {t('withInvestors', { count: analysts.length })}
               </p>
             )}
           </div>
@@ -145,7 +147,7 @@ export function StockAnalysisLoadingState({ symbol, analysts }: StockAnalysisLoa
             {analysisStages[currentStage].text}
           </p>
           <p className="text-sm text-muted-foreground">
-            Stage {currentStage + 1} of {analysisStages.length}
+            {t('stageProgress', { current: currentStage + 1, total: analysisStages.length })}
           </p>
         </div>
 

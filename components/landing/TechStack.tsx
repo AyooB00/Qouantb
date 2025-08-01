@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Shield, Zap, Brain, Database, Cloud, Lock, Sparkles, Globe, Server, Activity } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useTranslations } from 'next-intl'
 
 const technologies = [
   {
@@ -58,20 +59,21 @@ const stats = [
 ]
 
 export function TechStack() {
+  const t = useTranslations('landing.techStack')
+
   return (
     <section className="py-16 md:py-24 lg:py-32 bg-gradient-to-b from-background to-muted/20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4">
             <Sparkles className="mr-2 h-3 w-3" />
-            AI-Powered Infrastructure
+            {t('badge') || 'AI-Powered Infrastructure'}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Built with Best-in-Class Technology
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[700px] text-lg text-muted-foreground">
-            Powered by Claude AI and leading technology partners to deliver institutional-grade 
-            investment analysis at unprecedented speed and accuracy.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -86,19 +88,17 @@ export function TechStack() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold">Claude AI</h3>
-                    <p className="text-sm text-muted-foreground">by Anthropic</p>
+                    <p className="text-sm text-muted-foreground">{t('claude.byAnthropic') || 'by Anthropic'}</p>
                   </div>
                 </div>
                 <p className="text-lg mb-6">
-                  The core intelligence behind our investment analysis platform. Claude's advanced 
-                  reasoning capabilities power our AI agents to analyze financial data, understand 
-                  market context, and provide nuanced investment insights.
+                  {t('claude.description') || "The core intelligence behind our investment analysis platform. Claude's advanced reasoning capabilities power our AI agents to analyze financial data, understand market context, and provide nuanced investment insights."}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge>Advanced Reasoning</Badge>
-                  <Badge>Financial Analysis</Badge>
-                  <Badge>Multi-Agent System</Badge>
-                  <Badge>Real-time Processing</Badge>
+                  <Badge>{t('claude.features.0') || 'Advanced Reasoning'}</Badge>
+                  <Badge>{t('claude.features.1') || 'Financial Analysis'}</Badge>
+                  <Badge>{t('claude.features.2') || 'Multi-Agent System'}</Badge>
+                  <Badge>{t('claude.features.3') || 'Real-time Processing'}</Badge>
                 </div>
               </div>
               <div className="relative h-full min-h-[300px] bg-gradient-to-br from-teal-500/20 to-blue-500/20 p-8 flex items-center justify-center">
@@ -117,7 +117,7 @@ export function TechStack() {
                       <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur" />
                     </div>
                   </div>
-                  <p className="text-center mt-4 text-white/60 text-sm">Multi-Model Collaboration</p>
+                  <p className="text-center mt-4 text-white/60 text-sm">{t('claude.collaboration') || 'Multi-Model Collaboration'}</p>
                 </div>
               </div>
             </div>
@@ -169,7 +169,7 @@ export function TechStack() {
         {/* Performance Stats */}
         <div className="rounded-lg bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 p-8">
           <h3 className="text-center text-xl font-semibold mb-8">
-            Performance Metrics
+            {t('performance.title') || 'Performance Metrics'}
           </h3>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {stats.map((stat) => {
@@ -191,18 +191,18 @@ export function TechStack() {
         <div className="mt-16 grid gap-4 md:grid-cols-3">
           <Card className="text-center p-6">
             <Shield className="h-8 w-8 text-green-500 mx-auto mb-2" />
-            <h4 className="font-semibold mb-1">SOC 2 Compliant</h4>
-            <p className="text-sm text-muted-foreground">Audited security controls</p>
+            <h4 className="font-semibold mb-1">{t('trust.soc2.title') || 'SOC 2 Compliant'}</h4>
+            <p className="text-sm text-muted-foreground">{t('trust.soc2.description') || 'Audited security controls'}</p>
           </Card>
           <Card className="text-center p-6">
             <Lock className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-            <h4 className="font-semibold mb-1">End-to-End Encryption</h4>
-            <p className="text-sm text-muted-foreground">Your data is always secure</p>
+            <h4 className="font-semibold mb-1">{t('trust.encryption.title') || 'End-to-End Encryption'}</h4>
+            <p className="text-sm text-muted-foreground">{t('trust.encryption.description') || 'Your data is always secure'}</p>
           </Card>
           <Card className="text-center p-6">
             <Activity className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-            <h4 className="font-semibold mb-1">99.9% Uptime</h4>
-            <p className="text-sm text-muted-foreground">Reliable 24/7 operation</p>
+            <h4 className="font-semibold mb-1">{t('trust.uptime.title') || '99.9% Uptime'}</h4>
+            <p className="text-sm text-muted-foreground">{t('trust.uptime.description') || 'Reliable 24/7 operation'}</p>
           </Card>
         </div>
       </div>

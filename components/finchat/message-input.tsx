@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useRef, KeyboardEvent } from 'react'
-import { Send, Paperclip, Mic, MicOff } from 'lucide-react'
+import { Send, Paperclip } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void
@@ -16,13 +17,15 @@ interface MessageInputProps {
 export function MessageInput({ 
   onSendMessage, 
   disabled, 
-  placeholder = "Type a message...",
+  placeholder,
   className 
 }: MessageInputProps) {
   const [message, setMessage] = useState('')
-  const [isRecording, setIsRecording] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const t = useTranslations('finChat')
+  
+  const placeholderText = placeholder || t('placeholder')
 
   const handleSend = () => {
     if (message.trim() && !disabled) {
@@ -53,10 +56,6 @@ export function MessageInput({
     }
   }
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording)
-    // Voice recording logic would go here
-  }
 
   return (
     <div className={cn("relative", className)}>
@@ -89,32 +88,13 @@ export function MessageInput({
               variant="ghost"
               className={cn(
                 "h-8 w-8 rounded-full transition-all duration-200",
-                isRecording 
-                  ? "bg-red-500 text-white hover:bg-red-600 animate-pulse" 
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
-              )}
-              onClick={toggleRecording}
-              disabled={disabled}
-              type="button"
-            >
-              {isRecording ? (
-                <MicOff className="h-4 w-4" />
-              ) : (
-                <Mic className="h-4 w-4" />
-              )}
-            </Button>
-            
-            <Button
-              size="icon"
-              variant="ghost"
-              className={cn(
-                "h-8 w-8 rounded-full transition-all duration-200",
                 message.trim() 
                   ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:shadow-lg hover:scale-105" 
                   : "hover:bg-gray-100 dark:hover:bg-gray-800"
               )}
               onClick={handleSend}
               disabled={!message.trim() || disabled}
+              title={t('send')}
             >
               <Send className="h-4 w-4" />
             </Button>
@@ -123,13 +103,7 @@ export function MessageInput({
       </div>
       
       <div className="flex items-center justify-between mt-2 px-2">
-        <span className="text-xs text-muted-foreground/60">Press Enter to send, Shift+Enter for new line</span>
-        {isRecording && (
-          <span className="text-xs text-red-500 animate-pulse flex items-center gap-1">
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            Recording...
-          </span>
-        )}
+        <span className="text-xs text-muted-foreground/60">{t('messageInput.enterToSend')}</span>
       </div>
     </div>
   )

@@ -1,35 +1,38 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Activity, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Activity, TrendingUp, TrendingDown } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ComponentRenderProps, TechnicalAnalysisData } from '@/lib/types/finchat'
 import { cn } from '@/lib/utils'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BaseSmartCard } from '../base-smart-card'
+import { useTranslations } from 'next-intl'
 
 export default function TechnicalAnalysisCard({ data, onAction, className }: ComponentRenderProps<TechnicalAnalysisData>) {
-  const [techData, setTechData] = useState<TechnicalAnalysisData | null>(data)
+  const [techData, setTechData] = useState<TechnicalAnalysisData | null>(data || null)
   const [loading, setLoading] = useState(!data)
+  const t = useTranslations('finChat.smartCards.technicalAnalysis')
+  const common = useTranslations('finChat.smartCards.common')
 
   useEffect(() => {
-    if (!data && data !== null) {
-      // Fetch technical data if needed
+    if (data) {
+      setTechData(data)
+      setLoading(false)
+    } else if (data === undefined) {
       setLoading(false)
     }
   }, [data])
 
   if (loading) {
     return (
-      <Card className={cn("animate-pulse", className)}>
-        <CardHeader>
-          <CardTitle>Loading Technical Analysis...</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-32 bg-muted rounded" />
-        </CardContent>
-      </Card>
+      <BaseSmartCard
+        title={t('title')}
+        icon={Activity}
+        loading={true}
+        className={className}
+      />
     )
   }
 
@@ -68,29 +71,25 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
   }
 
   // Mock chart data for moving averages
-  const chartData = indicators.movingAverages ? Array.from({ length: 20 }, (_, i) => ({
+  const chartData = indicators?.movingAverages ? Array.from({ length: 20 }, (_, i) => ({
     day: i + 1,
-    price: indicators.movingAverages.sma20 + (Math.random() - 0.5) * 10,
-    sma20: indicators.movingAverages.sma20,
-    sma50: indicators.movingAverages.sma50,
-    sma200: indicators.movingAverages.sma200,
+    price: indicators.movingAverages!.sma20 + (Math.random() - 0.5) * 10,
+    sma20: indicators.movingAverages!.sma20,
+    sma50: indicators.movingAverages!.sma50,
+    sma200: indicators.movingAverages!.sma200,
   })) : []
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="h-5 w-5 text-teal-600" />
-            Technical Analysis - {techData.symbol}
-          </CardTitle>
-          <Badge className={cn("capitalize", getSignalColor(signal))}>
-            {signal.replace('-', ' ')}
-          </Badge>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
+    <BaseSmartCard
+      title={`${t('title')} - ${techData.symbol}`}
+      icon={Activity}
+      badge={{
+        label: signal.replace('-', ' '),
+        className: getSignalColor(signal)
+      }}
+      className={className}
+      onAction={onAction}
+    >
         {/* Trend Overview */}
         <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
           <div className="flex items-center gap-2">
@@ -98,9 +97,9 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
             <span className="font-medium capitalize">{trend}</span>
           </div>
           <div className="text-sm text-muted-foreground">
-            {support?.[0] && `S: $${support[0].toFixed(2)}`}
+            {support?.[0] && `${t('support')[0]}: $${support[0].toFixed(2)}`}
             {support?.[0] && resistance?.[0] && ' | '}
-            {resistance?.[0] && `R: $${resistance[0].toFixed(2)}`}
+            {resistance?.[0] && `${t('resistance')[0]}: $${resistance[0].toFixed(2)}`}
           </div>
         </div>
 
@@ -108,17 +107,17 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
         {indicators.rsi && (
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">RSI (14)</span>
+              <span className="text-sm font-medium">{t('rsi')}</span>
               <Badge variant="outline" className={cn("text-xs", getRSIColor(indicators.rsi.value))}>
                 {indicators.rsi.value.toFixed(1)} - {indicators.rsi.signal}
               </Badge>
             </div>
             <Progress value={indicators.rsi.value} max={100} className="h-2" />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Oversold</span>
+              <span>{t('oversold')}</span>
               <span>30</span>
               <span>70</span>
-              <span>Overbought</span>
+              <span>{t('overbought')}</span>
             </div>
           </div>
         )}
@@ -127,7 +126,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
         {indicators.macd && (
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">MACD</span>
+              <span className="text-sm font-medium">{t('macd')}</span>
               <Badge variant="outline" className={cn(
                 "text-xs",
                 indicators.macd.trend === 'bullish' ? 'text-green-600' : 'text-red-600'
@@ -137,15 +136,15 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
             </div>
             <div className="grid grid-cols-3 gap-2 text-xs">
               <div>
-                <span className="text-muted-foreground">MACD:</span>
+                <span className="text-muted-foreground">{t('macd')}:</span>
                 <span className="ml-1 font-medium">{indicators.macd.value.toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Signal:</span>
+                <span className="text-muted-foreground">{t('signal')}:</span>
                 <span className="ml-1 font-medium">{indicators.macd.signal.toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Histogram:</span>
+                <span className="text-muted-foreground">{t('histogram')}:</span>
                 <span className={cn(
                   "ml-1 font-medium",
                   indicators.macd.histogram > 0 ? 'text-green-600' : 'text-red-600'
@@ -160,7 +159,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
         {/* Moving Averages Chart */}
         {indicators.movingAverages && chartData.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Moving Averages</h4>
+            <h4 className="text-sm font-medium">{t('movingAverages')}</h4>
             <div className="h-32">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
@@ -180,7 +179,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
                     stroke="hsl(var(--primary))" 
                     strokeWidth={2}
                     dot={false}
-                    name="Price"
+                    name={t('price')}
                   />
                   <Line 
                     type="monotone" 
@@ -215,7 +214,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
             <div className="flex gap-4 justify-center text-xs">
               <div className="flex items-center gap-1">
                 <div className="w-3 h-0.5 bg-primary" />
-                <span>Price</span>
+                <span>{t('price')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-3 h-0.5 bg-green-500" style={{ borderTop: '1px dashed' }} />
@@ -236,22 +235,22 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
         {/* Bollinger Bands */}
         {indicators.bollingerBands && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Bollinger Bands</h4>
+            <h4 className="text-sm font-medium">{t('bollingerBands')}</h4>
             <div className="space-y-1 text-xs">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Upper Band:</span>
+                <span className="text-muted-foreground">{t('upperBand')}:</span>
                 <span className="font-medium">${indicators.bollingerBands.upper.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Middle Band:</span>
+                <span className="text-muted-foreground">{t('middleBand')}:</span>
                 <span className="font-medium">${indicators.bollingerBands.middle.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Lower Band:</span>
+                <span className="text-muted-foreground">{t('lowerBand')}:</span>
                 <span className="font-medium">${indicators.bollingerBands.lower.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Current Price:</span>
+                <span className="text-muted-foreground">{t('currentPrice')}:</span>
                 <span className={cn(
                   "font-medium",
                   indicators.bollingerBands.price > indicators.bollingerBands.upper ? 'text-red-600' :
@@ -270,7 +269,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
           <div className="grid grid-cols-2 gap-3">
             {support?.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-green-600">Support Levels</h4>
+                <h4 className="text-sm font-medium text-green-600">{t('supportLevels')}</h4>
                 <div className="space-y-1">
                   {support.map((level, i) => (
                     <div key={i} className="flex justify-between text-xs">
@@ -283,7 +282,7 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
             )}
             {resistance?.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-red-600">Resistance Levels</h4>
+                <h4 className="text-sm font-medium text-red-600">{t('resistanceLevels')}</h4>
                 <div className="space-y-1">
                   {resistance.map((level, i) => (
                     <div key={i} className="flex justify-between text-xs">
@@ -296,7 +295,6 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+    </BaseSmartCard>
   )
 }

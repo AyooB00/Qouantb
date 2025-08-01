@@ -72,7 +72,7 @@ export default function SectorAnalysisCard({ data, onAction, className }: Compon
           <h4 className="text-sm font-medium mb-2">Performance Overview</h4>
           <div className="h-32">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={performanceData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+              <BarChart data={performanceData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
                 <XAxis dataKey="period" fontSize={12} />
                 <YAxis fontSize={12} />
                 <Tooltip 

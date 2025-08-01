@@ -13,7 +13,7 @@ export type SmartComponentType =
 export interface QuickAction {
   label: string
   action: string
-  data?: any
+  data?: Record<string, unknown>
   variant?: 'default' | 'primary' | 'secondary' | 'destructive'
   icon?: string
 }
@@ -29,7 +29,7 @@ export interface MessageContext {
 export interface SmartComponent {
   id: string
   type: SmartComponentType
-  data: any
+  data: MarketAnalysisData | StockComparisonData | TechnicalAnalysisData | NewsSummaryData | PortfolioImpactData | RiskAssessmentData | Record<string, unknown>
   priority: number
   interactive: boolean
   metadata?: {
@@ -162,12 +162,12 @@ export interface EnhancedChatMessage {
   metadata?: {
     error?: boolean
     isThinking?: boolean
-    toolStatus?: any
+    toolStatus?: Record<string, unknown>
     processingTime?: number
   }
 }
 
-export interface ComponentRenderProps<T = any> {
+export interface ComponentRenderProps<T = unknown> {
   data: T
   onAction?: (action: QuickAction) => void
   className?: string
@@ -177,5 +177,5 @@ export interface StreamedComponentData {
   componentId: string
   type: SmartComponentType
   partial: boolean
-  data: any
+  data: Partial<MarketAnalysisData | StockComparisonData | TechnicalAnalysisData | NewsSummaryData | PortfolioImpactData | RiskAssessmentData> | Record<string, unknown>
 }

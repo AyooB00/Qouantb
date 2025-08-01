@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { ArrowRight, TrendingUp, TrendingDown, Activity, Sparkles, Brain, Zap, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,11 +17,18 @@ const stockTickers = [
   { symbol: 'NVDA', price: 495.22, change: -2.11, percent: -0.42 },
 ]
 
-const tradingTypes = ['Short-term Trading', 'Long-term Investing', 'Swing Trading', 'Value Investing']
-
 export function HeroSection() {
   const [currentTickerIndex, setCurrentTickerIndex] = useState(0)
   const [tradingTypeIndex, setTradingTypeIndex] = useState(0)
+  const t = useTranslations('landing.hero')
+  const locale = useLocale()
+
+  const tradingTypes = [
+    t('tradingTypes.shortTerm'),
+    t('tradingTypes.longTerm'),
+    t('tradingTypes.swing'),
+    t('tradingTypes.value')
+  ]
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,14 +60,14 @@ export function HeroSection() {
         <div className="animate-fade-in">
           <Badge variant="outline" className="px-4 py-2 text-sm font-medium">
             <Brain className="mr-2 h-3 w-3 animate-pulse text-teal-500" />
-            AI Agents Analyzing Markets 24/7
+            {t('badge')}
           </Badge>
         </div>
 
         {/* Main headline */}
         <div className="space-y-4 animate-fade-in">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            <span className="block">AI Agents for</span>
+            <span className="block">{t('title')}</span>
             <span className="block h-[1.2em] relative overflow-hidden">
               <span 
                 className="absolute inset-0 transition-transform duration-700 ease-in-out" 
@@ -78,9 +86,7 @@ export function HeroSection() {
           </h1>
           
           <p className="mx-auto max-w-[800px] text-lg text-muted-foreground sm:text-xl">
-            Our AI agents analyze hundreds of companies, read financial statements, 
-            monitor trades and news to identify profitable opportunities using methodologies 
-            from legendary investors like Warren Buffett, Cathie Wood, and more.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -94,7 +100,7 @@ export function HeroSection() {
                 </div>
                 <div className="text-left">
                   <p className="font-semibold">{currentTicker.symbol}</p>
-                  <p className="text-sm text-muted-foreground">AI Analysis Active</p>
+                  <p className="text-sm text-muted-foreground">{t('aiAnalysis')}</p>
                 </div>
               </div>
               <div className="text-right">
@@ -116,43 +122,43 @@ export function HeroSection() {
             </div>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            5 AI agents analyzing • Real-time opportunity detection
+            {t('agentsAnalyzing', { count: 5 })} • {t('realTimeDetection')}
           </p>
         </div>
 
         {/* CTA buttons */}
         <div className="flex flex-col gap-4 sm:flex-row animate-fade-in animation-delay-400">
           <Button size="lg" asChild className="group">
-            <Link href="/dashboard">
+            <Link href={`/${locale}/dashboard`}>
               <Sparkles className="mr-2 h-4 w-4" />
-              Start Free Trial
+              {t('cta.startFree')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/stock-analysis">
-              See AI Agents in Action
+            <Link href={`/${locale}/stock-analysis`}>
+              {t('cta.seeAgents')}
             </Link>
           </Button>
         </div>
 
         {/* Trust indicators for funds */}
         <div className="mt-8 animate-fade-in animation-delay-600">
-          <p className="text-sm text-muted-foreground mb-4">Trusted by Investment Professionals</p>
+          <p className="text-sm text-muted-foreground mb-4">{t('trust.title')}</p>
           <div className="flex flex-wrap items-center justify-center gap-8">
             <div className="flex flex-col items-center">
               <p className="text-3xl font-bold">50+</p>
-              <p className="text-sm text-muted-foreground">Investment Funds</p>
+              <p className="text-sm text-muted-foreground">{t('trust.funds')}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="flex flex-col items-center">
               <p className="text-3xl font-bold">$2.5B+</p>
-              <p className="text-sm text-muted-foreground">Assets Analyzed</p>
+              <p className="text-sm text-muted-foreground">{t('trust.assets')}</p>
             </div>
             <div className="h-8 w-px bg-border" />
             <div className="flex flex-col items-center">
               <p className="text-3xl font-bold">500+</p>
-              <p className="text-sm text-muted-foreground">Companies Monitored</p>
+              <p className="text-sm text-muted-foreground">{t('trust.companies')}</p>
             </div>
           </div>
         </div>
@@ -161,15 +167,15 @@ export function HeroSection() {
         <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground animate-fade-in animation-delay-800">
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            <span>Bank-grade encryption</span>
+            <span>{t('security.encryption')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4" />
-            <span>Sub-100ms analysis</span>
+            <span>{t('security.speed')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            <span>Real-time monitoring</span>
+            <span>{t('security.monitoring')}</span>
           </div>
         </div>
       </div>

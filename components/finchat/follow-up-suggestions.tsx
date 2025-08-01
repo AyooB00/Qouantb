@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Sparkles, TrendingUp, Shield, Calculator, Newspaper, BarChart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface FollowUpSuggestionsProps {
   lastMessage: string
@@ -24,6 +25,7 @@ export function FollowUpSuggestions({
   onSelectSuggestion,
   className 
 }: FollowUpSuggestionsProps) {
+  const t = useTranslations('finChat.suggestions')
   // Memoize the suggestions generation to prevent unnecessary recalculations
   const suggestions = useMemo(() => {
     const newSuggestions: Suggestion[] = []
@@ -35,12 +37,12 @@ export function FollowUpSuggestions({
       
       if (message.includes('price') || message.includes('quote')) {
         newSuggestions.push({
-          text: `Show technical analysis for ${mainStock}`,
+          text: t('stockSpecific.technicalAnalysis', { symbol: mainStock }),
           icon: BarChart,
           category: 'analysis'
         })
         newSuggestions.push({
-          text: `Get recent news about ${mainStock}`,
+          text: t('stockSpecific.recentNews', { symbol: mainStock }),
           icon: Newspaper,
           category: 'news'
         })
@@ -48,12 +50,12 @@ export function FollowUpSuggestions({
 
       if (message.includes('technical') || message.includes('indicator')) {
         newSuggestions.push({
-          text: `What's the best entry point for ${mainStock}?`,
+          text: t('stockSpecific.entryPoint', { symbol: mainStock }),
           icon: TrendingUp,
           category: 'strategy'
         })
         newSuggestions.push({
-          text: `Compare ${mainStock} with its competitors`,
+          text: t('stockSpecific.compareCompetitors', { symbol: mainStock }),
           icon: BarChart,
           category: 'comparison'
         })
@@ -61,7 +63,7 @@ export function FollowUpSuggestions({
 
       if (stockSymbols.length === 1) {
         newSuggestions.push({
-          text: `Calculate position size for ${mainStock} with 2% risk`,
+          text: t('stockSpecific.positionSize', { symbol: mainStock }),
           icon: Calculator,
           category: 'risk'
         })
@@ -71,12 +73,12 @@ export function FollowUpSuggestions({
     // General market suggestions
     if (message.includes('market')) {
       newSuggestions.push({
-        text: 'Which sectors are performing best today?',
+        text: t('general.sectorsToday'),
         icon: TrendingUp,
         category: 'analysis'
       })
       newSuggestions.push({
-        text: 'Show me the market sentiment analysis',
+        text: t('general.marketSentiment'),
         icon: BarChart,
         category: 'analysis'
       })
@@ -85,12 +87,12 @@ export function FollowUpSuggestions({
     // Portfolio suggestions
     if (message.includes('portfolio')) {
       newSuggestions.push({
-        text: 'How can I improve my diversification?',
+        text: t('general.diversification'),
         icon: Shield,
         category: 'risk'
       })
       newSuggestions.push({
-        text: 'What are my top performing holdings?',
+        text: t('general.topPerformers'),
         icon: TrendingUp,
         category: 'analysis'
       })
@@ -99,12 +101,12 @@ export function FollowUpSuggestions({
     // Strategy suggestions
     if (message.includes('buy') || message.includes('sell')) {
       newSuggestions.push({
-        text: 'What are the key risks to consider?',
+        text: t('general.keyRisks'),
         icon: Shield,
         category: 'risk'
       })
       newSuggestions.push({
-        text: 'Show me alternative investment options',
+        text: t('general.alternatives'),
         icon: Sparkles,
         category: 'strategy'
       })
@@ -114,17 +116,17 @@ export function FollowUpSuggestions({
     if (newSuggestions.length === 0) {
       newSuggestions.push(
         {
-          text: 'Show market overview',
+          text: t('general.marketOverview'),
           icon: BarChart,
           category: 'analysis'
         },
         {
-          text: 'Analyze my portfolio performance',
+          text: t('general.portfolioPerformance'),
           icon: TrendingUp,
           category: 'analysis'
         },
         {
-          text: 'Find trending stocks today',
+          text: t('general.trendingStocks'),
           icon: Sparkles,
           category: 'strategy'
         }
@@ -141,7 +143,7 @@ export function FollowUpSuggestions({
     <div className={cn("animate-fade-in", className)}>
       <div className="flex items-center gap-2 mb-2">
         <Sparkles className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Suggested follow-ups</span>
+        <span className="text-sm text-muted-foreground">{t('title')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {suggestions.map((suggestion, index) => {

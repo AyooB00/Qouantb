@@ -1,18 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { FinnhubClient } from '@/lib/finnhub'
+import { NextResponse } from 'next/server'
 import { AIProviderFactory } from '@/lib/ai-providers/provider-factory'
 import { DailyPortfolioInsights, PortfolioInsight } from '@/lib/types/portfolio'
-import { usePortfolioStore } from '@/lib/stores/portfolio-store'
+import { handleAPIError, validateAPIKeys } from '@/lib/api/error-handler'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Validate API keys
-    if (!process.env.FINNHUB_API_KEY || !process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'API keys not configured' },
-        { status: 500 }
-      )
-    }
+    validateAPIKeys(['FINNHUB_API_KEY', 'OPENAI_API_KEY'])
 
     // Note: In a real implementation, we'd get the portfolio from the user's session
     // For now, we'll analyze the default portfolio

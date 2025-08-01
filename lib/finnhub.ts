@@ -1,4 +1,11 @@
-import { FinnhubQuote, FinnhubCompanyProfile, StockData } from '@/lib/types/trading';
+import { 
+  FinnhubQuote, 
+  FinnhubCompanyProfile, 
+  StockData, 
+  FinnhubNewsArticle, 
+  FinnhubRecommendation, 
+  FinnhubFinancialMetrics 
+} from '@/lib/types/trading';
 import { ExtendedStockData } from '@/lib/types/agents';
 import { stockQuoteCache, stockProfileCache, createCacheKey } from '@/lib/cache/stockCache';
 import { finnhubRateLimiter } from '@/lib/middleware/finnhubRateLimiter';
@@ -187,14 +194,14 @@ export class FinnhubClient {
     }
   }
 
-  async getBasicFinancials(symbol: string): Promise<any> {
+  async getBasicFinancials(symbol: string): Promise<FinnhubFinancialMetrics> {
     return this.fetchFromFinnhub('/stock/metric', { 
       symbol, 
       metric: 'all' 
     });
   }
 
-  async getCompanyNews(symbol: string, days: number = 7): Promise<any[]> {
+  async getCompanyNews(symbol: string, days: number = 7): Promise<FinnhubNewsArticle[]> {
     const to = new Date();
     const from = new Date();
     from.setDate(from.getDate() - days);
@@ -209,7 +216,7 @@ export class FinnhubClient {
     return Array.isArray(result) ? result : [];
   }
 
-  async getRecommendations(symbol: string): Promise<any[]> {
+  async getRecommendations(symbol: string): Promise<FinnhubRecommendation[]> {
     const result = await this.fetchFromFinnhub('/stock/recommendation', { symbol });
     // Ensure we always return an array
     return Array.isArray(result) ? result : [];
@@ -234,7 +241,7 @@ export class FinnhubClient {
     const cached = stockQuoteCache.get(cacheKey);
     if (cached) {
       console.log(`Cache hit for candles: ${symbol}`);
-      return cached as any;
+      return cached as T;
     }
 
     const data = await this.fetchFromFinnhub('/stock/candle', {

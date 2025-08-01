@@ -1,14 +1,18 @@
 'use client'
 
 import { ExternalLink, Newspaper, TrendingUp, TrendingDown, Minus } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ComponentRenderProps, NewsSummaryData } from '@/lib/types/finchat'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
+import { BaseSmartCard } from '../base-smart-card'
+import { useTranslations } from 'next-intl'
 
 export default function NewsSummaryCard({ data, onAction, className }: ComponentRenderProps<NewsSummaryData>) {
+  const t = useTranslations('finChat.smartCards.newsSummary')
+  const common = useTranslations('finChat.smartCards.common')
+  
   if (!data || !data.articles || data.articles.length === 0) return null
 
   const getSentimentIcon = (sentiment?: string) => {
@@ -35,10 +39,10 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
 
   const getOverallSentimentBadge = () => {
     const sentimentMap = {
-      'positive': { label: 'Positive Sentiment', color: 'text-green-600 bg-green-50 dark:bg-green-950/30' },
-      'negative': { label: 'Negative Sentiment', color: 'text-red-600 bg-red-50 dark:bg-red-950/30' },
-      'mixed': { label: 'Mixed Sentiment', color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/30' },
-      'neutral': { label: 'Neutral Sentiment', color: 'text-gray-600 bg-gray-50 dark:bg-gray-900/30' }
+      'positive': { label: t('sentiment') + ' - ' + common('bullish'), color: 'text-green-600 bg-green-50 dark:bg-green-950/30' },
+      'negative': { label: t('sentiment') + ' - ' + common('bearish'), color: 'text-red-600 bg-red-50 dark:bg-red-950/30' },
+      'mixed': { label: t('sentiment') + ' - ' + common('mixed'), color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/30' },
+      'neutral': { label: t('sentiment') + ' - ' + common('neutral'), color: 'text-gray-600 bg-gray-50 dark:bg-gray-900/30' }
     }
     
     const { label, color } = sentimentMap[data.overallSentiment] || sentimentMap.neutral
@@ -51,27 +55,28 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
   }
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Newspaper className="h-5 w-5 text-teal-600" />
-            News Summary
-          </CardTitle>
-          {getOverallSentimentBadge()}
+    <BaseSmartCard
+      title={t('title')}
+      icon={Newspaper}
+      badge={{
+        label: data.overallSentiment || 'neutral',
+        className: getSentimentColor(data.overallSentiment)
+      }}
+      className={className}
+      onAction={onAction}
+    >
+      {data.keyTopics && data.keyTopics.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-3">
+          <span className="text-xs text-muted-foreground mr-1">{t('keyTopics')}:</span>
+          {data.keyTopics.map((topic, i) => (
+            <Badge key={i} variant="outline" className="text-xs">
+              {topic}
+            </Badge>
+          ))}
         </div>
-        {data.keyTopics && data.keyTopics.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {data.keyTopics.map((topic, i) => (
-              <Badge key={i} variant="outline" className="text-xs">
-                {topic}
-              </Badge>
-            ))}
-          </div>
-        )}
-      </CardHeader>
+      )}
       
-      <CardContent className="space-y-3">
+      <div className="space-y-3">
         {data.articles.map((article, index) => (
           <div 
             key={index} 
@@ -98,7 +103,7 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{article.source}</span>
                 <span>•</span>
-                <span>{formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })}</span>
+                <span>{t('publishedAgo', { time: formatDistanceToNow(new Date(article.publishedAt)) })}</span>
               </div>
               
               <Button
@@ -108,7 +113,7 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
                 asChild
               >
                 <a href={article.url} target="_blank" rel="noopener noreferrer">
-                  Read <ExternalLink className="h-3 w-3 ml-1" />
+                  {t('readMore')} <ExternalLink className="h-3 w-3 ml-1" />
                 </a>
               </Button>
             </div>
@@ -133,12 +138,12 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
             variant="outline" 
             size="sm" 
             className="w-full"
-            onClick={() => onAction({ label: 'View More News', action: 'more-news', data })}
+            onClick={() => onAction({ label: t('readMore'), action: 'more-news', data })}
           >
-            View More News
+            {t('readMore')}
           </Button>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </BaseSmartCard>
   )
 }

@@ -8,7 +8,7 @@ export interface ChatMessage {
   timestamp: string
   metadata?: {
     stocks?: string[]
-    charts?: any[]
+    charts?: Array<{ type: string; data: unknown }>
     sources?: string[]
     error?: boolean
   }
@@ -88,7 +88,23 @@ export const useChatStore = create<ChatStore>()(
                     messages,
                     updatedAt: timestamp,
                     title: conv.title === 'New Chat' && message.role === 'user' 
-                      ? message.content.slice(0, 50) + (message.content.length > 50 ? '...' : '')
+                      ? (() => {
+                          const maxLength = 20
+                          const cleaned = message.content.trim()
+                          
+                          if (cleaned.length <= maxLength) return cleaned
+                          
+                          // Find the last space before the limit
+                          const truncated = cleaned.slice(0, maxLength - 3) // Reserve space for ...
+                          const lastSpace = truncated.lastIndexOf(' ')
+                          
+                          if (lastSpace > 10) {
+                            return truncated.slice(0, lastSpace) + '...'
+                          }
+                          
+                          // If no good space found, just cut at character limit
+                          return truncated + '...'
+                        })()
                       : conv.title
                   }
                 : conv

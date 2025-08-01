@@ -6,6 +6,8 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { QueueIndicator } from '@/components/ui/queue-indicator'
+import { useTranslations } from 'next-intl'
+import { useLocale } from '@/lib/locale-context'
 
 interface StockCardProps {
   symbol: string
@@ -25,6 +27,8 @@ export function StockCard({ symbol, className }: StockCardProps) {
   const [stockData, setStockData] = useState<StockData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const t = useTranslations('finChat.stockCard')
+  const locale = useLocale()
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -84,7 +88,7 @@ export function StockCard({ symbol, className }: StockCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm">Loading {symbol}...</span>
+            <span className="text-sm">{t('loading', { symbol })}</span>
           </div>
           <QueueIndicator symbol={symbol} showDetails={false} />
         </div>
@@ -95,7 +99,7 @@ export function StockCard({ symbol, className }: StockCardProps) {
   if (error || !stockData) {
     return (
       <Card className={cn("p-3", className)}>
-        <p className="text-sm text-muted-foreground">Unable to load {symbol}</p>
+        <p className="text-sm text-muted-foreground">{t('unableToLoad', { symbol })}</p>
       </Card>
     )
   }
@@ -113,7 +117,10 @@ export function StockCard({ symbol, className }: StockCardProps) {
             </Badge>
           </div>
           <p className="text-lg font-semibold mt-1">
-            ${stockData.currentPrice.toFixed(2)}
+            {locale === 'ar' 
+              ? new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'USD' }).format(stockData.currentPrice)
+              : `$${stockData.currentPrice.toFixed(2)}`
+            }
           </p>
         </div>
         
@@ -128,18 +135,27 @@ export function StockCard({ symbol, className }: StockCardProps) {
               <TrendingDown className="h-4 w-4" />
             )}
             <span className="font-medium">
-              {isPositive ? '+' : ''}{stockData.changePercent.toFixed(2)}%
+              {locale === 'ar'
+                ? `${new Intl.NumberFormat('ar-SA').format(Math.abs(stockData.changePercent))}%${isPositive ? '+' : '-'}`
+                : `${isPositive ? '+' : ''}${stockData.changePercent.toFixed(2)}%`
+              }
             </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            {isPositive ? '+' : ''}{stockData.change.toFixed(2)}
+            {locale === 'ar'
+              ? `${new Intl.NumberFormat('ar-SA').format(Math.abs(stockData.change))}${isPositive ? '+' : '-'}`
+              : `${isPositive ? '+' : ''}${stockData.change.toFixed(2)}`
+            }
           </p>
         </div>
       </div>
       
       {stockData.volume && (
         <p className="text-xs text-muted-foreground mt-2">
-          Vol: {(stockData.volume / 1000000).toFixed(2)}M
+          {t('volume')}: {locale === 'ar' 
+            ? new Intl.NumberFormat('ar-SA', { notation: 'compact', maximumFractionDigits: 2 }).format(stockData.volume)
+            : `${(stockData.volume / 1000000).toFixed(2)}M`
+          }
         </p>
       )}
     </Card>

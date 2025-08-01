@@ -8,6 +8,8 @@ import { Loader2, TrendingUp, TrendingDown } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { cn } from '@/lib/utils'
 import { QueueIndicator } from '@/components/ui/queue-indicator'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatCurrency, formatPercentage, formatDate } from '@/lib/utils/formatters'
 
 interface StockChartProps {
   symbol: string
@@ -36,6 +38,8 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
   const [error, setError] = useState<string | null>(null)
   const [chartData, setChartData] = useState<ChartData[]>([])
   const [quote, setQuote] = useState<StockQuote | null>(null)
+  const t = useTranslations('dashboard.market')
+  const locale = useLocale()
 
   useEffect(() => {
     fetchStockData()
@@ -64,7 +68,7 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
         return {
           date: date.toISOString(),
           price: price,
-          displayDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+          displayDate: formatDate(date, locale, { dateStyle: 'medium' }).split(',')[0] // Get just month and day
         }
       })
 
@@ -77,17 +81,8 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
     }
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value)
-  }
-
   const formatTooltipValue = (value: number) => {
-    return [formatCurrency(value), 'Price']
+    return [formatCurrency(value, locale), 'Price']
   }
 
   if (loading) {
@@ -155,13 +150,13 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
             <QueueIndicator symbol={symbol} className="text-xs" />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-semibold">{formatCurrency(quote.c)}</span>
+            <span className="text-2xl font-semibold">{formatCurrency(quote.c, locale)}</span>
             <Badge 
               variant={isPositive ? "default" : "destructive"}
               className="flex items-center gap-1"
             >
               {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-              {isPositive ? '+' : ''}{quote.dp.toFixed(2)}%
+              {formatPercentage(quote.dp, locale)}
             </Badge>
           </div>
         </div>
@@ -188,7 +183,7 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
               tick={{ fontSize: 12 }}
               className="text-muted-foreground"
               domain={['dataMin - 5', 'dataMax + 5']}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => formatCurrency(value, locale, true)}
             />
             <Tooltip 
               formatter={formatTooltipValue}
@@ -209,19 +204,19 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
         </ResponsiveContainer>
         <div className="grid grid-cols-4 gap-2 mt-4 text-sm">
           <div>
-            <p className="text-muted-foreground">Open</p>
+            <p className="text-muted-foreground">{t('open')}</p>
             <p className="font-medium">{formatCurrency(quote.o)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">High</p>
+            <p className="text-muted-foreground">{t('high')}</p>
             <p className="font-medium">{formatCurrency(quote.h)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Low</p>
+            <p className="text-muted-foreground">{t('low')}</p>
             <p className="font-medium">{formatCurrency(quote.l)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Prev Close</p>
+            <p className="text-muted-foreground">{t('previousClose')}</p>
             <p className="font-medium">{formatCurrency(quote.pc)}</p>
           </div>
         </div>

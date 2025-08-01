@@ -8,26 +8,20 @@ import {
   StockTip,
   StockForecast 
 } from '@/lib/types/portfolio'
+import { handleAPIError, validateAPIKeys, validateRequired, APIError } from '@/lib/api/error-handler'
 
 export async function POST(request: NextRequest) {
   try {
     const body: PortfolioAnalysisRequest = await request.json()
     const { symbols } = body
 
+    validateRequired(body, ['symbols'])
     if (!symbols || symbols.length === 0) {
-      return NextResponse.json(
-        { error: 'No symbols provided' },
-        { status: 400 }
-      )
+      throw new APIError('No symbols provided', 400, 'NO_SYMBOLS')
     }
 
     // Validate API keys
-    if (!process.env.FINNHUB_API_KEY || !process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'API keys not configured' },
-        { status: 500 }
-      )
-    }
+    validateAPIKeys(['FINNHUB_API_KEY', 'OPENAI_API_KEY'])
 
     const finnhub = new FinnhubClient(process.env.FINNHUB_API_KEY)
     const aiFactory = AIProviderFactory.getInstance()
@@ -216,18 +210,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Error in portfolio analysis:', error)
-    
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    }
-    
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    )
+    return handleAPIError(error)
   }
 }

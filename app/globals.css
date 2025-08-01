@@ -8,6 +8,134 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Arabic Typography Improvements */
+[lang="ar"] {
+  font-family: var(--font-arabic-primary), var(--font-arabic-fallback), var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Improved line height for Arabic text readability */
+[lang="ar"] p,
+[lang="ar"] .text-base,
+[lang="ar"] .text-sm {
+  line-height: 1.8;
+}
+
+/* Better spacing for Arabic headings */
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+  letter-spacing: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+/* Specific font sizes for Arabic - slightly larger for better readability */
+[lang="ar"] .text-xs { font-size: 0.875rem; }
+[lang="ar"] .text-sm { font-size: 0.9375rem; }
+[lang="ar"] .text-base { font-size: 1.0625rem; }
+[lang="ar"] .text-lg { font-size: 1.1875rem; }
+[lang="ar"] .text-xl { font-size: 1.375rem; }
+[lang="ar"] .text-2xl { font-size: 1.625rem; }
+[lang="ar"] .text-3xl { font-size: 2rem; }
+
+
+/* Ensure numbers stay LTR */
+.tabular-nums,
+[data-numeric="true"] {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+/* RTL Support for HowItWorks section only */
+section[dir="rtl"] {
+  text-align: right;
+}
+
+/* Fix margins for RTL in HowItWorks */
+section[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+section[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Fix flex direction for RTL in HowItWorks */
+section[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+/* Fix arrows for RTL */
+section[dir="rtl"] svg.lucide-arrow-right:not(.rotate-90) {
+  transform: rotate(180deg);
+}
+
+/* Fix grid for RTL */
+section[dir="rtl"] .grid-cols-3 {
+  direction: rtl;
+}
+
+/* Keep text centered where needed */
+section[dir="rtl"] .text-center {
+  text-align: center;
+}
+
+/* Fix items alignment */
+section[dir="rtl"] .items-start {
+  align-items: flex-start;
+}
+
+section[dir="rtl"] .items-center {
+  align-items: center;
+}
+
+/* Fix gap and space utilities for RTL */
+section[dir="rtl"] .gap-2 {
+  gap: 0.5rem;
+}
+
+section[dir="rtl"] .gap-4 {
+  gap: 1rem;
+}
+
+/* Keep features list items aligned properly */
+section[dir="rtl"] .flex.items-center.gap-2 {
+  flex-direction: row;
+}
+
+/* Mixed content handling */
+.mixed-content {
+  unicode-bidi: plaintext;
+}
+
+/* Improve Arabic font weight rendering */
+[lang="ar"] .font-medium {
+  font-weight: 500;
+}
+
+[lang="ar"] .font-semibold {
+  font-weight: 600;
+}
+
+[lang="ar"] .font-bold {
+  font-weight: 700;
+}
+
+/* Chart adjustments - always LTR */
+.recharts-wrapper {
+  direction: ltr;
+}
+
+
 /* Custom animations for typing indicator */
 @keyframes typing-bounce {
   0%, 60%, 100% {

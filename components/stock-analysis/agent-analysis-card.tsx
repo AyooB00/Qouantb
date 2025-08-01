@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { AgentAnalysis } from '@/lib/types/agents';
 import { cn } from '@/lib/utils';
+import { useTranslations, useLocale } from 'next-intl';
+import { formatCurrency, formatPercentageChange } from '@/lib/utils/formatters';
 
 interface AgentAnalysisCardProps {
   analysis: AgentAnalysis;
@@ -22,6 +24,9 @@ interface AgentAnalysisCardProps {
 }
 
 export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnalysisCardProps) {
+  const t = useTranslations('stockAnalysis.analysis');
+  const locale = useLocale();
+  
   const getRecommendationColor = (recommendation: string) => {
     switch (recommendation) {
       case 'strong-buy': return 'text-green-600 bg-green-100';
@@ -74,7 +79,7 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Confidence Level</span>
+            <span className="text-muted-foreground">{t('confidenceLevel')}</span>
             <span className="font-semibold">{analysis.confidence}%</span>
           </div>
           <Progress value={analysis.confidence} className="h-2" />
@@ -161,15 +166,15 @@ export default function AgentAnalysisCard({ analysis, currentPrice }: AgentAnaly
                 <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Target Price</span>
+                    <span className="text-sm font-medium">{t('targetPrice')}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-semibold">${analysis.targetPrice.toFixed(2)}</span>
+                    <span className="text-sm font-semibold">{formatCurrency(analysis.targetPrice, locale)}</span>
                     <span className={cn(
                       "text-xs ml-2",
                       analysis.targetPrice > currentPrice ? "text-green-600" : "text-red-600"
                     )}>
-                      ({analysis.targetPrice > currentPrice ? '+' : ''}{calculatePriceChange(analysis.targetPrice)}%)
+                      ({formatPercentageChange(parseFloat(calculatePriceChange(analysis.targetPrice)), locale).text})
                     </span>
                   </div>
                 </div>

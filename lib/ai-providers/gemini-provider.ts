@@ -1,11 +1,11 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { BaseAIProvider } from './types';
 import { SearchCriteria, StockData, TradingOpportunity } from '@/lib/types/trading';
 
 export class GeminiProvider extends BaseAIProvider {
   name = 'Gemini';
   private genAI: GoogleGenerativeAI;
-  private model: any;
+  private model: GenerativeModel;
 
   constructor(apiKey: string, modelName?: string) {
     super(apiKey, modelName || 'gemini-1.5-pro');

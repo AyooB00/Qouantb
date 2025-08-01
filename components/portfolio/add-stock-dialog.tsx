@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import StockSelector from '@/components/stock-analysis/stock-selector'
 import { useToast } from '@/hooks/use-toast'
+import { useTranslations } from 'next-intl'
 
 interface AddStockDialogProps {
   open: boolean
@@ -29,11 +30,13 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
   
   const { addItem } = usePortfolioStore()
   const { toast } = useToast()
+  const t = useTranslations('portfolio.dialog')
+  const tCommon = useTranslations('common')
 
   const handleAdd = async () => {
     if (!selectedSymbol || !quantity || !avgCost) {
       toast({
-        title: 'Missing information',
+        title: tCommon('error'),
         description: 'Please fill in all fields',
         variant: 'destructive'
       })
@@ -45,8 +48,8 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
 
     if (isNaN(quantityNum) || quantityNum <= 0) {
       toast({
-        title: 'Invalid quantity',
-        description: 'Please enter a valid number of shares',
+        title: tCommon('error'),
+        description: t('enterValidShares'),
         variant: 'destructive'
       })
       return
@@ -54,8 +57,8 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
 
     if (isNaN(avgCostNum) || avgCostNum <= 0) {
       toast({
-        title: 'Invalid price',
-        description: 'Please enter a valid average cost',
+        title: tCommon('error'),
+        description: t('enterValidCost'),
         variant: 'destructive'
       })
       return
@@ -68,8 +71,13 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
       const response = await fetch(`/api/search-stocks?q=${selectedSymbol}`)
       if (!response.ok) throw new Error('Failed to fetch stock info')
       
-      const data = await response.json()
-      const stockInfo = data.results?.find((s: any) => s.symbol === selectedSymbol)
+      interface StockSearchResult {
+        symbol: string
+        description: string
+      }
+      
+      const data: { results?: StockSearchResult[] } = await response.json()
+      const stockInfo = data.results?.find((s) => s.symbol === selectedSymbol)
       
       addItem({
         symbol: selectedSymbol,
@@ -79,8 +87,8 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
       })
 
       toast({
-        title: 'Stock added',
-        description: `Added ${quantityNum} shares of ${selectedSymbol} to your portfolio`
+        title: tCommon('save'),
+        description: t('addedSuccessMessage', { quantity: quantityNum, symbol: selectedSymbol })
       })
 
       // Reset form
@@ -90,8 +98,8 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
       onOpenChange(false)
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to add stock to portfolio',
+        title: tCommon('error'),
+        description: tCommon('unexpectedError'),
         variant: 'destructive'
       })
     } finally {
@@ -103,7 +111,7 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add Stock to Portfolio</DialogTitle>
+          <DialogTitle>{t('addToPortfolio')}</DialogTitle>
           <DialogDescription>
             Add a new stock position to track in your portfolio
           </DialogDescription>
@@ -112,7 +120,7 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
         <div className="space-y-4 pt-4">
           {/* Stock Selection */}
           <div className="space-y-2">
-            <Label>Stock Symbol</Label>
+            <Label>{t('stockSymbol')}</Label>
             <StockSelector
               onSelect={setSelectedSymbol}
               selectedSymbol={selectedSymbol}
@@ -120,14 +128,14 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
             />
             {selectedSymbol && (
               <p className="text-sm text-muted-foreground">
-                Selected: <span className="font-medium">{selectedSymbol}</span>
+                {t('selected')}: <span className="font-medium">{selectedSymbol}</span>
               </p>
             )}
           </div>
 
           {/* Quantity */}
           <div className="space-y-2">
-            <Label htmlFor="quantity">Number of Shares</Label>
+            <Label htmlFor="quantity">{t('numberOfShares')}</Label>
             <Input
               id="quantity"
               type="number"
@@ -141,7 +149,7 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
 
           {/* Average Cost */}
           <div className="space-y-2">
-            <Label htmlFor="avgCost">Average Cost per Share</Label>
+            <Label htmlFor="avgCost">{t('averageCostPerShare')}</Label>
             <Input
               id="avgCost"
               type="number"
@@ -170,7 +178,7 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Cancel
+              {tCommon('cancel')}
             </Button>
             <Button
               onClick={handleAdd}
@@ -183,7 +191,7 @@ export function AddStockDialog({ open, onOpenChange }: AddStockDialogProps) {
                   Adding...
                 </>
               ) : (
-                'Add to Portfolio'
+                t('addToPortfolio')
               )}
             </Button>
           </div>

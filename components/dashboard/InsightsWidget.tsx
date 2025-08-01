@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Brain, TrendingUp, AlertTriangle, Lightbulb, RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatRelativeTime } from '@/lib/utils/formatters'
 
 interface Insight {
   id: string
@@ -24,12 +26,10 @@ export function InsightsWidget() {
   const [insights, setInsights] = useState<Insight[]>([])
   const [loading, setLoading] = useState(true)
   const [lastRefresh, setLastRefresh] = useState(new Date())
+  const t = useTranslations('dashboard.insights')
+  const locale = useLocale()
 
-  useEffect(() => {
-    generateInsights()
-  }, [items, totalValue])
-
-  const generateInsights = async () => {
+  const generateInsights = useCallback(async () => {
     setLoading(true)
     
     // Simulate AI-generated insights based on portfolio
@@ -41,8 +41,8 @@ export function InsightsWidget() {
         newInsights.push({
           id: '1',
           type: 'opportunity',
-          title: 'Strong Portfolio Performance',
-          description: 'Your portfolio is outperforming the market. Consider taking some profits on winners.',
+          title: t('strongPerformanceTitle'),
+          description: t('strongPerformanceDesc'),
           impact: 'high',
           timestamp: new Date(),
         })
@@ -50,8 +50,8 @@ export function InsightsWidget() {
         newInsights.push({
           id: '2',
           type: 'risk',
-          title: 'Portfolio Under Pressure',
-          description: 'Recent market conditions have impacted your holdings. Review stop-loss levels.',
+          title: t('underPressureTitle'),
+          description: t('underPressureDesc'),
           impact: 'high',
           timestamp: new Date(),
         })
@@ -66,8 +66,8 @@ export function InsightsWidget() {
         newInsights.push({
           id: '3',
           type: 'tip',
-          title: `${topGainer.symbol} Hitting New Highs`,
-          description: `Up ${topGainer.profitLossPercent?.toFixed(1)}% since purchase. Consider setting trailing stop-loss.`,
+          title: t('hittingHighsTitle', { symbol: topGainer.symbol }),
+          description: t('hittingHighsDesc', { percent: topGainer.profitLossPercent?.toFixed(1) }),
           impact: 'medium',
           relatedSymbol: topGainer.symbol,
           timestamp: new Date(),
@@ -78,8 +78,8 @@ export function InsightsWidget() {
       newInsights.push({
         id: '4',
         type: 'news',
-        title: 'Tech Sector Momentum',
-        description: 'Technology stocks showing strong momentum. AI and semiconductor stocks leading gains.',
+        title: t('techMomentumTitle'),
+        description: t('techMomentumDesc'),
         impact: 'medium',
         timestamp: new Date(),
       })
@@ -90,8 +90,8 @@ export function InsightsWidget() {
         newInsights.push({
           id: '5',
           type: 'risk',
-          title: 'High Portfolio Volatility',
-          description: `${highBetaStocks.length} stocks with high beta. Consider adding defensive positions.`,
+          title: t('highVolatilityTitle'),
+          description: t('highVolatilityDesc', { count: highBetaStocks.length }),
           impact: 'medium',
           timestamp: new Date(),
         })
@@ -101,7 +101,11 @@ export function InsightsWidget() {
       setLoading(false)
       setLastRefresh(new Date())
     }, 1500)
-  }
+  }, [items, totalProfitLossPercent, t])
+
+  useEffect(() => {
+    generateInsights()
+  }, [items, totalValue, generateInsights])
 
   const getInsightIcon = (type: Insight['type']) => {
     switch (type) {
@@ -130,16 +134,19 @@ export function InsightsWidget() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-pink-50/30 dark:from-purple-950/20 dark:to-pink-950/20" />
+      <CardHeader className="relative">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
-              AI Insights
+              <Brain className="h-5 w-5 text-purple-500" />
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+                {t('title')}
+              </span>
             </CardTitle>
             <CardDescription>
-              Personalized recommendations based on your portfolio
+              {t('personalizedRecommendations')}
             </CardDescription>
           </div>
           <Button
@@ -156,7 +163,7 @@ export function InsightsWidget() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-2">
+              <div key={i} className="space-y-2 animate-pulse">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-full" />
               </div>
@@ -169,7 +176,7 @@ export function InsightsWidget() {
               return (
                 <div
                   key={insight.id}
-                  className="flex gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                  className="flex gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-all duration-300 hover:shadow-md hover:scale-[1.01]"
                 >
                   <Icon className={cn("h-5 w-5 mt-0.5", getInsightColor(insight.type))} />
                   <div className="flex-1 space-y-1">
@@ -184,7 +191,7 @@ export function InsightsWidget() {
                           }
                           className="text-xs"
                         >
-                          {insight.impact}
+                          {t(`impact.${insight.impact}`)}
                         </Badge>
                       )}
                     </div>
@@ -205,7 +212,7 @@ export function InsightsWidget() {
         
         <div className="mt-4 pt-4 border-t">
           <p className="text-xs text-muted-foreground text-center">
-            Last updated: {lastRefresh.toLocaleTimeString()}
+            {t('lastUpdated')}: {formatRelativeTime(lastRefresh, locale)}
           </p>
         </div>
       </CardContent>

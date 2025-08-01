@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LineChart, Line, AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
 
 // Mock data for charts
 const chartData = [
@@ -20,67 +21,71 @@ const chartData = [
   { name: 'Jun', value: 4800 },
 ]
 
-const features = [
+const getFeatures = (t: any, locale: string) => [
   {
-    title: 'AI Financial Assistant',
-    description: 'Chat with our AI expert for personalized market insights and investment advice.',
+    title: t('cards.0.title'),
+    description: t('cards.0.description'),
     icon: Bot,
-    href: '/finchat',
+    href: `/${locale}/finchat`,
     preview: 'chat',
-    badge: 'Most Popular',
+    badge: t('cards.0.badge'),
     gradient: 'from-teal-600 to-teal-500',
   },
   {
-    title: 'Portfolio Analytics',
-    description: 'Track performance, analyze risk, and get AI-powered optimization suggestions.',
+    title: t('cards.1.title'),
+    description: t('cards.1.description'),
     icon: ChartLine,
-    href: '/portfolio',
+    href: `/${locale}/portfolio`,
     preview: 'portfolio',
     gradient: 'from-green-600 to-green-500',
   },
   {
-    title: 'Stock Analysis',
-    description: 'Get comprehensive analysis from legendary investor AI personas.',
+    title: t('cards.2.title'),
+    description: t('cards.2.description'),
     icon: Brain,
-    href: '/stock-analysis',
+    href: `/${locale}/stock-analysis`,
     preview: 'analysis',
     gradient: 'from-blue-600 to-blue-500',
   },
   {
-    title: 'Swing Trading',
-    description: 'Discover profitable opportunities with AI-powered market scanning.',
+    title: t('cards.3.title'),
+    description: t('cards.3.description'),
     icon: TrendingUp,
-    href: '/swing-trading',
+    href: `/${locale}/swing-trading`,
     preview: 'trading',
     gradient: 'from-teal-500 to-green-500',
   },
 ]
 
-const additionalFeatures = [
+const getAdditionalFeatures = (t: any) => [
   {
     icon: Shield,
-    title: 'Bank-Level Security',
-    description: 'Your data is encrypted and secure',
+    title: t('additional.0.title'),
+    description: t('additional.0.description'),
   },
   {
     icon: Zap,
-    title: 'Real-Time Data',
-    description: 'Live market updates every second',
+    title: t('additional.1.title'),
+    description: t('additional.1.description'),
   },
 ]
 
 export function FeatureShowcase() {
   const [activeTab, setActiveTab] = useState('chat')
+  const t = useTranslations('landing.features')
+  const locale = useLocale()
+  const features = getFeatures(t, locale)
+  const additionalFeatures = getAdditionalFeatures(t)
 
   return (
     <section className="py-16 md:py-24 lg:py-32 bg-muted/50">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Powerful Features for Smart Investors
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[700px] text-lg text-muted-foreground">
-            Everything you need to analyze markets, manage portfolios, and make informed decisions.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -88,10 +93,10 @@ export function FeatureShowcase() {
         <div className="mb-16">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8">
-              <TabsTrigger value="chat">AI Chat</TabsTrigger>
-              <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-              <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              <TabsTrigger value="trading">Trading</TabsTrigger>
+              <TabsTrigger value="chat">{t('tabs.chat')}</TabsTrigger>
+              <TabsTrigger value="portfolio">{t('tabs.portfolio')}</TabsTrigger>
+              <TabsTrigger value="analysis">{t('tabs.analysis')}</TabsTrigger>
+              <TabsTrigger value="trading">{t('tabs.trading')}</TabsTrigger>
             </TabsList>
 
             <div className="rounded-lg border bg-card p-8 shadow-lg">
@@ -101,13 +106,13 @@ export function FeatureShowcase() {
                     <Bot className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold mb-2">FinChat AI Assistant</h3>
+                    <h3 className="font-semibold mb-2">{t('chatDemo.title')}</h3>
                     <div className="space-y-3">
                       <div className="rounded-lg bg-muted p-3">
-                        <p className="text-sm">What's the outlook for tech stocks this quarter?</p>
+                        <p className="text-sm">{t('chatDemo.userMessage')}</p>
                       </div>
                       <div className="rounded-lg bg-primary/10 p-3 ml-8">
-                        <p className="text-sm">Based on current market trends, tech stocks show strong momentum. Key factors include...</p>
+                        <p className="text-sm">{t('chatDemo.aiResponse')}</p>
                       </div>
                     </div>
                   </div>
@@ -117,8 +122,8 @@ export function FeatureShowcase() {
               <TabsContent value="portfolio" className="mt-0">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold">Portfolio Performance</h3>
-                    <Badge variant="default" className="bg-green-500">+12.4%</Badge>
+                    <h3 className="font-semibold">{t('portfolioDemo.title')}</h3>
+                    <Badge variant="default" className="bg-green-500">{t('portfolioDemo.return')}</Badge>
                   </div>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
@@ -143,20 +148,20 @@ export function FeatureShowcase() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-base">AAPL Analysis</CardTitle>
+                      <CardTitle className="text-base">{t('analysisDemo.stockAnalysis')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Recommendation</span>
-                          <Badge className="bg-green-500">BUY</Badge>
+                          <span className="text-sm text-muted-foreground">{t('analysisDemo.recommendation')}</span>
+                          <Badge className="bg-green-500">{t('analysisDemo.recommendation')}</Badge>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Target Price</span>
+                          <span className="text-sm text-muted-foreground">{t('analysisDemo.targetPrice')}</span>
                           <span className="font-medium">$195.00</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-muted-foreground">Confidence</span>
+                          <span className="text-sm text-muted-foreground">{t('analysisDemo.confidence')}</span>
                           <span className="font-medium">87%</span>
                         </div>
                       </div>
@@ -164,11 +169,11 @@ export function FeatureShowcase() {
                   </Card>
                   <Card>
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-base">AI Insights</CardTitle>
+                      <CardTitle className="text-base">{locale === 'ar' ? 'رؤى الذكاء الاصطناعي' : 'AI Insights'}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground">
-                        Strong fundamentals with growing services revenue. Recent AI initiatives position for future growth...
+                        {t('analysisDemo.insights')}
                       </p>
                     </CardContent>
                   </Card>
@@ -177,17 +182,17 @@ export function FeatureShowcase() {
 
               <TabsContent value="trading" className="mt-0">
                 <div className="space-y-4">
-                  <h3 className="font-semibold">Swing Trading Opportunities</h3>
+                  <h3 className="font-semibold">{t('tradingDemo.title')}</h3>
                   <div className="space-y-3">
                     {['NVDA', 'META', 'AMZN'].map((symbol) => (
                       <div key={symbol} className="flex items-center justify-between rounded-lg border p-3">
                         <div>
                           <p className="font-medium">{symbol}</p>
-                          <p className="text-sm text-muted-foreground">Bullish momentum detected</p>
+                          <p className="text-sm text-muted-foreground">{t('tradingDemo.bullishMomentum')}</p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium text-green-500">+85%</p>
-                          <p className="text-xs text-muted-foreground">Confidence</p>
+                          <p className="text-xs text-muted-foreground">{t('tradingDemo.confidence')}</p>
                         </div>
                       </div>
                     ))}
@@ -235,7 +240,7 @@ export function FeatureShowcase() {
                 <CardContent>
                   <Button variant="ghost" className="group/btn -ml-3" asChild>
                     <Link href={feature.href}>
-                      Learn more
+                      {t('cards.0.learnMore')}
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                     </Link>
                   </Button>

@@ -3,22 +3,24 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
+import { useLocale } from 'next-intl'
 import { Moon, Sun, LogIn, Menu, X, Building2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-
-const navItems = [
-  { label: 'AI Agents', href: '#ai-agents' },
-  { label: 'Features', href: '#features' },
-  { label: 'How it Works', href: '#how-it-works' },
-  { label: 'For Enterprise', href: '#enterprise' },
-  { label: 'Technology', href: '#technology' },
-  { label: 'Docs', href: '#documentation' },
-]
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 export function LandingHeader() {
   const { theme, setTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
+  const locale = useLocale()
+
+  const navItems = [
+    { label: locale === 'ar' ? 'وكلاء الذكاء الاصطناعي' : 'AI Agents', href: '#ai-agents' },
+    { label: locale === 'ar' ? 'المميزات' : 'Features', href: '#features' },
+    { label: locale === 'ar' ? 'كيف يعمل' : 'How it Works', href: '#how-it-works' },
+    { label: locale === 'ar' ? 'للمؤسسات' : 'For Enterprise', href: '#enterprise' },
+    { label: locale === 'ar' ? 'الوثائق' : 'Docs', href: '#documentation' },
+  ]
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b">
@@ -29,7 +31,7 @@ export function LandingHeader() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-blue-600 text-white shadow-lg">
               <span className="text-sm font-bold">Q</span>
             </div>
-            <span className="font-bold text-xl">QuoantB</span>
+            <span className="font-bold text-xl">QuantumBoard</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -47,6 +49,13 @@ export function LandingHeader() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher 
+              variant="ghost" 
+              size="icon"
+              showLabel={false}
+              className="hidden sm:inline-flex"
+            />
+            
             <Button
               variant="ghost"
               size="icon"
@@ -61,14 +70,14 @@ export function LandingHeader() {
             <Button variant="outline" asChild className="hidden sm:inline-flex">
               <Link href="#enterprise">
                 <Building2 className="mr-2 h-4 w-4" />
-                For Enterprise
+                {locale === 'ar' ? 'للمؤسسات' : 'For Enterprise'}
               </Link>
             </Button>
             
             <Button asChild>
-              <Link href="/dashboard">
+              <Link href={`/${locale}/dashboard`}>
                 <LogIn className="mr-2 h-4 w-4" />
-                Get Started
+                {locale === 'ar' ? 'ابدأ الآن' : 'Get Started'}
               </Link>
             </Button>
 
@@ -92,7 +101,7 @@ export function LandingHeader() {
                       {item.label}
                     </Link>
                   ))}
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t space-y-2">
                     <Button
                       variant="ghost"
                       className="w-full justify-start"
@@ -104,15 +113,21 @@ export function LandingHeader() {
                       {theme === "light" ? (
                         <>
                           <Moon className="mr-2 h-4 w-4" />
-                          Dark Mode
+                          {locale === 'ar' ? 'الوضع الداكن' : 'Dark Mode'}
                         </>
                       ) : (
                         <>
                           <Sun className="mr-2 h-4 w-4" />
-                          Light Mode
+                          {locale === 'ar' ? 'الوضع الفاتح' : 'Light Mode'}
                         </>
                       )}
                     </Button>
+                    <div className="px-3">
+                      <LanguageSwitcher 
+                        variant="ghost" 
+                        className="w-full justify-start"
+                      />
+                    </div>
                   </div>
                 </nav>
               </SheetContent>

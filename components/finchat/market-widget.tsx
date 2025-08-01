@@ -5,6 +5,8 @@ import { TrendingUp, TrendingDown, Activity, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatNumber, formatPercentage, formatRelativeTime } from '@/lib/utils/formatters'
 
 interface MarketIndex {
   symbol: string
@@ -24,6 +26,8 @@ export function MarketWidget() {
   const [marketData, setMarketData] = useState<MarketSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const t = useTranslations('finChat.market')
+  const locale = useLocale()
 
   useEffect(() => {
     fetchMarketData()
@@ -72,7 +76,7 @@ export function MarketWidget() {
             changePercent: 3.53
           }
         ],
-        marketStatus: isMarketOpen() ? 'Open' : 'Closed',
+        marketStatus: isMarketOpen() ? 'open' : 'closed',
         lastUpdated: new Date().toISOString()
       }
       
@@ -112,7 +116,7 @@ export function MarketWidget() {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-32">
-          <p className="text-sm text-muted-foreground">Unable to load market data</p>
+          <p className="text-sm text-muted-foreground">{t('unableToLoadData')}</p>
         </CardContent>
       </Card>
     )
@@ -122,9 +126,9 @@ export function MarketWidget() {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Market Summary</CardTitle>
-          <Badge variant={marketData.marketStatus === 'Open' ? 'default' : 'secondary'}>
-            {marketData.marketStatus}
+          <CardTitle className="text-base">{t('marketSummary')}</CardTitle>
+          <Badge variant={marketData.marketStatus === 'open' ? 'default' : 'secondary'}>
+            {t(marketData.marketStatus)}
           </Badge>
         </div>
       </CardHeader>
@@ -138,7 +142,7 @@ export function MarketWidget() {
                   <span className="text-sm font-medium">{index.symbol}</span>
                   <Activity className="h-3 w-3 text-muted-foreground" />
                 </div>
-                <p className="text-lg font-semibold">{index.value.toLocaleString()}</p>
+                <p className="text-lg font-semibold">{formatNumber(index.value, locale)}</p>
                 <div className={cn(
                   "flex items-center gap-1 text-sm",
                   isPositive ? "text-green-600" : "text-red-600"
@@ -149,7 +153,7 @@ export function MarketWidget() {
                     <TrendingDown className="h-3 w-3" />
                   )}
                   <span>
-                    {isPositive ? '+' : ''}{index.changePercent.toFixed(2)}%
+                    {formatPercentage(index.changePercent, locale)}
                   </span>
                 </div>
               </div>
@@ -158,7 +162,7 @@ export function MarketWidget() {
         </div>
         
         <p className="text-xs text-muted-foreground mt-3">
-          Last updated: {new Date(marketData.lastUpdated).toLocaleTimeString()}
+          {t('lastUpdated')}: {formatRelativeTime(marketData.lastUpdated, locale)}
         </p>
       </CardContent>
     </Card>

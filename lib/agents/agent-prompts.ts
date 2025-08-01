@@ -1,4 +1,4 @@
-import { AgentPersona, ExtendedStockData } from '@/lib/types/agents';
+import { AgentPersona, ExtendedStockData, AgentAnalysis } from '@/lib/types/agents';
 
 export function createAgentAnalysisPrompt(
   agent: AgentPersona,
@@ -111,7 +111,7 @@ Stay true to ${agent.name}'s investment philosophy and speaking style.`;
   return baseContext + (agentSpecificPrompts[agent.id] || '') + outputFormat;
 }
 
-export function createComparisonPrompt(analyses: any[]): string {
+export function createComparisonPrompt(analyses: AgentAnalysis[]): string {
   return `
 Compare and contrast these different investment perspectives on the same stock:
 

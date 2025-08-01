@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { 
   TrendingUp, 
   ChartBar, 
@@ -13,47 +14,48 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const analysisStages = [
-  {
-    icon: Search,
-    text: "Scanning market data...",
-    color: "text-blue-500"
-  },
-  {
-    icon: ChartBar,
-    text: "Analyzing price patterns...",
-    color: "text-green-500"
-  },
-  {
-    icon: TrendingUp,
-    text: "Evaluating momentum indicators...",
-    color: "text-teal-500"
-  },
-  {
-    icon: Activity,
-    text: "Checking volume trends...",
-    color: "text-green-600"
-  },
-  {
-    icon: Target,
-    text: "Identifying entry points...",
-    color: "text-blue-600"
-  },
-  {
-    icon: Brain,
-    text: "Processing AI insights...",
-    color: "text-teal-600"
-  },
-  {
-    icon: Sparkles,
-    text: "Finalizing recommendations...",
-    color: "text-green-500"
-  }
-];
-
 export function AnalysisLoadingState() {
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
+  const t = useTranslations('swingTrading.loading');
+  
+  const analysisStages = [
+    {
+      icon: Search,
+      text: t('scanningMarket'),
+      color: "text-blue-500"
+    },
+    {
+      icon: ChartBar,
+      text: t('analyzingPatterns'),
+      color: "text-green-500"
+    },
+    {
+      icon: TrendingUp,
+      text: t('evaluatingMomentum'),
+      color: "text-teal-500"
+    },
+    {
+      icon: Activity,
+      text: t('checkingVolume'),
+      color: "text-green-600"
+    },
+    {
+      icon: Target,
+      text: t('identifyingEntry'),
+      color: "text-blue-600"
+    },
+    {
+      icon: Brain,
+      text: t('processingAI'),
+      color: "text-teal-600"
+    },
+    {
+      icon: Sparkles,
+      text: t('finalizingRecommendations'),
+      color: "text-green-500"
+    }
+  ];
 
   useEffect(() => {
     const stageInterval = setInterval(() => {
@@ -110,7 +112,7 @@ export function AnalysisLoadingState() {
           {analysisStages[currentStage].text}
         </p>
         <p className="text-sm text-muted-foreground">
-          Analyzing market conditions across multiple timeframes
+          {t('analyzingConditions')}
         </p>
       </div>
 
@@ -162,7 +164,7 @@ export function AnalysisLoadingState() {
       {/* Fun fact or tip */}
       <div className="text-center text-sm text-muted-foreground italic animate-fade-in">
         <Zap className="inline-block h-4 w-4 mr-1" />
-        Tip: Our AI analyzes over 50 technical indicators to find the best opportunities
+        {t('tip')}
       </div>
     </div>
   );

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Search } from 'lucide-react';
-import { examplePrompts } from '@/lib/example-prompts';
+import { useTranslations } from 'next-intl';
+import { getTranslatedPrompts } from '@/lib/example-prompts';
 
 interface PromptSearchFormProps {
   onSearch: (prompt: string) => void;
@@ -13,6 +14,8 @@ interface PromptSearchFormProps {
 
 export default function PromptSearchForm({ onSearch, isLoading }: PromptSearchFormProps) {
   const [prompt, setPrompt] = useState('');
+  const t = useTranslations();
+  const examplePrompts = getTranslatedPrompts(t);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

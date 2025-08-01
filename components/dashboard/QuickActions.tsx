@@ -5,71 +5,80 @@ import { Plus, MessageSquare, TrendingUp, BrainCircuit, PieChart, FileText } fro
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-
-const actions = [
-  {
-    title: 'Add Stock',
-    description: 'Add a new stock to your portfolio',
-    icon: Plus,
-    href: '/portfolio',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    hoverColor: 'hover:bg-blue-500/20',
-  },
-  {
-    title: 'Chat with AI',
-    description: 'Get instant financial insights',
-    icon: MessageSquare,
-    href: '/finchat',
-    color: 'text-teal-500',
-    bgColor: 'bg-teal-500/10',
-    hoverColor: 'hover:bg-teal-500/20',
-  },
-  {
-    title: 'Find Trades',
-    description: 'Discover swing trading opportunities',
-    icon: TrendingUp,
-    href: '/swing-trading',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-    hoverColor: 'hover:bg-green-500/20',
-  },
-  {
-    title: 'Analyze Stock',
-    description: 'Get AI-powered stock analysis',
-    icon: BrainCircuit,
-    href: '/stock-analysis',
-    color: 'text-green-600',
-    bgColor: 'bg-green-600/10',
-    hoverColor: 'hover:bg-green-600/20',
-  },
-  {
-    title: 'View Portfolio',
-    description: 'Check your holdings and performance',
-    icon: PieChart,
-    href: '/portfolio',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-600/10',
-    hoverColor: 'hover:bg-blue-600/20',
-  },
-  {
-    title: 'Market Report',
-    description: 'Generate AI market summary',
-    icon: FileText,
-    href: '/finchat',
-    color: 'text-teal-600',
-    bgColor: 'bg-teal-600/10',
-    hoverColor: 'hover:bg-teal-600/20',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export function QuickActions() {
+  const t = useTranslations('dashboard.quickActions')
+
+  const actions = [
+    {
+      id: 'addStock',
+      title: t('actions.addStock.title'),
+      description: t('actions.addStock.description'),
+      icon: Plus,
+      href: '/portfolio',
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10',
+      hoverColor: 'hover:bg-blue-500/20',
+    },
+    {
+      id: 'chatWithAI',
+      title: t('actions.chatWithAI.title'),
+      description: t('actions.chatWithAI.description'),
+      icon: MessageSquare,
+      href: '/finchat',
+      color: 'text-teal-500',
+      bgColor: 'bg-teal-500/10',
+      hoverColor: 'hover:bg-teal-500/20',
+    },
+    {
+      id: 'findTrades',
+      title: t('actions.findTrades.title'),
+      description: t('actions.findTrades.description'),
+      icon: TrendingUp,
+      href: '/swing-trading',
+      color: 'text-green-500',
+      bgColor: 'bg-green-500/10',
+      hoverColor: 'hover:bg-green-500/20',
+    },
+    {
+      id: 'analyzeStock',
+      title: t('actions.analyzeStock.title'),
+      description: t('actions.analyzeStock.description'),
+      icon: BrainCircuit,
+      href: '/stock-analysis',
+      color: 'text-green-600',
+      bgColor: 'bg-green-600/10',
+      hoverColor: 'hover:bg-green-600/20',
+    },
+    {
+      id: 'viewPortfolio',
+      title: t('actions.viewPortfolio.title'),
+      description: t('actions.viewPortfolio.description'),
+      icon: PieChart,
+      href: '/portfolio',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-600/10',
+      hoverColor: 'hover:bg-blue-600/20',
+    },
+    {
+      id: 'marketReport',
+      title: t('actions.marketReport.title'),
+      description: t('actions.marketReport.description'),
+      icon: FileText,
+      href: '/finchat',
+      color: 'text-teal-600',
+      bgColor: 'bg-teal-600/10',
+      hoverColor: 'hover:bg-teal-600/20',
+    },
+  ]
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Quick Actions</CardTitle>
-        <CardDescription>
-          Common tasks and features at your fingertips
+    <Card className="overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/30 to-teal-50/30 dark:from-cyan-950/20 dark:to-teal-950/20" />
+      <CardHeader className="relative">
+        <CardTitle className="bg-gradient-to-r from-cyan-600 to-teal-600 dark:from-cyan-400 dark:to-teal-400 bg-clip-text text-transparent">{t('title')}</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          {t('subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -78,7 +87,7 @@ export function QuickActions() {
             const Icon = action.icon
             return (
               <Button
-                key={action.title}
+                key={action.id}
                 variant="ghost"
                 className={cn(
                   "h-auto flex-col gap-2 p-4 justify-start",

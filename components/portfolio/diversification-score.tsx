@@ -7,6 +7,8 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatPercentage } from '@/lib/utils/formatters'
 
 interface DiversificationMetrics {
   score: number // 0-100
@@ -38,6 +40,8 @@ interface DiversificationMetrics {
 export function DiversificationScore() {
   const { items } = usePortfolioStore()
   const [metrics, setMetrics] = useState<DiversificationMetrics | null>(null)
+  const t = useTranslations('portfolio.diversification')
+  const locale = useLocale()
 
   useEffect(() => {
     calculateDiversification()
@@ -76,13 +80,13 @@ export function DiversificationScore() {
       score += 25
     } else if (items.length >= 5 && items.length < 8) {
       score += 15
-      recommendations.push('Add 3-5 more stocks for better diversification')
+      recommendations.push(t('addMoreStocks'))
     } else if (items.length < 5) {
       score += 5
-      recommendations.push('Portfolio too concentrated - add at least 3 more stocks')
+      recommendations.push(t('tooConcentrated'))
     } else {
       score += 20
-      recommendations.push('Consider consolidating - too many holdings to manage effectively')
+      recommendations.push(t('tooManyHoldings'))
     }
 
     // Sector diversity (0-35 points)
@@ -90,13 +94,13 @@ export function DiversificationScore() {
       score += 35
     } else if (sectorCount >= 3 && sectorBalance) {
       score += 25
-      recommendations.push('Diversify into 2-3 additional sectors')
+      recommendations.push(t('diversifyIntoSectors'))
     } else if (sectorCount >= 3) {
       score += 15
-      recommendations.push('Rebalance sector allocation - too concentrated in one sector')
+      recommendations.push(t('rebalanceSectors'))
     } else {
       score += 5
-      recommendations.push('Critical: Add stocks from different sectors immediately')
+      recommendations.push(t('addDifferentSectors'))
     }
 
     // Market cap diversity (0-20 points) - Mock data
@@ -108,15 +112,15 @@ export function DiversificationScore() {
       score += 20
     } else if (hasLargeCap && (hasMidCap || hasSmallCap)) {
       score += 15
-      recommendations.push('Add small or mid-cap stocks for size diversification')
+      recommendations.push(t('addSmallMidCap'))
     } else {
       score += 10
-      recommendations.push('Portfolio lacks market cap diversity')
+      recommendations.push(t('lacksMarketCapDiversity'))
     }
 
     // Geographic diversity (0-20 points) - All US stocks in demo
     score += 5
-    recommendations.push('Consider adding international exposure (Europe, Asia)')
+    recommendations.push(t('considerInternational'))
 
     // Determine grade
     const grade: DiversificationMetrics['grade'] = 
@@ -177,22 +181,25 @@ export function DiversificationScore() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-50/30 to-fuchsia-50/30 dark:from-violet-950/10 dark:to-fuchsia-950/10" />
+      <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2">
-          <PieChart className="h-5 w-5" />
-          Diversification Analysis
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-violet-100 to-fuchsia-100 dark:from-violet-900/50 dark:to-fuchsia-900/50 flex items-center justify-center">
+            <PieChart className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+          </div>
+          {t('title')}
         </CardTitle>
         <CardDescription>
-          How well-balanced is your portfolio
+          {t('subtitle')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 relative">
         {/* Overall Score */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center justify-center">
             <div className={cn(
-              "text-4xl font-bold w-20 h-20 rounded-full flex items-center justify-center",
+              "text-4xl font-bold w-24 h-24 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-105",
               getGradeColor(metrics.grade)
             )}>
               {metrics.grade}
@@ -201,7 +208,7 @@ export function DiversificationScore() {
           <div className="space-y-2">
             <Progress value={metrics.score} className="h-3" />
             <p className="text-sm text-muted-foreground">
-              Diversification Score: {metrics.score}/100
+              {t('score')}: {metrics.score}/100
             </p>
           </div>
         </div>
@@ -211,7 +218,7 @@ export function DiversificationScore() {
           {/* Asset Count */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Number of Holdings</span>
+              <span className="text-sm font-medium">{t('numberOfHoldings')}</span>
               {metrics.assetCount.status === 'optimal' ? (
                 <CheckCircle className="h-4 w-4 text-green-600" />
               ) : (
@@ -219,7 +226,7 @@ export function DiversificationScore() {
               )}
             </div>
             <Badge variant={metrics.assetCount.status === 'optimal' ? 'default' : 'secondary'}>
-              {metrics.assetCount.current} stocks
+              {metrics.assetCount.current} {t('stocks')}
             </Badge>
           </div>
 
@@ -227,7 +234,7 @@ export function DiversificationScore() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Sector Coverage</span>
+                <span className="text-sm font-medium">{t('sectorCoverage')}</span>
                 {metrics.sectorDiversity.isBalanced ? (
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 ) : (
@@ -235,7 +242,7 @@ export function DiversificationScore() {
                 )}
               </div>
               <Badge variant="outline">
-                {metrics.sectorDiversity.count} sectors
+                {metrics.sectorDiversity.count} {t('sectors')}
               </Badge>
             </div>
             <div className="flex gap-2 flex-wrap">
@@ -250,7 +257,7 @@ export function DiversificationScore() {
           {/* Geographic Diversity */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Geographic Exposure</span>
+              <span className="text-sm font-medium">{t('geographicExposure')}</span>
               {metrics.geographicDiversity.isBalanced ? (
                 <CheckCircle className="h-4 w-4 text-green-600" />
               ) : (
@@ -258,7 +265,7 @@ export function DiversificationScore() {
               )}
             </div>
             <Badge variant="secondary">
-              {metrics.geographicDiversity.domestic}% US
+              {formatPercentage(metrics.geographicDiversity.domestic, locale)} {locale === 'ar' ? 'أمريكي' : 'US'}
             </Badge>
           </div>
         </div>
@@ -266,7 +273,7 @@ export function DiversificationScore() {
         {/* Recommendations */}
         {metrics.recommendations.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Recommendations</h4>
+            <h4 className="text-sm font-medium">{t('recommendations')}</h4>
             <ul className="space-y-1">
               {metrics.recommendations.map((rec, index) => (
                 <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">

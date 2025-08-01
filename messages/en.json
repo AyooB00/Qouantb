@@ -1,0 +1,1395 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "finChat": "FinChat",
+    "stockAnalysis": "Stock Analysis",
+    "swingTrading": "Swing Trading",
+    "settings": "Settings",
+    "toggleTheme": "Toggle theme",
+    "opportunityAnalysis": "Opportunity Analysis"
+  },
+  "landing": {
+    "hero": {
+      "badge": "AI Agents Analyzing Markets 24/7",
+      "title": "AI Agents for",
+      "tradingTypes": {
+        "shortTerm": "Short-term Trading",
+        "longTerm": "Long-term Investing",
+        "swing": "Swing Trading",
+        "value": "Value Investing"
+      },
+      "subtitle": "Our AI agents analyze hundreds of companies, read financial statements, monitor trades and news to identify profitable opportunities using methodologies from legendary investors like Warren Buffett, Cathie Wood, and more.",
+      "cta": {
+        "startFree": "Start Free Trial",
+        "seeAgents": "See AI Agents in Action"
+      },
+      "aiAnalysis": "AI Analysis Active",
+      "agentsAnalyzing": "{count} AI agents analyzing",
+      "realTimeDetection": "Real-time opportunity detection",
+      "trust": {
+        "title": "Trusted by Investment Professionals",
+        "funds": "Investment Funds",
+        "assets": "Assets Analyzed",
+        "companies": "Companies Monitored"
+      },
+      "security": {
+        "encryption": "Bank-grade encryption",
+        "speed": "Sub-100ms analysis",
+        "monitoring": "Real-time monitoring"
+      }
+    },
+    "aiAgents": {
+      "badge": "AI-Powered Analysis",
+      "title": "Meet Your AI Investment Agents",
+      "subtitle": "Our AI agents analyze hundreds of companies using the methodologies of legendary investors, identifying both short-term trading and long-term investment opportunities.",
+      "dailyAnalysis": "Our agents analyze 500+ companies daily across 11 sectors",
+      "riskProfiles": {
+        "conservative": "conservative",
+        "moderate": "moderate",
+        "aggressive": "aggressive"
+      },
+      "timeHorizons": {
+        "very-long": "10+ years",
+        "long": "5-10 years",
+        "medium": "2-5 years",
+        "short": "6-12 months"
+      },
+      "focusAreas": "Focus Areas:",
+      "keyMetrics": "Key Metrics:",
+      "agents": {
+        "buffett": {
+          "name": "Warren Buffett",
+          "style": "Value Investing",
+          "philosophy": "Value investing with focus on companies with strong moats, excellent management, and trading below intrinsic value. Buy wonderful companies at fair prices.",
+          "focusAreas": ["Competitive advantages (moats)", "Management quality", "Long-term earnings power", "Simple, understandable businesses", "Strong brand value"],
+          "metrics": ["P/E Ratio", "Return on Equity (ROE)", "Free Cash Flow", "Profit Margins"]
+        },
+        "cathie-wood": {
+          "name": "Cathie Wood",
+          "style": "Disruptive Innovation",
+          "philosophy": "Focus on disruptive innovation and exponential growth opportunities. Invest in companies leading technological revolutions across AI, robotics, genomics, and blockchain.",
+          "focusAreas": ["Artificial Intelligence", "Genomic revolution", "Autonomous technology", "Blockchain technology", "Space exploration"],
+          "metrics": ["Revenue Growth Rate", "Total Addressable Market (TAM)", "R&D Spending", "Technology Leadership"]
+        },
+        "lynch": {
+          "name": "Peter Lynch",
+          "style": "Growth at Reasonable Price",
+          "philosophy": "Look for understandable growth companies at reasonable prices with potential to grow earnings faster than the market.",
+          "focusAreas": ["Earnings growth", "Market expansion", "Product innovation", "Consumer trends"],
+          "metrics": ["PEG Ratio", "Earnings Growth", "Market Share", "Sales Growth"]
+        },
+        "dalio": {
+          "name": "Ray Dalio",
+          "style": "Macro Investing",
+          "philosophy": "Understanding economic cycles and market dynamics to build all-weather portfolios that can thrive in any environment.",
+          "focusAreas": ["Economic cycles", "Debt levels", "Risk parity", "Global trends"],
+          "metrics": ["Macro indicators", "Debt ratios", "Capital flows", "Market correlation"]
+        },
+        "graham": {
+          "name": "Benjamin Graham",
+          "style": "Deep Value",
+          "philosophy": "Buy stocks trading significantly below their intrinsic value with a strong margin of safety.",
+          "focusAreas": ["Book value", "Tangible assets", "Margin of safety", "Financial stability"],
+          "metrics": ["Price-to-Book", "Working Capital", "Debt Ratio", "Stable Earnings"]
+        }
+      }
+    },
+    "howItWorks": {
+      "badge": "Takes only 30 seconds",
+      "title": "Simple 3-Step Process",
+      "subtitle": "From stock selection to actionable insights in seconds",
+      "steps": [
+        {
+          "title": "Choose What to Analyze",
+          "description": "Select stocks or upload your portfolio",
+          "features": ["Single stock", "Full portfolio", "Market sectors"]
+        },
+        {
+          "title": "AI Agents Analyze",
+          "description": "5 legendary investor AIs work in parallel",
+          "features": ["Warren Buffett", "Cathie Wood", "Ray Dalio"],
+          "badge": "AI Powered"
+        },
+        {
+          "title": "Get Actionable Insights",
+          "description": "Clear buy/sell recommendations with confidence scores",
+          "features": ["Buy/Sell signals", "Risk analysis", "Price targets"]
+        }
+      ],
+      "stats": {
+        "accuracy": "94% accuracy rate",
+        "speed": "Results in 30 seconds",
+        "trusted": "Used by 50+ investment funds"
+      }
+    },
+    "features": {
+      "title": "Powerful Features for Smart Investors",
+      "subtitle": "Everything you need to analyze markets, manage portfolios, and make informed decisions.",
+      "tabs": {
+        "chat": "AI Chat",
+        "portfolio": "Portfolio",
+        "analysis": "Analysis",
+        "trading": "Trading"
+      },
+      "chatDemo": {
+        "title": "FinChat AI Assistant",
+        "userMessage": "What's the outlook for tech stocks this quarter?",
+        "aiResponse": "Based on current market trends, tech stocks show strong momentum. Key factors include..."
+      },
+      "portfolioDemo": {
+        "title": "Portfolio Performance",
+        "return": "+12.4%"
+      },
+      "analysisDemo": {
+        "stockAnalysis": "AAPL Analysis",
+        "recommendation": "BUY",
+        "targetPrice": "Target Price",
+        "confidence": "Confidence",
+        "insights": "Strong fundamentals with growing services revenue. Recent AI initiatives position for future growth..."
+      },
+      "tradingDemo": {
+        "title": "Swing Trading Opportunities",
+        "bullishMomentum": "Bullish momentum detected",
+        "confidence": "Confidence"
+      },
+      "cards": [
+        {
+          "title": "AI Financial Assistant",
+          "description": "Chat with our AI expert for personalized market insights and investment advice.",
+          "badge": "Most Popular",
+          "learnMore": "Learn more"
+        },
+        {
+          "title": "Portfolio Analytics",
+          "description": "Track performance, analyze risk, and get AI-powered optimization suggestions.",
+          "learnMore": "Learn more"
+        },
+        {
+          "title": "Stock Analysis",
+          "description": "Get comprehensive analysis from legendary investor AI personas.",
+          "learnMore": "Learn more"
+        },
+        {
+          "title": "Swing Trading",
+          "description": "Discover profitable opportunities with AI-powered market scanning.",
+          "learnMore": "Learn more"
+        }
+      ],
+      "additional": [
+        {
+          "title": "Bank-Level Security",
+          "description": "Your data is encrypted and secure"
+        },
+        {
+          "title": "Real-Time Data",
+          "description": "Live market updates every second"
+        }
+      ]
+    },
+    "enterprise": {
+      "badge": "Enterprise Solutions",
+      "title": "Built for Investment Funds & Portfolio Managers",
+      "subtitle": "Leverage our AI agents to analyze your entire portfolio, identify opportunities, and make data-driven decisions faster than ever before.",
+      "features": [
+        {
+          "title": "Bank-Grade Security",
+          "description": "End-to-end encryption for all portfolio data with SOC 2 compliance"
+        },
+        {
+          "title": "Seamless Integration",
+          "description": "Connect your existing systems via API or secure file upload"
+        },
+        {
+          "title": "Portfolio Analytics",
+          "description": "AI-powered insights across your entire portfolio in real-time"
+        },
+        {
+          "title": "Multi-User Access",
+          "description": "Role-based permissions for your entire investment team"
+        }
+      ],
+      "benefits": [
+        "Analyze portfolios 100x faster than traditional methods",
+        "Identify hidden risks and opportunities across holdings",
+        "Get personalized recommendations based on your investment mandate",
+        "Track performance against custom benchmarks",
+        "Automated compliance and reporting features",
+        "White-label solutions available"
+      ],
+      "stats": {
+        "assets": "Assets Analyzed",
+        "funds": "Fund Clients",
+        "uptime": "Uptime SLA"
+      },
+      "technology": {
+        "title": "Same Technology Used by Industry Leaders",
+        "stack": "Claude AI • Advanced Analytics • Institutional Grade",
+        "description": "Our AI technology stack powers analysis at the world's leading investment institutions"
+      },
+      "cta": {
+        "title": "Ready to Transform Your Investment Strategy?",
+        "description": "Join 50+ investment funds using QuantumBoard to gain a competitive edge.",
+        "button": "Schedule Demo",
+        "contact": "or contact us at"
+      }
+    },
+    "architecture": {
+      "badge": "Advanced Architecture",
+      "title": "How Our AI Engine Works",
+      "subtitle": "Multiple data sources, intelligent processing, and AI-powered analysis combine to deliver the most accurate investment insights",
+      "dataSources": {
+        "title": "Data Sources",
+        "items": ["Market Data APIs", "Financial Statements", "News & Sentiment", "Technical Indicators"],
+        "descriptions": ["Real-time prices & volumes", "SEC filings & reports", "Global news analysis", "Charts & patterns"]
+      },
+      "processing": {
+        "title": "Context Engineering",
+        "description": "Data normalization, validation, and enrichment",
+        "items": ["Deduplication", "Validation", "Normalization", "Enrichment"]
+      },
+      "aiAnalysis": {
+        "title": "Multi-Agent AI",
+        "description": "5 specialized investment agents analyzing in parallel",
+        "agents": ["Warren Buffett Agent", "Cathie Wood Agent", "Peter Lynch Agent", "Ray Dalio Agent", "Benjamin Graham Agent"],
+        "shortTerm": "Short-term Trading",
+        "shortTermDuration": "1-30 days",
+        "longTerm": "Long-term Investing",
+        "longTermDuration": "1-10+ years"
+      },
+      "output": {
+        "title": "Insights & Actions",
+        "items": ["Buy/Sell recommendations", "Risk analysis", "Price targets", "Market timing"]
+      },
+      "performance": {
+        "latency": "Sub-100ms response time",
+        "accuracy": "94% prediction accuracy",
+        "coverage": "500+ stocks analyzed daily",
+        "processing": "Processing 1M+ data points/second"
+      }
+    },
+    "techStack": {
+      "title": "Built with Best-in-Class Technology",
+      "subtitle": "Powered by Claude AI and leading technology partners to deliver institutional-grade investment analysis at unprecedented speed and accuracy.",
+      "badge": "AI-Powered Infrastructure",
+      "claude": {
+        "byAnthropic": "by Anthropic",
+        "description": "The core intelligence behind our investment analysis platform. Claude's advanced reasoning capabilities power our AI agents to analyze financial data, understand market context, and provide nuanced investment insights.",
+        "features": ["Advanced Reasoning", "Financial Analysis", "Multi-Agent System", "Real-time Processing"],
+        "collaboration": "Multi-Model Collaboration"
+      },
+      "performance": {
+        "title": "Performance Metrics"
+      },
+      "trust": {
+        "soc2": {
+          "title": "SOC 2 Compliant",
+          "description": "Audited security controls"
+        },
+        "encryption": {
+          "title": "End-to-End Encryption",
+          "description": "Your data is always secure"
+        },
+        "uptime": {
+          "title": "99.9% Uptime",
+          "description": "Reliable 24/7 operation"
+        }
+      }
+    },
+    "documentation": {
+      "title": "Comprehensive Resources",
+      "subtitle": "Everything you need to get started and succeed with QuantumBoard",
+      "badge": "Comprehensive Documentation",
+      "sections": [
+        {
+          "title": "Getting Started",
+          "description": "Quick start guides and tutorials",
+          "items": ["Create Your Account", "First Portfolio Setup", "Understanding AI Agents", "Making Your First Trade"]
+        },
+        {
+          "title": "Using Our Services",
+          "description": "Detailed guides for each feature",
+          "items": ["AI Stock Analysis", "Portfolio Management", "Swing Trading Signals", "FinChat Assistant"]
+        },
+        {
+          "title": "For Investment Funds",
+          "description": "Enterprise integration and APIs",
+          "items": ["API Documentation", "Bulk Data Import", "Security & Compliance", "White Label Options"]
+        },
+        {
+          "title": "Security & Privacy",
+          "description": "Data protection and encryption",
+          "items": ["Data Encryption", "Privacy Policy", "SOC 2 Compliance", "Access Controls"]
+        }
+      ],
+      "videoTutorials": {
+        "title": "Video Tutorials",
+        "description": "Learn visually with our step-by-step video guides",
+        "viewAll": "View All Tutorials"
+      },
+      "support": {
+        "title": "Need Help?",
+        "description": "Our support team and community are here to help",
+        "liveChat": {
+          "title": "Live Chat Support",
+          "description": "Available 24/7 for premium users"
+        },
+        "forum": {
+          "title": "Community Forum",
+          "description": "Connect with 10,000+ traders"
+        },
+        "email": {
+          "title": "Email Support",
+          "address": "support@quoantb.com"
+        },
+        "contactButton": "Contact Support"
+      },
+      "developer": {
+        "title": "Developer Resources",
+        "description": "REST API, WebSockets, SDKs for Python, JavaScript, and more"
+      },
+      "cta": {
+        "docs": "Explore Docs",
+        "api": "View API Docs",
+        "support": "Get Support"
+      }
+    },
+    "footer": {
+      "company": {
+        "name": "QuantumBoard",
+        "description": "AI-powered investment platform using advanced agents to identify trading and investment opportunities."
+      },
+      "products": {
+        "title": "Products",
+        "stockAnalysis": "AI Stock Analysis",
+        "portfolio": "Portfolio Management",
+        "swingTrading": "Swing Trading",
+        "finChat": "FinChat Assistant"
+      },
+      "resources": {
+        "title": "Resources",
+        "documentation": "Documentation",
+        "api": "API Reference",
+        "blog": "Blog",
+        "community": "Community"
+      },
+      "legal": {
+        "title": "Legal & Security",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "security": "Security",
+        "compliance": "Compliance"
+      },
+      "copyright": "© 2024 QuantumBoard. All rights reserved. Not financial advice.",
+      "socCompliant": "SOC 2 Compliant",
+      "email": "support@quoantb.com"
+    }
+  },
+  "stockAnalysis": {
+    "title": "AI Investment Analysis",
+    "subtitle": "Get stock analysis from legendary investors powered by AI",
+    "selectStock": "Select Stock",
+    "selectStockDesc": "Choose a stock to analyze",
+    "selectAnalysts": "Select Investment Analysts",
+    "selectAnalystsDesc": "Choose one or more legendary investors",
+    "analyzeButton": "Analyze Stock",
+    "analyzing": "Analyzing...",
+    "consensus": "Consensus",
+    "currentPrice": "Current Price",
+    "marketCap": "Market Cap",
+    "peRatio": "P/E Ratio",
+    "beta": "Beta",
+    "dividendYield": "Dividend Yield",
+    "investmentAnalyses": "Investment Analyses",
+    "disclaimer": "This analysis is generated by AI based on the investment philosophies of famous investors. It is for educational purposes only and should not be considered as financial advice.",
+    "error": "Please select a stock and at least one analyst"
+  },
+  "finChat": {
+    "placeholder": "Ask me about stocks, market trends, or investment strategies...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "fetchingData": "Fetching real-time data...",
+    "error": "Error",
+    "retry": "Retry",
+    "clearChat": "Clear chat"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Track and manage your investments",
+    "totalValue": "Total Value",
+    "totalGainLoss": "Total Gain/Loss",
+    "holdings": "Holdings",
+    "performance": "Performance",
+    "addStock": "Add Stock",
+    "updateAnalysis": "Update Analysis",
+    "noHoldings": "No holdings yet. Add your first stock to get started."
+  },
+  "languageSwitcher": {
+    "rememberChoice": "Remember my choice"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "bullish": "Bullish",
+    "bearish": "Bearish",
+    "mixed": "Mixed",
+    "unexpectedError": "An unexpected error occurred",
+    "sectors": {
+      "technology": "Technology",
+      "healthcare": "Healthcare",
+      "finance": "Finance",
+      "consumer": "Consumer",
+      "energy": "Energy",
+      "materials": "Materials",
+      "industrials": "Industrials",
+      "utilities": "Utilities",
+      "realEstate": "Real Estate",
+      "communication": "Communication"
+    }
+  },
+  "notFound": {
+    "message": "Page not found",
+    "backHome": "Back to Home"
+  },
+  "swingTrading": {
+    "title": "Find Trading Opportunities",
+    "subtitle": "Use AI to discover swing trading opportunities",
+    "searchPlaceholder": "e.g., 'Find NASDAQ tech stocks with RSI below 30'",
+    "analyzing": "Analyzing NASDAQ stocks...",
+    "foundOpportunities": "{count} Opportunities Found",
+    "analyzedStocks": "Analyzed {count} stocks",
+    "filters": {
+      "all": "All",
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "oversold": "Oversold",
+      "overbought": "Overbought"
+    },
+    "card": {
+      "entryPoint": "Entry Point",
+      "exitPoint": "Exit Target",
+      "stopLoss": "Stop Loss",
+      "riskReward": "Risk/Reward",
+      "confidence": "Confidence",
+      "timeframe": "Timeframe",
+      "technicalIndicators": "Technical Indicators",
+      "keyLevels": "Key Levels",
+      "support": "Support",
+      "resistance": "Resistance"
+    },
+    "examplePrompts": {
+      "prompt1": "Find tech stocks under $100 for swing trading",
+      "prompt2": "Show me stocks between $20-$50 with medium risk",
+      "prompt3": "I want high-growth stocks under $200",
+      "prompt4": "Find momentum stocks in technology sector",
+      "prompt5": "Looking for undervalued stocks under $75",
+      "prompt6": "Show me volatile stocks for day trading",
+      "prompt7": "Find dividend stocks for conservative trades",
+      "prompt8": "Stocks under $50 with strong technicals"
+    },
+    "indicators": {
+      "rsi": "RSI",
+      "macd": "MACD",
+      "movingAverages": "Moving Averages",
+      "sma20": "SMA 20",
+      "sma50": "SMA 50",
+      "sma200": "SMA 200",
+      "ema": "EMA",
+      "bollingerBands": "Bollinger Bands",
+      "volume": "Volume",
+      "volumeProfile": "Volume Profile"
+    },
+    "signals": {
+      "buy": "Buy Signal",
+      "sell": "Sell Signal",
+      "hold": "Hold",
+      "strongBuy": "Strong Buy",
+      "strongSell": "Strong Sell"
+    },
+    "loading": {
+      "scanningMarket": "Scanning market data...",
+      "analyzingPatterns": "Analyzing price patterns...",
+      "evaluatingMomentum": "Evaluating momentum indicators...",
+      "checkingVolume": "Checking volume trends...",
+      "identifyingEntry": "Identifying entry points...",
+      "processingAI": "Processing AI insights...",
+      "finalizingRecommendations": "Finalizing recommendations...",
+      "analyzingConditions": "Analyzing market conditions across multiple timeframes",
+      "tip": "Tip: Our AI analyzes over 50 technical indicators to find the best opportunities"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your application preferences",
+    "saved": "Settings saved successfully",
+    "save": "Save Settings",
+    "providers": {
+      "title": "AI Provider",
+      "description": "Choose your preferred AI provider for analysis and chat",
+      "preferred": "Preferred Provider",
+      "automatic": "Automatic",
+      "recommended": "Recommended",
+      "notConfigured": "Not configured",
+      "availableProviders": "Available Providers",
+      "active": "Active",
+      "autoDescription": "Automatic mode will use the best available provider"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the look and feel of the application",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "general": {
+      "title": "General",
+      "description": "General application preferences",
+      "notifications": "Notifications",
+      "notificationsDesc": "Receive alerts for market updates and analysis",
+      "autoSave": "Auto-save",
+      "autoSaveDesc": "Automatically save your work and preferences"
+    },
+    "language": {
+      "title": "Language & URLs",
+      "description": "Configure language and URL preferences",
+      "cleanUrls": "Clean URLs Mode",
+      "cleanUrlsDesc": "Use simple URLs without language prefixes",
+      "cleanUrlsExample": "URL format",
+      "cleanUrlsWarning": "Note: This mode reduces SEO visibility for multiple languages",
+      "seoFriendly": "SEO-optimized URLs with language prefixes for better search visibility"
+    },
+    "generalOld": {
+      "language": "Language",
+      "languageDesc": "Choose your preferred language",
+      "currency": "Currency",
+      "currencyDesc": "Default currency for display",
+      "timezone": "Time Zone",
+      "timezoneDesc": "Your local time zone for market hours"
+    },
+    "trading": {
+      "title": "Trading Preferences",
+      "description": "Configure your trading settings",
+      "defaultExchange": "Default Exchange",
+      "nasdaqOnly": "NASDAQ Stocks Only",
+      "nasdaqOnlyDesc": "Show only NASDAQ-listed stocks in searches",
+      "riskTolerance": "Risk Tolerance",
+      "conservative": "Conservative",
+      "moderate": "Moderate",
+      "aggressive": "Aggressive"
+    },
+    "privacy": {
+      "title": "Privacy & Data",
+      "description": "Manage your data and privacy settings",
+      "dataCollection": "Data Collection",
+      "analytics": "Analytics",
+      "analyticsDesc": "Help improve the app by sharing usage data",
+      "clearData": "Clear Local Data",
+      "exportData": "Export My Data"
+    },
+    "about": {
+      "localOnly": "Settings are saved locally in your browser.",
+      "apiKeys": "API keys should be configured through environment variables."
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to QuantumBoard",
+    "step": "Step {current} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "complete": "Get Started",
+    "welcome": {
+      "title": "Welcome",
+      "description": "Let's get you started with QuantumBoard",
+      "greeting": "Welcome to QuantumBoard!",
+      "intro": "Your AI-powered investment platform for smart trading decisions",
+      "feature1": "AI agents analyze NASDAQ stocks 24/7",
+      "feature2": "Real-time market insights and opportunities",
+      "feature3": "Personalized investment recommendations"
+    },
+    "language": {
+      "title": "Language & URLs",
+      "description": "Configure language and URL preferences",
+      "cleanUrls": "Clean URLs Mode",
+      "cleanUrlsDesc": "Use simple URLs without language prefixes",
+      "cleanUrlsExample": "URL format",
+      "cleanUrlsWarning": "Note: This mode reduces SEO visibility for multiple languages",
+      "seoFriendly": "SEO-optimized URLs with language prefixes for better search visibility"
+    },
+    "currency": {
+      "title": "Currency Preference",
+      "description": "Select your preferred currency for displaying prices"
+    },
+    "preferences": {
+      "title": "Trading Preferences",
+      "description": "Customize your trading experience",
+      "nasdaqOnly": "Focus on NASDAQ Stocks",
+      "nasdaqOnlyDesc": "Show only NASDAQ-listed stocks in searches and analysis",
+      "notifications": "Enable Notifications",
+      "notificationsDesc": "Receive alerts for market updates and trading opportunities",
+      "summary": "Your Preferences",
+      "nasdaqStocksOnly": "NASDAQ stocks only",
+      "allStocks": "All US stocks"
+    }
+  },
+  "finChat": {
+    "placeholder": "Ask me about stocks, market trends, or investment strategies...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "fetchingData": "Fetching real-time data...",
+    "error": "Error",
+    "retry": "Retry",
+    "clearChat": "Clear chat",
+    "conversation": {
+      "newChat": "New Chat",
+      "chatHistory": "Chat History",
+      "noConversations": "No conversations yet",
+      "clearAllConversations": "Clear All Conversations",
+      "conversations": "Conversations"
+    },
+    "market": {
+      "marketSummary": "Market Summary",
+      "open": "Open",
+      "closed": "Closed",
+      "unableToLoadData": "Unable to load market data",
+      "lastUpdated": "Last updated"
+    },
+    "stockCard": {
+      "loading": "Loading {symbol}...",
+      "unableToLoad": "Unable to load {symbol}",
+      "volume": "Vol"
+    },
+    "messageItem": {
+      "copy": "Copy",
+      "copied": "Copied!",
+      "thinking": "Thinking...",
+      "fetchingData": "Fetching data...",
+      "analyzing": "Analyzing...",
+      "error": "Error occurred",
+      "retry": "Retry"
+    },
+    "tools": {
+      "stockQuote": "Stock Quote",
+      "technicalAnalysis": "Technical Analysis",
+      "newsAnalysis": "News Analysis",
+      "compare": "Stock Comparison",
+      "fundamentals": "Fundamentals"
+    },
+    "actions": {
+      "rename": "Rename",
+      "delete": "Delete",
+      "clearAll": "Clear all chats",
+      "searchChats": "Search chats..."
+    },
+    "sidebar": {
+      "chats": "Chats",
+      "newChat": "New Chat",
+      "startNewChat": "Start a new chat",
+      "noResults": "No results",
+      "deleteConfirmTitle": "Delete conversation?",
+      "deleteConfirmMessage": "This will permanently delete this conversation and all its messages. This action cannot be undone.",
+      "clearAllConfirmTitle": "Clear all conversations?",
+      "clearAllConfirmMessage": "This will permanently delete all {count} conversations and their messages. This action cannot be undone."
+    },
+    "welcome": {
+      "title": "Welcome to FinChat",
+      "subtitle": "Your AI-powered financial assistant with real-time market data. Ask me anything about stocks, markets, or investment strategies.",
+      "tryPrompts": "Try one of the suggested prompts below or type your own question",
+      "features": {
+        "realTimeData": {
+          "title": "Real-Time Data",
+          "description": "Live stock quotes, technical indicators, and market analysis"
+        },
+        "aiInsights": {
+          "title": "AI Insights",
+          "description": "Intelligent analysis powered by advanced AI with market context"
+        },
+        "riskAnalysis": {
+          "title": "Risk Analysis",
+          "description": "Position sizing, portfolio analysis, and risk management tools"
+        }
+      }
+    },
+    "suggestions": {
+      "title": "Suggested follow-ups",
+      "categories": {
+        "marketAnalysis": "Market Analysis",
+        "stockResearch": "Stock Research",
+        "investmentStrategy": "Investment Strategy",
+        "technicalAnalysis": "Technical Analysis",
+        "optionsDerivatives": "Options & Derivatives",
+        "economicIndicators": "Economic Indicators"
+      },
+      "stockSpecific": {
+        "technicalAnalysis": "Show technical analysis for {symbol}",
+        "recentNews": "Get recent news about {symbol}",
+        "entryPoint": "What's the best entry point for {symbol}?",
+        "compareCompetitors": "Compare {symbol} with its competitors",
+        "positionSize": "Calculate position size for {symbol} with 2% risk"
+      },
+      "general": {
+        "sectorsToday": "Which sectors are performing best today?",
+        "marketSentiment": "Show me the market sentiment analysis",
+        "diversification": "How can I improve my diversification?",
+        "topPerformers": "What are my top performing holdings?",
+        "keyRisks": "What are the key risks to consider?",
+        "alternatives": "Show me alternative investment options",
+        "marketOverview": "Show market overview",
+        "portfolioPerformance": "Analyze my portfolio performance",
+        "trendingStocks": "Find trending stocks today"
+      }
+    },
+    "messageInput": {
+      "enterToSend": "Press Enter to send, Shift+Enter for new line",
+      "attachFile": "Attach file"
+    },
+    "chatInterface": {
+      "toggleSidebar": "Toggle sidebar",
+      "tryAsking": "Try asking:",
+      "disclaimer": "FinChat can make mistakes. Consider checking important information."
+    },
+    "componentGrid": {
+      "smartComponents": "{count, plural, =0 {No smart components} =1 {1 smart component} other {{count} smart components}}",
+      "gridView": "Grid view",
+      "listView": "List view"
+    },
+    "smartCards": {
+      "technicalAnalysis": {
+        "title": "Technical Analysis",
+        "rsi": "RSI (14)",
+        "macd": "MACD",
+        "movingAverages": "Moving Averages",
+        "bollingerBands": "Bollinger Bands",
+        "support": "Support",
+        "resistance": "Resistance",
+        "upperBand": "Upper Band",
+        "middleBand": "Middle Band",
+        "lowerBand": "Lower Band",
+        "currentPrice": "Current Price",
+        "oversold": "Oversold",
+        "overbought": "Overbought",
+        "price": "Price",
+        "signal": "Signal",
+        "histogram": "Histogram",
+        "supportLevels": "Support Levels",
+        "resistanceLevels": "Resistance Levels"
+      },
+      "marketAnalysis": {
+        "title": "Market Analysis",
+        "indices": "Market Indices",
+        "sentiment": "Market Sentiment",
+        "sectorPerformance": "Sector Performance",
+        "volatility": "Volatility",
+        "volume": "Volume",
+        "breadth": "Market Breadth",
+        "advancers": "Advancers",
+        "decliners": "Decliners",
+        "unchanged": "Unchanged",
+        "newHighs": "New Highs",
+        "newLows": "New Lows"
+      },
+      "stockComparison": {
+        "title": "Stock Comparison",
+        "compare": "Compare",
+        "metrics": "Metrics",
+        "fundamentals": "Fundamentals",
+        "technical": "Technical",
+        "valuation": "Valuation",
+        "growth": "Growth",
+        "profitability": "Profitability"
+      },
+      "newsSummary": {
+        "title": "News Summary",
+        "topStories": "Top Stories",
+        "sentiment": "Sentiment",
+        "keyTopics": "Key Topics",
+        "readMore": "Read more"
+      },
+      "stockQuote": {
+        "dayRange": "Day Range",
+        "open": "Open",
+        "prevClose": "Prev Close",
+        "marketCap": "Market Cap",
+        "volume": "Volume",
+        "active": "Active"
+      },
+      "positionCalculator": {
+        "title": "Position Size for {symbol}",
+        "shares": "shares",
+        "totalCost": "Total Cost",
+        "accountPercentage": "% of Account",
+        "riskManagement": "Risk Management",
+        "stopLoss": "Stop Loss",
+        "maxLoss": "Max Loss",
+        "profitTargets": "Profit Targets",
+        "target1": "Target 1 (2%)",
+        "target2": "Target 2 (5%)",
+        "target3": "Target 3 (10%)",
+        "entryPrice": "Entry Price"
+      },
+      "portfolioSummary": {
+        "title": "Portfolio Overview",
+        "totalValue": "Total Portfolio Value",
+        "holdings": "Holdings",
+        "topPerformer": "Top Performer",
+        "diversification": "Sector Diversification",
+        "sectors": {
+          "technology": "Technology",
+          "healthcare": "Healthcare",
+          "finance": "Finance",
+          "consumer": "Consumer",
+          "other": "Other"
+        },
+        "actionHint": "Visit Portfolio page for detailed analysis"
+      },
+      "publishedAgo": "{time} ago",
+      "overallSentiment": "Overall Sentiment",
+      "portfolioImpact": {
+        "title": "Portfolio Impact",
+        "currentPosition": "Current Position",
+        "proposedAction": "Proposed Action",
+        "impact": "Impact",
+        "shares": "Shares",
+        "avgCost": "Avg Cost",
+        "currentValue": "Current Value",
+        "gainLoss": "Gain/Loss",
+        "addToPortfolio": "Add to Portfolio",
+        "updatePosition": "Update Position"
+      },
+      "riskAssessment": {
+        "title": "Risk Assessment",
+        "overallRisk": "Overall Risk",
+        "riskFactors": "Risk Factors",
+        "mitigations": "Mitigations",
+        "marketRisk": "Market Risk",
+        "liquidityRisk": "Liquidity Risk",
+        "volatilityRisk": "Volatility Risk",
+        "concentrationRisk": "Concentration Risk",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "score": "Score"
+      },
+      "priceAlert": {
+        "title": "Price Alert",
+        "createAlert": "Create Alert",
+        "targetPrice": "Target Price",
+        "alertType": "Alert Type",
+        "priceAbove": "Price Above",
+        "priceBelow": "Price Below",
+        "percentageChange": "Percentage Change",
+        "notification": "Notification"
+      },
+      "earningsSummary": {
+        "title": "Earnings Summary",
+        "quarter": "Quarter",
+        "reportDate": "Report Date",
+        "eps": "EPS",
+        "revenue": "Revenue",
+        "guidance": "Guidance",
+        "beat": "Beat",
+        "miss": "Miss",
+        "inline": "In Line",
+        "surprise": "Surprise",
+        "consensus": "Consensus"
+      },
+      "sectorAnalysis": {
+        "title": "Sector Analysis",
+        "performance": "Performance",
+        "leaders": "Leaders",
+        "laggards": "Laggards",
+        "momentum": "Momentum",
+        "rotation": "Rotation",
+        "relativeStrength": "Relative Strength"
+      },
+      "sentimentGauge": {
+        "title": "Sentiment Gauge",
+        "marketSentiment": "Market Sentiment",
+        "bullish": "Bullish",
+        "bearish": "Bearish",
+        "neutral": "Neutral",
+        "extreme": "Extreme",
+        "fear": "Fear",
+        "greed": "Greed"
+      },
+      "common": {
+        "loading": "Loading...",
+        "error": "Error loading data",
+        "retry": "Retry",
+        "noData": "No data available",
+        "lastUpdated": "Last updated {time}",
+        "viewDetails": "View Details",
+        "analyze": "Analyze",
+        "compare": "Compare",
+        "addToWatchlist": "Add to Watchlist"
+      }
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Track and manage your investments",
+    "totalValue": "Total Value",
+    "totalGainLoss": "Total Gain/Loss",
+    "holdings": "Holdings",
+    "performance": "Performance",
+    "addStock": "Add Stock",
+    "updateAnalysis": "Update Analysis",
+    "noHoldings": "No holdings yet. Add your first stock to get started.",
+    "exampleStocksNotice": "These are example stocks to help you get started. You can add your own stocks or clear these examples.",
+    "disclaimer": "Portfolio tracking and analysis for educational purposes only. Real-time prices may be delayed. Not financial advice.",
+    "costBasis": "Cost Basis",
+    "uniqueStocks": "Unique Stocks",
+    "averageReturn": "Average Return",
+    "perHolding": "per holding",
+    "topSectors": "Top Sectors",
+    "holding": {
+      "shares": "shares",
+      "currentPrice": "Current Price",
+      "avgCost": "Avg Cost",
+      "totalCost": "Total Cost",
+      "added": "Added",
+      "aiForecast": "AI Forecast",
+      "sevenDayTarget": "7-Day Target",
+      "thirtyDayTarget": "30-Day Target",
+      "confidence": "Confidence",
+      "aiTips": "AI Tips",
+      "marketSentiment": "Market Sentiment",
+      "edit": "Edit",
+      "remove": "Remove",
+      "loading": "Loading...",
+      "removeConfirmTitle": "Remove {symbol} from portfolio?",
+      "removeConfirmMessage": "This will remove {quantity} shares of {companyName} from your portfolio. This action cannot be undone."
+    },
+    "dialog": {
+      "stockSymbol": "Stock Symbol",
+      "numberOfShares": "Number of Shares",
+      "averageCostPerShare": "Average Cost per Share",
+      "addToPortfolio": "Add to Portfolio",
+      "selected": "Selected",
+      "enterValidShares": "Please enter a valid number of shares",
+      "enterValidCost": "Please enter a valid average cost",
+      "addedSuccessMessage": "Added {quantity} shares of {symbol} to your portfolio"
+    },
+    "insights": {
+      "marketSummary": "Market Summary",
+      "title": "AI Portfolio Insights",
+      "subtitle": "Personalized analytics and recommendations",
+      "refresh": "Refresh",
+      "tabs": {
+        "insights": "Insights",
+        "performance": "Performance",
+        "watchlist": "Tomorrow"
+      },
+      "dailyReturn": "Daily Return",
+      "vsMarket": "vs S&P 500",
+      "topMovers": "Today's Top Movers",
+      "tomorrowWatchlist": "Tomorrow's Watchlist",
+      "expectedImpact": "Expected Impact",
+      "actionRequired": "Action Required",
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      }
+    },
+    "risk": {
+      "title": "Risk Analysis",
+      "subtitle": "Portfolio risk metrics and warnings",
+      "overallScore": "Overall Risk Score",
+      "levels": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "wellBalanced": "Well-balanced portfolio",
+      "moderateExposure": "Moderate risk exposure",
+      "considerDiversification": "High risk - consider diversification",
+      "volatility": "Volatility",
+      "annual": "annual",
+      "maxDrawdown": "Max Drawdown",
+      "fromPeak": "from peak",
+      "portfolioBeta": "Portfolio Beta",
+      "sharpeRatio": "Sharpe Ratio",
+      "highVolatility": "High volatility",
+      "lowVolatility": "Low volatility",
+      "marketAverage": "Market average",
+      "goodReturns": "Good risk-adjusted returns",
+      "belowAverage": "Below average",
+      "concentrationWarning": "High position concentration",
+      "sectorConcentration": "Sector concentration risk",
+      "reducePosition": "Consider reducing position size",
+      "diversifyAcrossSectors": "Diversify across sectors to reduce risk"
+    },
+    "diversification": {
+      "title": "Diversification Analysis",
+      "subtitle": "How well-balanced is your portfolio",
+      "score": "Diversification Score",
+      "numberOfHoldings": "Number of Holdings",
+      "stocks": "stocks",
+      "sectorCoverage": "Sector Coverage",
+      "sectors": "sectors",
+      "geographicExposure": "Geographic Exposure",
+      "recommendations": "Recommendations",
+      "addMoreStocks": "Add 3-5 more stocks to improve diversification",
+      "tooConcentrated": "Portfolio too concentrated - add at least 3 stocks",
+      "tooManyHoldings": "Consider consolidating - too many holdings to manage effectively",
+      "diversifyIntoSectors": "Diversify into 2-3 additional sectors",
+      "rebalanceSectors": "Rebalance sector allocation - too concentrated in one sector",
+      "addDifferentSectors": "Critical: Add stocks from different sectors immediately",
+      "addSmallMidCap": "Add small or mid-cap stocks for size diversification",
+      "lacksMarketCapDiversity": "Portfolio lacks market cap diversity",
+      "considerInternational": "Consider adding international exposure (Europe, Asia)"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's your financial overview.",
+    "marketOverview": "Market Overview",
+    "topGainers": "Top Gainers",
+    "topLosers": "Top Losers",
+    "portfolioPerformance": "Portfolio Performance",
+    "recentActivity": "Recent Activity",
+    "marketSentiment": "Market Sentiment",
+    "tradingVolume": "Trading Volume",
+    "marketCap": "Market Cap",
+    "dailyChange": "Daily Change",
+    "insights": {
+      "title": "AI Insights",
+      "portfolioHealth": "Portfolio Health",
+      "riskLevel": "Risk Level",
+      "opportunities": "Opportunities Found",
+      "recommendations": "Recommendations",
+      "viewAll": "View All Insights",
+      "personalizedRecommendations": "Personalized recommendations based on your portfolio",
+      "lastUpdated": "Last updated",
+      "strongPerformanceTitle": "Strong Portfolio Performance",
+      "strongPerformanceDesc": "Your portfolio is outperforming the market. Consider taking some profits on winners.",
+      "underPressureTitle": "Portfolio Under Pressure",
+      "underPressureDesc": "Recent market conditions have impacted your holdings. Review stop-loss levels.",
+      "hittingHighsTitle": "{symbol} Hitting New Highs",
+      "hittingHighsDesc": "Up {percent}% since purchase. Consider setting trailing stop-loss.",
+      "techMomentumTitle": "Tech Sector Momentum",
+      "techMomentumDesc": "Technology stocks showing strong momentum. AI and semiconductor stocks leading gains.",
+      "highVolatilityTitle": "High Portfolio Volatility",
+      "highVolatilityDesc": "{count} stocks with high beta. Consider adding defensive positions.",
+      "impact": {
+        "high": "high",
+        "medium": "medium",
+        "low": "low"
+      }
+    },
+    "metrics": {
+      "totalValue": "Total Portfolio Value",
+      "dayChange": "Today's Change",
+      "totalReturn": "Total Return",
+      "winRate": "Win Rate",
+      "activePositions": "Active Positions",
+      "cashBalance": "Cash Balance",
+      "positions": "{winners}/{total} positions"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "subtitle": "Common tasks and features at your fingertips",
+      "actions": {
+        "addStock": {
+          "title": "Add Stock",
+          "description": "Add a new stock to your portfolio"
+        },
+        "chatWithAI": {
+          "title": "Chat with AI",
+          "description": "Get instant financial insights"
+        },
+        "findTrades": {
+          "title": "Find Trades",
+          "description": "Discover swing trading opportunities"
+        },
+        "analyzeStock": {
+          "title": "Analyze Stock",
+          "description": "Get AI-powered stock analysis"
+        },
+        "viewPortfolio": {
+          "title": "View Portfolio",
+          "description": "Check your holdings and performance"
+        },
+        "marketReport": {
+          "title": "Market Report",
+          "description": "Generate AI market summary"
+        }
+      }
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "subtitle": "Your latest actions and updates",
+      "bought": "Bought",
+      "sold": "Sold",
+      "dividend": "Dividend Received",
+      "alert": "Price Alert",
+      "analysis": "New Analysis Available",
+      "noActivity": "No recent activity",
+      "noActivityDescription": "Start by adding stocks to your portfolio or chatting with AI",
+      "addedToPortfolio": "Added {symbol} to portfolio",
+      "sharesAtPrice": "{quantity} shares at ${price}",
+      "viewAll": "View all activity",
+      "messages": "{count} messages",
+      "analyzedStock": "Analyzed {symbol}",
+      "aiConsensus": "AI consensus: {rating}",
+      "strongBuy": "Strong Buy",
+      "relativeTime": {
+        "justNow": "Just now",
+        "minutesAgo": "{minutes}m ago",
+        "hoursAgo": "{hours}h ago",
+        "daysAgo": "{days}d ago"
+      }
+    },
+    "market": {
+      "marketOverview": "Market Overview",
+      "nasdaqComposite": "NASDAQ Composite",
+      "nasdaq100": "NASDAQ 100",
+      "nasdaqETF": "NASDAQ ETF",
+      "preMarket": "Pre-Market",
+      "afterHours": "After Hours",
+      "marketOpen": "Market Open",
+      "marketClosed": "Market Closed",
+      "marketSentiment": "Market Sentiment",
+      "marketSentimentDescription": "Based on volume and price action",
+      "bearish": "Bearish",
+      "bullish": "Bullish",
+      "marketShowing": "Market showing {sentiment} sentiment",
+      "trendingStocks": "Trending NASDAQ Stocks",
+      "volumeLabel": "Vol: {volume}",
+      "volume": "Volume",
+      "avgVolume": "Avg Volume",
+      "high": "High",
+      "low": "Low",
+      "previousClose": "Previous Close"
+    }
+  },
+  "swingTrading": {
+    "title": "Find Trading Opportunities",
+    "subtitle": "Use AI to discover swing trading opportunities",
+    "searchPlaceholder": "e.g., 'Find NASDAQ tech stocks with RSI below 30'",
+    "analysisInfo": "Analysis may take up to 3 minutes as we search and analyze hundreds of stocks, market data, and news",
+    "analyzing": "Analyzing NASDAQ stocks...",
+    "foundOpportunities": "{count} Opportunities Found",
+    "analyzedStocks": "Analyzed {count} stocks",
+    "filters": {
+      "all": "All",
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "oversold": "Oversold",
+      "overbought": "Overbought"
+    },
+    "card": {
+      "entryPoint": "Entry Point",
+      "exitPoint": "Exit Target",
+      "stopLoss": "Stop Loss",
+      "riskReward": "Risk/Reward",
+      "confidence": "Confidence",
+      "timeframe": "Timeframe",
+      "technicalIndicators": "Technical Indicators",
+      "keyLevels": "Key Levels",
+      "support": "Support",
+      "resistance": "Resistance",
+      "target1": "Target 1"
+    },
+    "table": {
+      "symbol": "Symbol",
+      "company": "Company",
+      "currentPrice": "Current Price",
+      "entryPrice": "Entry Price",
+      "stopLoss": "Stop Loss",
+      "target1": "Target 1",
+      "target2": "Target 2",
+      "target3": "Target 3",
+      "confidence": "Confidence",
+      "riskReward": "Risk/Reward",
+      "reasoning": "Reasoning"
+    },
+    "examplePrompts": {
+      "prompt1": "Find tech stocks under $100 for swing trading",
+      "prompt2": "Show me stocks between $20-$50 with medium risk",
+      "prompt3": "I want high-growth stocks under $200",
+      "prompt4": "Find momentum stocks in technology sector",
+      "prompt5": "Looking for undervalued stocks under $75",
+      "prompt6": "Show me volatile stocks for day trading",
+      "prompt7": "Find dividend stocks for conservative trades",
+      "prompt8": "Stocks under $50 with strong technicals"
+    },
+    "indicators": {
+      "rsi": "RSI",
+      "macd": "MACD",
+      "movingAverages": "Moving Averages",
+      "sma20": "SMA 20",
+      "sma50": "SMA 50",
+      "sma200": "SMA 200",
+      "ema": "EMA",
+      "bollingerBands": "Bollinger Bands",
+      "volume": "Volume",
+      "volumeProfile": "Volume Profile"
+    },
+    "signals": {
+      "buy": "Buy Signal",
+      "sell": "Sell Signal",
+      "hold": "Hold",
+      "strongBuy": "Strong Buy",
+      "strongSell": "Strong Sell"
+    },
+    "loading": {
+      "scanningMarket": "Scanning market data...",
+      "analyzingPatterns": "Analyzing price patterns...",
+      "evaluatingMomentum": "Evaluating momentum indicators...",
+      "checkingVolume": "Checking volume trends...",
+      "identifyingEntry": "Identifying entry points...",
+      "processingAI": "Processing AI insights...",
+      "finalizingRecommendations": "Finalizing recommendations...",
+      "analyzingConditions": "Analyzing market conditions across multiple timeframes",
+      "tip": "Tip: Our AI analyzes over 50 technical indicators to find the best opportunities"
+    }
+  },
+  "stockAnalysis": {
+    "title": "AI Investment Analysis",
+    "subtitle": "Get stock analysis from legendary investors powered by AI",
+    "selectStock": "Select Stock",
+    "selectStockDesc": "Choose a stock to analyze",
+    "selectAnalysts": "Select Investment Analysts",
+    "selectAnalystsDesc": "Choose one or more legendary investors",
+    "analyzeButton": "Analyze Stock",
+    "analyzing": "Analyzing...",
+    "consensus": "Consensus",
+    "currentPrice": "Current Price",
+    "marketCap": "Market Cap",
+    "peRatio": "P/E Ratio",
+    "beta": "Beta",
+    "dividendYield": "Dividend Yield",
+    "investmentAnalyses": "Investment Analyses",
+    "disclaimer": "This analysis is generated by AI based on the investment philosophies of famous investors. should not be considered as financial advice.",
+    "error": "Please select a stock and at least one analyst",
+    "analysis": {
+      "targetPrice": "Target Price",
+      "confidenceLevel": "Confidence Level",
+      "target": "Target",
+      "confidence": "Confidence",
+      "horizon": "Horizon",
+      "factors": "Factors",
+      "viewDetails": "View Details",
+      "keyFactors": "Key Factors",
+      "risks": "Risks",
+      "entryStrategy": "Entry Strategy",
+      "exitStrategy": "Exit Strategy",
+      "recommendations": {
+        "strong-buy": "Strong Buy",
+        "buy": "Buy",
+        "hold": "Hold",
+        "sell": "Sell",
+        "strong-sell": "Strong Sell"
+      }
+    },
+    "loading": {
+      "analyzingSymbol": "Analyzing {symbol}",
+      "withInvestors": "with {count, plural, =1 {# legendary investor} other {# legendary investors}}",
+      "stageProgress": "Stage {current} of {total}",
+      "stages": {
+        "fetchingData": "Fetching stock data...",
+        "connectingAnalysts": "Connecting to AI analysts...",
+        "fundamentalAnalysis": "Running fundamental analysis...",
+        "technicalIndicators": "Evaluating technical indicators...",
+        "processingInsights": "Processing AI insights...",
+        "generatingRecommendations": "Generating recommendations...",
+        "compilingReport": "Compiling analysis report..."
+      },
+      "tips": {
+        "uniquePhilosophy": "Each AI analyst brings unique investment philosophy to the analysis",
+        "fundamentalAndTechnical": "We analyze both fundamental metrics and technical patterns",
+        "historicalData": "Historical data helps predict future price movements",
+        "multiplePerspectives": "Multiple perspectives provide more balanced recommendations",
+        "realTimeData": "Real-time market data ensures up-to-date analysis"
+      }
+    },
+    "agents": {
+      "selectedCount": "{count, plural, =1 {# analyst selected} other {# analysts selected}}",
+      "timeHorizons": {
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long",
+        "very-long": "V.Long"
+      },
+      "riskProfiles": {
+        "conservative": "Conservative",
+        "moderate": "Moderate",
+        "aggressive": "Aggressive"
+      },
+      "buffett": {
+        "name": "Warren Buffett",
+        "style": "Value Investing",
+        "philosophy": "Value investing with focus on companies with strong moats, excellent management, and trading below intrinsic value. Buy wonderful companies at fair prices."
+      },
+      "cathie-wood": {
+        "name": "Cathie Wood",
+        "style": "Growth/Innovation Investing",
+        "philosophy": "Focus on disruptive innovation and exponential growth opportunities. Invest in companies leading technological revolutions across AI, robotics, genomics, and blockchain."
+      },
+      "lynch": {
+        "name": "Peter Lynch",
+        "style": "GARP (Growth at Reasonable Price)",
+        "philosophy": "Invest in what you know. Look for growth at a reasonable price (GARP). Find companies with strong fundamentals that Wall Street has overlooked."
+      },
+      "dalio": {
+        "name": "Ray Dalio",
+        "style": "Macro/Risk Parity Investing",
+        "philosophy": "All-weather portfolio approach focusing on risk parity and understanding economic cycles. Diversification across asset classes to weather any economic environment."
+      },
+      "graham": {
+        "name": "Benjamin Graham",
+        "style": "Deep Value Investing",
+        "philosophy": "Buy stocks trading significantly below their intrinsic value with a margin of safety. Focus on financial stability and avoid speculation."
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "bullish": "Bullish",
+    "bearish": "Bearish",
+    "mixed": "Mixed",
+    "unexpectedError": "An unexpected error occurred",
+    "sectors": {
+      "technology": "Technology",
+      "healthcare": "Healthcare",
+      "finance": "Finance",
+      "consumer": "Consumer",
+      "energy": "Energy",
+      "materials": "Materials",
+      "industrials": "Industrials",
+      "utilities": "Utilities",
+      "realEstate": "Real Estate",
+      "communication": "Communication"
+    },
+    "labels": {
+      "selected": "Selected",
+      "remove": "Remove",
+      "cancel": "Cancel"
+    }
+  }
+}

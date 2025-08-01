@@ -3,8 +3,10 @@
 import { Bot, Sparkles, TrendingUp, AlertCircle } from 'lucide-react'
 import { AnimatedBackground } from './animated-background'
 import { AnimatedText } from './animated-text'
+import { useTranslations } from 'next-intl'
 
 export function WelcomeContent() {
+  const t = useTranslations('finChat.welcome')
   return (
     <div className="relative">
       <AnimatedBackground />
@@ -14,11 +16,11 @@ export function WelcomeContent() {
             <Bot className="w-10 h-10 text-primary animate-bounce" />
           </div>
           <h1 className="text-4xl font-bold mb-4">
-            <AnimatedText text="Welcome to FinChat" speed={50} />
+            <AnimatedText text={t('title')} speed={50} />
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             <AnimatedText 
-              text="Your AI-powered financial assistant with real-time market data. Ask me anything about stocks, markets, or investment strategies."
+              text={t('subtitle')}
               delay={300}
               speed={15}
             />
@@ -31,33 +33,33 @@ export function WelcomeContent() {
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-400/20 to-green-600/20 mb-4 group-hover:scale-110 transition-transform">
               <TrendingUp className="w-6 h-6 text-green-600 group-hover:rotate-6 transition-transform" />
             </div>
-            <h3 className="font-semibold mb-2">Real-Time Data</h3>
+            <h3 className="font-semibold mb-2">{t('features.realTimeData.title')}</h3>
             <p className="text-sm text-muted-foreground">
-              Live stock quotes, technical indicators, and market analysis
+              {t('features.realTimeData.description')}
             </p>
           </div>
           <div className="group text-center p-6 rounded-2xl bg-card/50 backdrop-blur border border-border/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-card/80 animate-stagger animate-stagger-2">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-400/20 to-blue-600/20 mb-4 group-hover:scale-110 transition-transform">
               <Sparkles className="w-6 h-6 text-blue-600 group-hover:rotate-12 transition-transform" />
             </div>
-            <h3 className="font-semibold mb-2">AI Insights</h3>
+            <h3 className="font-semibold mb-2">{t('features.aiInsights.title')}</h3>
             <p className="text-sm text-muted-foreground">
-              Intelligent analysis powered by advanced AI with market context
+              {t('features.aiInsights.description')}
             </p>
           </div>
           <div className="group text-center p-6 rounded-2xl bg-card/50 backdrop-blur border border-border/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-card/80 animate-stagger animate-stagger-3">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-teal-400/20 to-teal-600/20 mb-4 group-hover:scale-110 transition-transform">
               <AlertCircle className="w-6 h-6 text-teal-600 group-hover:rotate-[-6deg] transition-transform" />
             </div>
-            <h3 className="font-semibold mb-2">Risk Analysis</h3>
+            <h3 className="font-semibold mb-2">{t('features.riskAnalysis.title')}</h3>
             <p className="text-sm text-muted-foreground">
-              Position sizing, portfolio analysis, and risk management tools
+              {t('features.riskAnalysis.description')}
             </p>
           </div>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
-          Try one of the suggested prompts below or type your own question
+          {t('tryPrompts')}
         </p>
       </div>
     </div>

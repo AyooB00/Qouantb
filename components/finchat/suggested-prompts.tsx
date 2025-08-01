@@ -19,9 +19,10 @@ const promptIcons: Record<string, any> = {
 
 function getPromptIcon(prompt: string) {
   const lowercasePrompt = prompt.toLowerCase()
-  if (lowercasePrompt.includes('market')) return promptIcons.market
-  if (lowercasePrompt.includes('stock') || lowercasePrompt.includes('analyze')) return promptIcons.stock
-  if (lowercasePrompt.includes('portfolio') || lowercasePrompt.includes('diversif')) return promptIcons.portfolio
+  // Check for both English and Arabic keywords
+  if (lowercasePrompt.includes('market') || lowercasePrompt.includes('سوق')) return promptIcons.market
+  if (lowercasePrompt.includes('stock') || lowercasePrompt.includes('analyze') || lowercasePrompt.includes('سهم') || lowercasePrompt.includes('تحليل')) return promptIcons.stock
+  if (lowercasePrompt.includes('portfolio') || lowercasePrompt.includes('diversif') || lowercasePrompt.includes('محفظ') || lowercasePrompt.includes('تنوي')) return promptIcons.portfolio
   return promptIcons.default
 }
 

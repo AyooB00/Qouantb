@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Menu } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -12,13 +13,15 @@ import { ConversationSidebar } from './conversation-sidebar'
 import { FollowUpSuggestions } from './follow-up-suggestions'
 import { WelcomeContent } from './welcome-content'
 import { SuggestedPrompts } from './suggested-prompts'
-import { featuredPrompts } from '@/lib/finchat/financial-prompts'
+import { getFeaturedPrompts } from '@/lib/finchat/localized-financial-prompts'
 import { cn } from '@/lib/utils'
 import { SmartComponent, EnhancedChatMessage, QuickAction } from '@/lib/types/finchat'
 
 export function ChatInterface() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const locale = useLocale()
+  const t = useTranslations('finChat')
   const { 
     messages, 
     isLoading,
@@ -29,6 +32,8 @@ export function ChatInterface() {
     createConversation,
     currentConversationId
   } = useChatStore()
+  
+  const featuredPrompts = getFeaturedPrompts(locale)
 
   // Auto-scroll to bottom when new messages arrive or when typing indicator shows
   useEffect(() => {
@@ -88,7 +93,7 @@ export function ChatInterface() {
     })
     
     let accumulatedComponents: SmartComponent[] = []
-    let messageContext: any = null
+    let messageContext: Record<string, unknown> | null = null
 
     try {
       useChatStore.setState({ 
@@ -106,7 +111,8 @@ export function ChatInterface() {
         body: JSON.stringify({
           messages: [...messages, { role: 'user', content }],
           stream: true,
-          provider: userProvider !== 'auto' ? userProvider : 'openai'
+          provider: userProvider !== 'auto' ? userProvider : 'openai',
+          locale
         })
       })
 
@@ -258,7 +264,7 @@ export function ChatInterface() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Toggle sidebar</p>
+                    <p>{t('chatInterface.toggleSidebar')}</p>
                     <p className="text-xs text-muted-foreground">⌘/</p>
                   </TooltipContent>
                 </Tooltip>
@@ -284,7 +290,7 @@ export function ChatInterface() {
             {/* Suggested Prompts when no messages */}
             {messages.length === 0 && !isLoading && (
               <div className="mb-4">
-                <h3 className="text-sm font-medium mb-3 text-center text-muted-foreground">Try asking:</h3>
+                <h3 className="text-sm font-medium mb-3 text-center text-muted-foreground">{t('chatInterface.tryAsking')}</h3>
                 <SuggestedPrompts 
                   prompts={featuredPrompts}
                   onSelectPrompt={handleSendMessage}
@@ -311,7 +317,6 @@ export function ChatInterface() {
             <MessageInput 
               onSendMessage={handleSendMessage}
               disabled={isLoading}
-              placeholder="Ask about stocks, markets, or investment strategies..."
             />
             
             {error && (
@@ -319,7 +324,7 @@ export function ChatInterface() {
             )}
             
             <p className="text-xs text-muted-foreground text-center mt-3">
-              FinChat can make mistakes. Consider checking important information.
+              {t('chatInterface.disclaimer')}
             </p>
           </div>
         </div>

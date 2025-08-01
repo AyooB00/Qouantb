@@ -8,6 +8,13 @@ import {
   NewsSummaryData
 } from '@/lib/types/finchat'
 
+type ToolResult = 
+  | MarketAnalysisData
+  | { stocks: Array<unknown> }
+  | { indicators: { rsi?: unknown; macd?: unknown } }
+  | { articles: Array<unknown> }
+  | Record<string, unknown>
+
 export class ResponseParser {
   private static instance: ResponseParser
   
@@ -20,10 +27,11 @@ export class ResponseParser {
     return ResponseParser.instance
   }
 
-  parseResponse(content: string, toolResults?: any[]): {
+  parseResponse(content: string, toolResults?: ToolResult[]): {
     text: string
     components: SmartComponent[]
     context: MessageContext
+    layout?: 'inline' | 'grid'
   } {
     const components: SmartComponent[] = []
     let cleanText = content
@@ -58,11 +66,39 @@ export class ResponseParser {
     // Sort by priority
     components.sort((a, b) => b.priority - a.priority)
     
+    // Determine layout based on components
+    const layout = this.determineLayout(components, content)
+    
     return {
       text: cleanText,
       components,
-      context
+      context,
+      layout
     }
+  }
+  
+  private determineLayout(components: SmartComponent[], content: string): 'inline' | 'grid' {
+    // Check for explicit layout hints in content
+    if (content.toLowerCase().includes('[grid]') || content.toLowerCase().includes('grid view')) {
+      return 'grid'
+    }
+    
+    // Use grid layout if we have multiple components of different types
+    if (components.length > 1) {
+      const uniqueTypes = new Set(components.map(c => c.type))
+      if (uniqueTypes.size > 1) {
+        return 'grid'
+      }
+    }
+    
+    // Use grid for certain component combinations
+    const hasAnalysis = components.some(c => c.type === 'technical-analysis' || c.type === 'market-analysis')
+    const hasComparison = components.some(c => c.type === 'stock-comparison')
+    if (hasAnalysis && hasComparison) {
+      return 'grid'
+    }
+    
+    return 'inline'
   }
 
   private extractContext(content: string): MessageContext {
@@ -174,9 +210,10 @@ export class ResponseParser {
     return undefined
   }
 
-  private parseToolResult(result: any): Omit<SmartComponent, 'id'> | null {
+  private parseToolResult(result: ToolResult): Omit<SmartComponent, 'id'> | null {
     // Parse based on tool type/structure
-    if (result.indices && result.marketSentiment) {
+    // Market overview data
+    if ('indices' in result && 'sentiment' in result) {
       return {
         type: 'market-analysis',
         data: result as MarketAnalysisData,
@@ -185,16 +222,18 @@ export class ResponseParser {
       }
     }
     
-    if (result.comparison && Array.isArray(result.comparison)) {
+    // Stock comparison data
+    if ('stocks' in result && Array.isArray(result.stocks)) {
       return {
         type: 'stock-comparison',
-        data: { stocks: result.comparison } as StockComparisonData,
+        data: { stocks: result.stocks } as StockComparisonData,
         priority: 9,
         interactive: true
       }
     }
     
-    if (result.indicators && (result.indicators.rsi || result.indicators.macd)) {
+    // Technical indicators data
+    if ('indicators' in result && result.indicators && ('rsi' in result.indicators || 'macd' in result.indicators)) {
       return {
         type: 'technical-analysis',
         data: result as TechnicalAnalysisData,
@@ -203,12 +242,43 @@ export class ResponseParser {
       }
     }
     
-    if (result.news && Array.isArray(result.news)) {
+    // News data
+    if ('articles' in result && Array.isArray(result.articles)) {
       return {
         type: 'news-summary',
-        data: { articles: result.news, overallSentiment: 'neutral', keyTopics: [] } as NewsSummaryData,
+        data: result as NewsSummaryData,
         priority: 7,
         interactive: false
+      }
+    }
+    
+    // Stock quote data - convert to a stock card component
+    if ('symbol' in result && 'currentPrice' in result && result.currentPrice !== undefined) {
+      return {
+        type: 'stock-quote',
+        data: result,
+        priority: 9,
+        interactive: true
+      }
+    }
+    
+    // Position sizing data
+    if (result.recommendedShares !== undefined && result.totalCost !== undefined) {
+      return {
+        type: 'position-calculator',
+        data: result,
+        priority: 8,
+        interactive: true
+      }
+    }
+    
+    // Portfolio summary
+    if (result.mockExample && result.mockExample.totalValue) {
+      return {
+        type: 'portfolio-summary',
+        data: result.mockExample,
+        priority: 8,
+        interactive: true
       }
     }
     

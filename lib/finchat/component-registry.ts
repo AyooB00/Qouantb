@@ -3,10 +3,19 @@ import { SmartComponentType, ComponentRenderProps } from '@/lib/types/finchat'
 
 export type SmartComponentModule = ComponentType<ComponentRenderProps>
 
+export interface ComponentMetadata {
+  supportedLocales: string[]
+  gridSize?: 'compact' | 'normal' | 'wide' | 'full'
+  priority: number
+  category: 'analysis' | 'market' | 'portfolio' | 'alert' | 'news'
+  requiresAuth?: boolean
+}
+
 interface ComponentRegistration {
   type: SmartComponentType
   loader: () => Promise<{ default: SmartComponentModule }>
   preload?: boolean
+  metadata: ComponentMetadata
 }
 
 export class ComponentRegistry {
@@ -31,52 +40,146 @@ export class ComponentRegistry {
       {
         type: 'market-analysis',
         loader: () => import('@/components/finchat/smart-cards/market-analysis-card'),
-        preload: true
+        preload: true,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'wide',
+          priority: 10,
+          category: 'market'
+        }
       },
       {
         type: 'stock-comparison',
         loader: () => import('@/components/finchat/smart-cards/stock-comparison-card'),
-        preload: true
+        preload: true,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'wide',
+          priority: 9,
+          category: 'analysis'
+        }
       },
       {
         type: 'technical-analysis',
         loader: () => import('@/components/finchat/smart-cards/technical-analysis-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 8,
+          category: 'analysis'
+        }
       },
       {
         type: 'news-summary',
         loader: () => import('@/components/finchat/smart-cards/news-summary-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 7,
+          category: 'news'
+        }
       },
       {
         type: 'portfolio-impact',
         loader: () => import('@/components/finchat/smart-cards/portfolio-impact-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 6,
+          category: 'portfolio',
+          requiresAuth: true
+        }
       },
       {
         type: 'risk-assessment',
         loader: () => import('@/components/finchat/smart-cards/risk-assessment-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'compact',
+          priority: 5,
+          category: 'analysis'
+        }
       },
       {
         type: 'price-alert',
         loader: () => import('@/components/finchat/smart-cards/price-alert-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'compact',
+          priority: 4,
+          category: 'alert'
+        }
       },
       {
         type: 'earnings-summary',
         loader: () => import('@/components/finchat/smart-cards/earnings-summary-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 6,
+          category: 'analysis'
+        }
       },
       {
         type: 'sector-analysis',
         loader: () => import('@/components/finchat/smart-cards/sector-analysis-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 7,
+          category: 'market'
+        }
       },
       {
         type: 'sentiment-gauge',
         loader: () => import('@/components/finchat/smart-cards/sentiment-gauge-card'),
-        preload: false
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'compact',
+          priority: 5,
+          category: 'analysis'
+        }
+      },
+      {
+        type: 'stock-quote',
+        loader: () => import('@/components/finchat/smart-cards/stock-quote-card'),
+        preload: true,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 9,
+          category: 'market'
+        }
+      },
+      {
+        type: 'position-calculator',
+        loader: () => import('@/components/finchat/smart-cards/position-calculator-card'),
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'normal',
+          priority: 7,
+          category: 'portfolio'
+        }
+      },
+      {
+        type: 'portfolio-summary',
+        loader: () => import('@/components/finchat/smart-cards/portfolio-summary-card'),
+        preload: false,
+        metadata: {
+          supportedLocales: ['en', 'ar'],
+          gridSize: 'wide',
+          priority: 8,
+          category: 'portfolio'
+        }
       }
     ]
     
@@ -154,5 +257,24 @@ export class ComponentRegistry {
   // Get all registered component types
   getRegisteredTypes(): SmartComponentType[] {
     return Array.from(this.components.keys())
+  }
+  
+  // Get component metadata
+  getComponentMetadata(type: SmartComponentType): ComponentMetadata | null {
+    const registration = this.components.get(type)
+    return registration?.metadata || null
+  }
+  
+  // Get components by category
+  getComponentsByCategory(category: ComponentMetadata['category']): SmartComponentType[] {
+    return Array.from(this.components.entries())
+      .filter(([_, reg]) => reg.metadata.category === category)
+      .map(([type]) => type)
+  }
+  
+  // Check if component supports locale
+  supportsLocale(type: SmartComponentType, locale: string): boolean {
+    const metadata = this.getComponentMetadata(type)
+    return metadata?.supportedLocales.includes(locale) || false
   }
 }

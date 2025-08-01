@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Plus, RefreshCw, TrendingUp, TrendingDown, AlertCircle, Loader2 } from 'lucide-react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useTranslations } from 'next-intl'
+import { Plus, RefreshCw, TrendingUp, AlertCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 import { PortfolioOverview } from '@/components/portfolio/portfolio-overview'
@@ -13,59 +13,53 @@ import { AddStockDialog } from '@/components/portfolio/add-stock-dialog'
 import { PortfolioInsights } from '@/components/portfolio/portfolio-insights'
 import { RiskAnalysis } from '@/components/portfolio/risk-analysis'
 import { DiversificationScore } from '@/components/portfolio/diversification-score'
-import { cn } from '@/lib/utils'
 
 export default function PortfolioPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const t = useTranslations('portfolio')
+  const tCommon = useTranslations('common')
+  const isUpdatingPrices = useRef(false)
+  const updateInterval = useRef<NodeJS.Timeout | null>(null)
   
   const {
     items,
-    totalValue,
-    totalProfitLoss,
-    totalProfitLossPercent,
     updatePrices,
     setLoading,
-    isLoading,
     initializeWithDefaults
   } = usePortfolioStore()
 
-  // Initialize with example stocks on first load
-  useEffect(() => {
-    initializeWithDefaults()
-  }, [])
-
-  // Update prices on mount and periodically
-  useEffect(() => {
-    if (items.length > 0) {
-      updateCurrentPrices()
+  const updateCurrentPrices = useCallback(async () => {
+    // Prevent multiple simultaneous updates
+    if (isUpdatingPrices.current) {
+      return
     }
-
-    // Update prices every 60 seconds
-    const interval = setInterval(() => {
-      if (items.length > 0) {
-        updateCurrentPrices()
-      }
-    }, 60000)
-
-    return () => clearInterval(interval)
-  }, [items.length])
-
-  const updateCurrentPrices = async () => {
+    
+    isUpdatingPrices.current = true
+    
     try {
       setLoading(true)
       const symbols = items.map(item => item.symbol)
       
       // Fetch current prices for all symbols
       const pricePromises = symbols.map(async (symbol) => {
-        const response = await fetch(`/api/search-stocks?q=${symbol}`)
-        if (!response.ok) throw new Error(`Failed to fetch ${symbol}`)
-        
-        // For now, we'll use the search endpoint, but ideally we'd have a dedicated price endpoint
-        // This is a placeholder - in production, we'd fetch real-time prices
-        const data = await response.json()
-        return { symbol, price: Math.random() * 200 + 50 } // Mock price for demo
+        try {
+          const response = await fetch(`/api/finchat/stock-quote?symbol=${symbol}`)
+          if (!response.ok) {
+            console.error(`Failed to fetch ${symbol}`)
+            return { symbol, price: items.find(i => i.symbol === symbol)?.currentPrice || 0 }
+          }
+          
+          const data = await response.json()
+          // Extract current price from the Finnhub quote data
+          const price = data.quote?.c || data.quote?.pc || items.find(i => i.symbol === symbol)?.currentPrice || 0
+          return { symbol, price }
+        } catch (error) {
+          console.error(`Error fetching price for ${symbol}:`, error)
+          // Fall back to current price if fetch fails
+          return { symbol, price: items.find(i => i.symbol === symbol)?.currentPrice || 0 }
+        }
       })
 
       const priceData = await Promise.all(pricePromises)
@@ -79,8 +73,45 @@ export default function PortfolioPage() {
       console.error('Error updating prices:', err)
     } finally {
       setLoading(false)
+      isUpdatingPrices.current = false
     }
-  }
+  }, [items, setLoading, updatePrices])
+
+  // Initialize with example stocks on first load
+  useEffect(() => {
+    initializeWithDefaults()
+  }, [initializeWithDefaults])
+
+  // Initial price update when component mounts
+  useEffect(() => {
+    if (items.length > 0) {
+      updateCurrentPrices()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run once on mount
+  
+  // Set up interval for periodic updates
+  useEffect(() => {
+    // Clear any existing interval
+    if (updateInterval.current) {
+      clearInterval(updateInterval.current)
+    }
+    
+    // Only set up interval if we have items
+    if (items.length > 0) {
+      updateInterval.current = setInterval(() => {
+        updateCurrentPrices()
+      }, 60000) // Update every 60 seconds
+    }
+
+    return () => {
+      if (updateInterval.current) {
+        clearInterval(updateInterval.current)
+        updateInterval.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length]) // Only re-run when items count changes
 
   const handleUpdateAnalysis = async () => {
     if (items.length === 0) return
@@ -100,15 +131,32 @@ export default function PortfolioPage() {
         throw new Error('Failed to update analysis')
       }
 
-      const data = await response.json()
+      interface AnalysisResponse {
+        analyses: Array<{
+          symbol: string
+          lastUpdated: string
+          tips: Array<{ description: string }>
+          forecast: {
+            predictions: {
+              sevenDay: { price: number; confidence: number }
+              thirtyDay: { price: number; confidence: number }
+            }
+            technicalIndicators: {
+              trend: 'bullish' | 'bearish' | 'neutral'
+            }
+          }
+        }>
+      }
+
+      const data: AnalysisResponse = await response.json()
       
       // Update each item with its analysis
-      data.analyses.forEach((analysis: any) => {
+      data.analyses.forEach((analysis) => {
         const item = items.find(i => i.symbol === analysis.symbol)
         if (item) {
           usePortfolioStore.getState().updateAnalysis(item.id, {
             timestamp: analysis.lastUpdated,
-            tips: analysis.tips.map((tip: any) => tip.description),
+            tips: analysis.tips.map((tip) => tip.description),
             forecast: {
               sevenDay: analysis.forecast.predictions.sevenDay.price,
               thirtyDay: analysis.forecast.predictions.thirtyDay.price,
@@ -127,12 +175,14 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-7xl mx-auto space-y-8">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">My Portfolio</h1>
-          <p className="text-muted-foreground">
-            Track your investments with AI-powered insights
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 dark:from-teal-400 dark:to-blue-400 bg-clip-text text-transparent">
+            {t('title')}
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            {t('subtitle')}
           </p>
         </div>
         
@@ -145,19 +195,19 @@ export default function PortfolioPage() {
               {isUpdating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Updating...
+                  {tCommon('loading')}
                 </>
               ) : (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  Update Analysis
+                  {t('updateAnalysis')}
                 </>
               )}
             </Button>
             
             <Button onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Stock
+              {t('addStock')}
             </Button>
           </div>
         </div>
@@ -170,18 +220,23 @@ export default function PortfolioPage() {
         )}
 
         {items.length === 0 ? (
-          <Card className="text-center py-12">
+          <Card className="text-center py-16 bg-gradient-to-br from-teal-50/50 to-blue-50/50 dark:from-teal-950/20 dark:to-blue-950/20 border-dashed">
             <CardContent>
-              <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-                <TrendingUp className="h-6 w-6 text-muted-foreground" />
+              <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-teal-100 to-blue-100 dark:from-teal-900/50 dark:to-blue-900/50 flex items-center justify-center mb-6">
+                <TrendingUp className="h-8 w-8 text-teal-600 dark:text-teal-400" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No stocks in portfolio</h3>
-              <p className="text-muted-foreground mb-4">
-                Add stocks to start tracking your investments
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                {t('noHoldings')}
+              </h3>
+              <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+                {t('noHoldings')}
               </p>
-              <Button onClick={() => setIsAddDialogOpen(true)}>
+              <Button 
+                onClick={() => setIsAddDialogOpen(true)}
+                className="bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
                 <Plus className="mr-2 h-4 w-4" />
-                Add Your First Stock
+                {t('addStock')}
               </Button>
             </CardContent>
           </Card>
@@ -192,7 +247,7 @@ export default function PortfolioPage() {
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  These are example stocks to help you get started. You can add your own stocks or clear these examples.
+                  {t('exampleStocksNotice')}
                 </AlertDescription>
               </Alert>
             )}
@@ -216,7 +271,7 @@ export default function PortfolioPage() {
 
             {/* Holdings */}
             <div>
-              <h2 className="text-2xl font-semibold mb-4">Holdings</h2>
+              <h2 className="text-2xl font-semibold mb-4">{t('holdings')}</h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
                 {items.map((item) => (
                   <HoldingCard key={item.id} holding={item} />
@@ -234,8 +289,7 @@ export default function PortfolioPage() {
 
       <div className="mt-16 text-center text-sm text-muted-foreground max-w-2xl mx-auto">
         <p>
-          Portfolio tracking and analysis for educational purposes only. 
-          Real-time prices may be delayed. Not financial advice.
+          {t('disclaimer')}
         </p>
       </div>
     </div>

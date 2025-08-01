@@ -4,49 +4,56 @@ import { Search, Brain, TrendingUp, ArrowRight, Clock, Shield, Target } from 'lu
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
 
-const steps = [
+const getSteps = (t: any) => [
   {
     number: '1',
-    title: 'Choose What to Analyze',
-    description: 'Select stocks or upload your portfolio',
+    title: t('steps.0.title'),
+    description: t('steps.0.description'),
     icon: Search,
     color: 'from-blue-600 to-blue-500',
-    features: ['Single stock', 'Full portfolio', 'Market sectors'],
+    features: t.raw('steps.0.features') || ['Single stock', 'Full portfolio', 'Market sectors'],
   },
   {
     number: '2',
-    title: 'AI Agents Analyze',
-    description: '5 legendary investor AIs work in parallel',
+    title: t('steps.1.title'),
+    description: t('steps.1.description'),
     icon: Brain,
     color: 'from-teal-600 to-teal-500',
-    features: ['Warren Buffett', 'Cathie Wood', 'Ray Dalio'],
+    features: t.raw('steps.1.features') || ['Warren Buffett', 'Cathie Wood', 'Ray Dalio'],
     highlight: true,
+    badge: t.raw('steps.1.badge'),
   },
   {
     number: '3',
-    title: 'Get Actionable Insights',
-    description: 'Clear buy/sell recommendations with confidence scores',
+    title: t('steps.2.title'),
+    description: t('steps.2.description'),
     icon: TrendingUp,
     color: 'from-green-600 to-green-500',
-    features: ['Buy/Sell signals', 'Risk analysis', 'Price targets'],
+    features: t.raw('steps.2.features') || ['Buy/Sell signals', 'Risk analysis', 'Price targets'],
   },
 ]
 
 export function HowItWorks() {
+  const t = useTranslations('landing.howItWorks')
+  const locale = useLocale()
+  const steps = getSteps(t)
+  const isRTL = locale === 'ar'
+
   return (
-    <section className="py-16 md:py-24 lg:py-32">
+    <section className="py-16 md:py-24 lg:py-32" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="mx-auto max-w-7xl">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4">
             <Clock className="mr-2 h-3 w-3" />
-            Takes only 30 seconds
+            {t('badge')}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Simple 3-Step Process
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[600px] text-lg text-muted-foreground">
-            From stock selection to actionable insights in seconds
+            {t('subtitle')}
           </p>
         </div>
 
@@ -75,11 +82,11 @@ export function HowItWorks() {
                       {/* Step number badge */}
                       <div className="flex items-center justify-between mb-4">
                         <Badge variant="secondary" className="text-lg px-3 py-1">
-                          Step {step.number}
+                          {locale === 'ar' ? `خطوة ${step.number}` : `Step ${step.number}`}
                         </Badge>
-                        {step.highlight && (
+                        {step.highlight && step.badge && (
                           <Badge variant="default" className="bg-teal-500">
-                            AI Powered
+                            {step.badge}
                           </Badge>
                         )}
                       </div>
@@ -141,10 +148,10 @@ export function HowItWorks() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary">Step {step.number}</Badge>
-                        {step.highlight && (
+                        <Badge variant="secondary">{locale === 'ar' ? `خطوة ${step.number}` : `Step ${step.number}`}</Badge>
+                        {step.highlight && step.badge && (
                           <Badge variant="default" className="bg-teal-500">
-                            AI Powered
+                            {step.badge}
                           </Badge>
                         )}
                       </div>
@@ -174,15 +181,15 @@ export function HowItWorks() {
         <div className="mt-12 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-green-500" />
-            <span>94% accuracy rate</span>
+            <span>{t('stats.accuracy')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-blue-500" />
-            <span>Results in 30 seconds</span>
+            <span>{t('stats.speed')}</span>
           </div>
           <div className="flex items-center gap-2">
             <Target className="h-4 w-4 text-purple-500" />
-            <span>Used by 50+ investment funds</span>
+            <span>{t('stats.trusted')}</span>
           </div>
         </div>
       </div>

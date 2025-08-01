@@ -6,6 +6,8 @@ import OpportunityCard from './opportunity-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Download, SortAsc, SortDesc } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import { formatCurrency } from '@/lib/utils/formatters';
 
 interface ResultsGridProps {
   results: AnalysisResult;
@@ -17,6 +19,8 @@ type SortOrder = 'asc' | 'desc';
 export default function ResultsGrid({ results }: ResultsGridProps) {
   const [sortField, setSortField] = useState<SortField>('confidence');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const t = useTranslations('swingTrading.table');
+  const locale = useLocale();
 
   const sortedOpportunities = useMemo(() => {
     const sorted = [...results.opportunities].sort((a, b) => {
@@ -42,16 +46,16 @@ export default function ResultsGrid({ results }: ResultsGridProps) {
 
   const handleExport = () => {
     const csvContent = [
-      ['Symbol', 'Company', 'Current Price', 'Entry Price', 'Stop Loss', 'Target 1', 'Target 2', 'Target 3', 'Confidence', 'Risk/Reward', 'Reasoning'],
+      [t('symbol'), t('company'), t('currentPrice'), t('entryPrice'), t('stopLoss'), t('target1'), t('target2'), t('target3'), t('confidence'), t('riskReward'), t('reasoning')],
       ...results.opportunities.map(opp => [
         opp.symbol,
         opp.companyName,
-        opp.currentPrice.toFixed(2),
-        opp.entryPrice.toFixed(2),
-        opp.stopLoss.toFixed(2),
-        opp.takeProfit.target1.toFixed(2),
-        opp.takeProfit.target2.toFixed(2),
-        opp.takeProfit.target3?.toFixed(2) || '',
+        formatCurrency(opp.currentPrice, locale),
+        formatCurrency(opp.entryPrice, locale),
+        formatCurrency(opp.stopLoss, locale),
+        formatCurrency(opp.takeProfit.target1, locale),
+        formatCurrency(opp.takeProfit.target2, locale),
+        opp.takeProfit.target3 ? formatCurrency(opp.takeProfit.target3, locale) : '',
         opp.confidence,
         opp.riskRewardRatio.toFixed(2),
         opp.reasoning.replace(/,/g, ';')
@@ -93,8 +97,8 @@ export default function ResultsGrid({ results }: ResultsGridProps) {
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="confidence">Confidence</SelectItem>
-              <SelectItem value="riskReward">Risk/Reward Ratio</SelectItem>
+              <SelectItem value="confidence">{t('confidence')}</SelectItem>
+              <SelectItem value="riskReward">{t('riskReward')}</SelectItem>
               <SelectItem value="entryPercentage">Entry Distance</SelectItem>
             </SelectContent>
           </Select>

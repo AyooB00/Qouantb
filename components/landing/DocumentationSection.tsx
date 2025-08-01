@@ -1,10 +1,11 @@
 'use client'
 
-import { BookOpen, Code, Shield, Rocket, Users, HelpCircle, FileText, Video } from 'lucide-react'
+import { BookOpen, Shield, Rocket, Users, HelpCircle, FileText, Video } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 
 const docCategories = [
   {
@@ -61,20 +62,22 @@ const videoTutorials = [
 ]
 
 export function DocumentationSection() {
+  const t = useTranslations('landing.documentation')
+  const locale = useLocale()
+
   return (
     <section className="py-16 md:py-24 lg:py-32 bg-gradient-to-b from-muted/30 to-background">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4">
             <FileText className="mr-2 h-3 w-3" />
-            Comprehensive Documentation
+            {t('badge') || 'Comprehensive Documentation'}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Everything You Need to Succeed
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[700px] text-lg text-muted-foreground">
-            From quick start guides to advanced API documentation, 
-            we've got you covered every step of the way
+            {t('subtitle')}
           </p>
         </div>
 
@@ -87,8 +90,8 @@ export function DocumentationSection() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle>{category.title}</CardTitle>
-                  <CardDescription>{category.description}</CardDescription>
+                  <CardTitle>{t(`sections.${docCategories.indexOf(category)}.title`) || category.title}</CardTitle>
+                  <CardDescription>{t(`sections.${docCategories.indexOf(category)}.description`) || category.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -98,7 +101,7 @@ export function DocumentationSection() {
                           href={item.href}
                           className="text-sm text-muted-foreground hover:text-primary transition-colors"
                         >
-                          {item.title} →
+                          {t.raw(`sections.${docCategories.indexOf(category)}.items`)?.[category.items.indexOf(item)] || item.title} →
                         </Link>
                       </li>
                     ))}
@@ -115,12 +118,12 @@ export function DocumentationSection() {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Video className="h-5 w-5" />
-                  Video Tutorials
+                  {t('videoTutorials.title') || 'Video Tutorials'}
                 </CardTitle>
-                <Badge>New</Badge>
+                <Badge>{locale === 'ar' ? 'جديد' : 'New'}</Badge>
               </div>
               <CardDescription>
-                Learn visually with our step-by-step video guides
+                {t('videoTutorials.description') || 'Learn visually with our step-by-step video guides'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -141,7 +144,7 @@ export function DocumentationSection() {
                 ))}
               </div>
               <Button className="w-full mt-4" variant="outline">
-                View All Tutorials
+                {t('videoTutorials.viewAll') || 'View All Tutorials'}
               </Button>
             </CardContent>
           </Card>
@@ -150,10 +153,10 @@ export function DocumentationSection() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <HelpCircle className="h-5 w-5" />
-                Need Help?
+                {t('support.title') || 'Need Help?'}
               </CardTitle>
               <CardDescription>
-                Our support team and community are here to help
+                {t('support.description') || 'Our support team and community are here to help'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -163,9 +166,9 @@ export function DocumentationSection() {
                     <div className="h-2 w-2 rounded-full bg-green-500" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">Live Chat Support</p>
+                    <p className="font-medium text-sm">{t('support.liveChat.title') || 'Live Chat Support'}</p>
                     <p className="text-sm text-muted-foreground">
-                      Available 24/7 for premium users
+                      {t('support.liveChat.description') || 'Available 24/7 for premium users'}
                     </p>
                   </div>
                 </div>
@@ -174,9 +177,9 @@ export function DocumentationSection() {
                     <div className="h-2 w-2 rounded-full bg-blue-500" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">Community Forum</p>
+                    <p className="font-medium text-sm">{t('support.forum.title') || 'Community Forum'}</p>
                     <p className="text-sm text-muted-foreground">
-                      Connect with 10,000+ traders
+                      {t('support.forum.description') || 'Connect with 10,000+ traders'}
                     </p>
                   </div>
                 </div>
@@ -185,37 +188,16 @@ export function DocumentationSection() {
                     <div className="h-2 w-2 rounded-full bg-purple-500" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">Email Support</p>
+                    <p className="font-medium text-sm">{t('support.email.title') || 'Email Support'}</p>
                     <p className="text-sm text-muted-foreground">
-                      support@quoantb.com
+                      {t('support.email.address') || 'support@quoantb.com'}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="pt-4 border-t">
                 <Button className="w-full" variant="default">
-                  Contact Support
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-12 text-center">
-          <Card className="inline-block">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <Code className="h-8 w-8 text-primary" />
-                <div className="text-left">
-                  <h3 className="font-semibold">Developer Resources</h3>
-                  <p className="text-sm text-muted-foreground">
-                    REST API, WebSockets, SDKs for Python, JavaScript, and more
-                  </p>
-                </div>
-                <Button size="sm" asChild>
-                  <Link href="/docs/api">
-                    View API Docs
-                  </Link>
+                  {t('support.contactButton') || 'Contact Support'}
                 </Button>
               </div>
             </CardContent>

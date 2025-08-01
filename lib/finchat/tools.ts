@@ -8,7 +8,7 @@ export interface ToolDefinition {
     description: string
     parameters: {
       type: 'object'
-      properties: Record<string, any>
+      properties: Record<string, unknown>
       required?: string[]
     }
   }
@@ -99,7 +99,7 @@ export const finChatTools = {
         })
       )
 
-      const validStocks = results.filter(r => r !== null) as any[]
+      const validStocks = results.filter(r => r !== null) as Array<{symbol: string; name: string; currentPrice: number; changePercent: number}>
       
       // Generate AI recommendation based on comparison
       let recommendation = ''
@@ -137,7 +137,7 @@ export const finChatTools = {
       const news = await finnhub.getCompanyNews(args.symbol.toUpperCase(), args.days || 7)
       
       // Analyze sentiment for each article (mock for demo)
-      const articles = news.slice(0, 5).map((article: any) => {
+      const articles = news.slice(0, 5).map((article: {headline: string; summary: string; url: string}) => {
         const headline = article.headline.toLowerCase()
         let sentiment: 'positive' | 'negative' | 'neutral' = 'neutral'
         
@@ -377,7 +377,7 @@ export const finChatTools = {
         })
       )
       
-      const validResults = results.filter(r => r !== null) as any[]
+      const validResults = results.filter(r => r !== null) as Array<unknown>
       const avgChange = validResults.reduce((sum, r) => sum + r.changePercent, 0) / validResults.length
       
       // Mock top movers data for demonstration
@@ -540,7 +540,7 @@ export const toolDefinitions: ToolDefinition[] = [
 ]
 
 // Execute tool calls
-export async function executeToolCall(toolCall: ToolCall): Promise<any> {
+export async function executeToolCall(toolCall: ToolCall): Promise<unknown> {
   const args = JSON.parse(toolCall.function.arguments)
   const func = finChatTools[toolCall.function.name as keyof typeof finChatTools]
   

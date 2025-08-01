@@ -4,17 +4,17 @@ import { FinnhubClient } from '@/lib/finnhub'
 import { toolDefinitions, executeToolCall, ToolCall } from '@/lib/finchat/tools'
 import OpenAI from 'openai'
 import { ResponseParser } from '@/lib/finchat/response-parser'
-import '@/lib/types/finchat'
+import { SmartComponent } from '@/lib/types/finchat'
+import { handleAPIError, validateRequired, APIError } from '@/lib/api/error-handler'
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, stream = true, provider } = await request.json()
+    const body = await request.json()
+    const { messages, stream = true, provider, locale = 'en' } = body
 
-    if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json(
-        { error: 'Messages array is required' },
-        { status: 400 }
-      )
+    validateRequired(body, ['messages'])
+    if (!Array.isArray(messages)) {
+      throw new APIError('Messages must be an array', 400, 'INVALID_MESSAGES')
     }
 
     // For function calling, we need to use OpenAI directly
@@ -22,31 +22,34 @@ export async function POST(request: NextRequest) {
     
     if (useOpenAI && process.env.OPENAI_API_KEY) {
       // Use OpenAI with function calling
-      return handleOpenAIChat(messages, stream)
+      return handleOpenAIChat(messages, stream, locale)
     } else {
       // Fallback to regular chat without function calling
-      return handleRegularChat(messages, stream, provider)
+      return handleRegularChat(messages, stream, provider, locale)
     }
 
   } catch (error) {
-    console.error('Chat API error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to process chat request' },
-      { status: 500 }
-    )
+    return handleAPIError(error)
   }
 }
 
-async function handleOpenAIChat(messages: OpenAI.Chat.ChatCompletionMessageParam[], stream: boolean) {
+async function handleOpenAIChat(messages: OpenAI.Chat.ChatCompletionMessageParam[], stream: boolean, locale: string = 'en') {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
   
   // Build financial context
   const financialContext = await buildFinancialContext(messages[messages.length - 1].content)
 
+  // Language instructions based on locale
+  const languageInstruction = locale === 'ar' 
+    ? 'You MUST respond in Arabic (العربية). All your responses, analysis, and explanations must be in Arabic. However, keep stock symbols (like AAPL, MSFT) and currency symbols ($) in English.'
+    : 'Respond in English.'
+
   // Create system prompt
   const systemMessage = {
     role: 'system',
     content: `You are FinChat, an expert financial AI assistant with access to real-time market data and analysis tools.
+
+${languageInstruction}
 
 Your capabilities:
 - Real-time stock quotes and market data
@@ -55,6 +58,20 @@ Your capabilities:
 - Risk management and position sizing
 - Market overview and sentiment analysis
 
+CRITICAL INSTRUCTIONS FOR SMART COMPONENTS:
+1. YOU MUST use the available tools for ANY query about:
+   - Specific stock prices or quotes → use get_stock_quote
+   - Technical analysis or indicators → use analyze_technical_indicators
+   - Market overview or sentiment → use get_market_overview
+   - Comparing multiple stocks → use compare_stocks
+   - Stock news or headlines → use get_stock_news
+   - Position sizing or risk → use calculate_position_size
+   - Portfolio information → use get_portfolio_summary
+
+2. ALWAYS call the appropriate tools BEFORE providing analysis
+3. Your responses will be enhanced with interactive smart components based on tool results
+4. When multiple aspects are requested, use multiple tools to provide comprehensive data
+
 Guidelines:
 1. Use the available tools to provide accurate, real-time data
 2. Always fetch current data when discussing specific stocks
@@ -62,6 +79,7 @@ Guidelines:
 4. Include risk warnings and educational context
 5. Format responses clearly with bullet points and sections
 6. Be proactive in suggesting related analysis or comparisons
+7. Tool results will automatically generate visual components - focus on insights
 
 Current context:
 ${financialContext}
@@ -145,8 +163,17 @@ Remember: You provide educational information only, not personalized financial a
           temperature: 0.7
         })
 
-        const toolCalls: any[] = []
-        let currentToolCall: any = null
+        interface ToolCall {
+          id: string
+          type: 'function'
+          function: {
+            name: string
+            arguments: string
+          }
+        }
+        
+        const toolCalls: ToolCall[] = []
+        let currentToolCall: ToolCall | null = null
 
         for await (const chunk of completion) {
           const delta = chunk.choices[0].delta
@@ -208,6 +235,34 @@ Remember: You provide educational information only, not personalized financial a
             })
           )
 
+          // Parse tool results into components immediately
+          const parser = ResponseParser.getInstance()
+          const parsedToolResults = toolResults.map(tr => {
+            try {
+              return JSON.parse(tr.content)
+            } catch {
+              return null
+            }
+          }).filter(Boolean)
+          
+          // Send components from tool results immediately
+          const toolComponents: SmartComponent[] = []
+          parsedToolResults.forEach((result) => {
+            const { components } = parser.parseResponse('', [result])
+            if (components.length > 0) {
+              toolComponents.push(...components)
+            }
+          })
+          
+          if (toolComponents.length > 0) {
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ 
+                components: toolComponents,
+                layout: toolComponents.length > 1 ? 'grid' : 'inline'
+              })}\n\n`)
+            )
+          }
+
           // Get final response with tool results
           const finalMessages = [
             ...allMessages,
@@ -222,40 +277,16 @@ Remember: You provide educational information only, not personalized financial a
             temperature: 0.7
           })
 
-          // Collect the full response for parsing
-          let fullResponse = ''
+          // Stream the text response
           for await (const chunk of finalCompletion) {
             if (chunk.choices[0].delta.content) {
               const content = chunk.choices[0].delta.content
-              fullResponse += content
               controller.enqueue(
                 encoder.encode(`data: ${JSON.stringify({ 
                   content: content 
                 })}\n\n`)
               )
             }
-          }
-          
-          // Parse and send components at the end
-          const parser = ResponseParser.getInstance()
-          const parsedToolResults = toolResults.map(tr => {
-            try {
-              return JSON.parse(tr.content)
-            } catch {
-              return null
-            }
-          }).filter(Boolean)
-          
-          const { components, context } = parser.parseResponse(fullResponse, parsedToolResults)
-          
-          if (components.length > 0 || context) {
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ 
-                components,
-                context,
-                metadata: { toolResults: parsedToolResults }
-              })}\n\n`)
-            )
           }
         }
 
@@ -276,7 +307,7 @@ Remember: You provide educational information only, not personalized financial a
   })
 }
 
-async function handleRegularChat(messages: OpenAI.Chat.ChatCompletionMessageParam[], stream: boolean, provider?: string) {
+async function handleRegularChat(messages: OpenAI.Chat.ChatCompletionMessageParam[], stream: boolean, provider?: string, locale: string = 'en') {
   // Validate API keys
   if (!process.env.OPENAI_API_KEY && !process.env.GEMINI_API_KEY) {
     return NextResponse.json(
@@ -291,10 +322,17 @@ async function handleRegularChat(messages: OpenAI.Chat.ChatCompletionMessagePara
   // Build financial context
   const financialContext = await buildFinancialContext(messages[messages.length - 1].content)
 
+  // Language instructions based on locale
+  const languageInstruction = locale === 'ar' 
+    ? 'You MUST respond in Arabic (العربية). All your responses, analysis, and explanations must be in Arabic. However, keep stock symbols (like AAPL, MSFT) and currency symbols ($) in English.'
+    : 'Respond in English.'
+
   // Create system prompt
   const systemMessage = {
     role: 'system',
-    content: `You are FinChat, an expert financial AI assistant specialized in stock market analysis, investment strategies, and financial planning. 
+    content: `You are FinChat, an expert financial AI assistant specialized in stock market analysis, investment strategies, and financial planning.
+
+${languageInstruction} 
 
 Guidelines:
 1. Provide accurate, data-driven insights

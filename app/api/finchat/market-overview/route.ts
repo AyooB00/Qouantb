@@ -1,23 +1,17 @@
 import { NextResponse } from 'next/server'
 import { finChatTools } from '@/lib/finchat/tools'
+import { handleAPIError, APIError } from '@/lib/api/error-handler'
 
 export async function GET() {
   try {
     const marketData = await finChatTools.get_market_overview()
     
     if ('error' in marketData) {
-      return NextResponse.json(
-        { error: marketData.error },
-        { status: 500 }
-      )
+      throw new APIError(marketData.error, 500, 'MARKET_DATA_ERROR')
     }
     
     return NextResponse.json(marketData)
   } catch (error) {
-    console.error('Market overview API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch market overview' },
-      { status: 500 }
-    )
+    return handleAPIError(error)
   }
 }

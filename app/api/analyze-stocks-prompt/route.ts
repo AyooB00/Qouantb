@@ -2,39 +2,45 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AnalysisResult, StockData } from '@/lib/types/trading';
 import { FinnhubClient } from '@/lib/finnhub';
 import { AIProviderFactory } from '@/lib/ai-providers/provider-factory';
+import { handleAPIError, validateAPIKeys, APIError } from '@/lib/api/error-handler';
 
-// Popular US stocks for demonstration - includes various price ranges
-const DEMO_STOCK_SYMBOLS = [
-  // Large tech companies
-  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA',
-  // Mid-priced tech stocks
-  'ORCL', 'CSCO', 'IBM', 'INTC', 'AMD', 'MU',
-  // Lower-priced tech stocks  
-  'SNAP', 'PLTR', 'ROKU', 'UBER', 'LYFT', 'SQ',
-  // Additional tech stocks often under $100
-  'PINS', 'TWTR', 'ZM', 'DOCU', 'OKTA', 'NET', 
-  'DDOG', 'PATH', 'U', 'RBLX', 'HOOD', 'SOFI',
-  // More tech stocks across price ranges
-  'TWLO', 'SHOP', 'SPOT', 'DBX', 'BOX', 'WORK',
-  'TEAM', 'CRWD', 'PANW', 'ZS', 'SNOW', 'AI',
-  'FIVN', 'PSTG', 'ESTC', 'SUMO', 'S', 'SMAR',
-  'VEEV', 'WDAY', 'CRM', 'NOW', 'ADBE', 'INTU',
-  'DELL', 'HPQ', 'HPE', 'NTNX', 'VMWARE', 'GTLB',
-  'SPLK', 'DOMO', 'MDB', 'FSLY', 'CFLT', 'AFRM',
-  'UPST', 'COIN', 'RIVN', 'LCID', 'NIO', 'XPEV',
-  // More affordable tech stocks
-  'BBBY', 'WISH', 'CLOV', 'SPCE', 'OPEN', 'SKLZ',
-  'FUBO', 'LAZR', 'QS', 'GOEV', 'RIDE', 'WKHS',
-  'BLNK', 'CHPT', 'EVGO', 'VLDR', 'OUST', 'AEVA',
-  'IONQ', 'ARQQ', 'BIGC', 'APPS', 'MGNI', 'PUBM',
-  'TTD', 'BILI', 'IQ', 'HUYA', 'DOYU', 'YY',
-  'VIPS', 'JD', 'BABA', 'BIDU', 'NTES', 'TME',
-  // Finance
-  'JPM', 'BAC', 'WFC', 'C', 'GS', 'MS', 'V', 'MA',
-  // Consumer
-  'DIS', 'NKE', 'SBUX', 'MCD', 'KO', 'PEP',
-  // Healthcare
-  'JNJ', 'PFE', 'MRNA', 'CVS', 'UNH', 'ABBV'
+// NASDAQ stocks for demonstration - focused on NASDAQ-listed companies
+const NASDAQ_STOCK_SYMBOLS = [
+  // NASDAQ 100 Large Cap Tech
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'META', 'NVDA', 'TSLA',
+  'AVGO', 'ASML', 'ADBE', 'CSCO', 'NFLX', 'PEP', 'COST', 'TMUS',
+  
+  // NASDAQ Mid Cap Tech
+  'INTC', 'AMD', 'QCOM', 'TXN', 'INTU', 'BKNG', 'ISRG', 'VRTX',
+  'REGN', 'ATVI', 'ADI', 'LRCX', 'SNPS', 'CDNS', 'MRVL', 'ORLY',
+  
+  // NASDAQ Growth Stocks
+  'PYPL', 'SBUX', 'MNST', 'NXPI', 'KLAC', 'MELI', 'CTAS', 'LULU',
+  'MCHP', 'PANW', 'ABNB', 'DXCM', 'WDAY', 'ROST', 'ODFL', 'PCAR',
+  
+  // NASDAQ Small Cap Tech
+  'CPRT', 'IDXX', 'VRSK', 'ANSS', 'FAST', 'PAYX', 'DLTR', 'CSGP',
+  'ALGN', 'SWKS', 'TEAM', 'ZM', 'DOCU', 'OKTA', 'NET', 'DDOG',
+  
+  // NASDAQ Biotech
+  'BIIB', 'ILMN', 'SGEN', 'INCY', 'BMRN', 'ALNY', 'NBIX', 'TECH',
+  'SRPT', 'IONS', 'EXAS', 'NTRA', 'HALO', 'BLUE', 'SAGE', 'FOLD',
+  
+  // NASDAQ FinTech & Crypto
+  'COIN', 'HOOD', 'SOFI', 'UPST', 'AFRM', 'SQ', 'MARA', 'RIOT',
+  
+  // NASDAQ EV & Clean Tech
+  'RIVN', 'LCID', 'NKLA', 'CHPT', 'BLNK', 'PLUG', 'FCEL', 'ENPH',
+  
+  // NASDAQ Cloud & SaaS
+  'SNOW', 'CRWD', 'ZS', 'VEEV', 'NOW', 'CRM', 'SPLK', 'TWLO',
+  'MDB', 'FSLY', 'CFLT', 'ESTC', 'SUMO', 'S', 'SMAR', 'DOMO',
+  
+  // NASDAQ Gaming & Entertainment
+  'RBLX', 'U', 'TTWO', 'EA', 'NTES', 'BILI', 'HUYA', 'DOYU',
+  
+  // NASDAQ E-commerce
+  'ETSY', 'W', 'BIGC', 'WISH', 'SHOP', 'MELI', 'SE', 'CPNG'
 ];
 
 export async function POST(request: NextRequest) {
@@ -42,19 +48,11 @@ export async function POST(request: NextRequest) {
     const { prompt } = await request.json();
     
     if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json(
-        { error: 'Please provide a valid search prompt' },
-        { status: 400 }
-      );
+      throw new APIError('Please provide a valid search prompt', 400, 'INVALID_PROMPT');
     }
 
     // Validate API keys
-    if (!process.env.FINNHUB_API_KEY || !process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'API keys not configured' },
-        { status: 500 }
-      );
-    }
+    validateAPIKeys(['FINNHUB_API_KEY', 'OPENAI_API_KEY']);
 
     // Get AI provider factory
     const aiFactory = AIProviderFactory.getInstance();
@@ -84,7 +82,7 @@ export async function POST(request: NextRequest) {
     let priceFilteredOut = 0;
     let sectorFilteredOut = 0;
     
-    for (const symbol of DEMO_STOCK_SYMBOLS) {
+    for (const symbol of NASDAQ_STOCK_SYMBOLS) {
       try {
         // Add a small delay to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 250)); // Increased delay for API rate limits
@@ -178,15 +176,17 @@ export async function POST(request: NextRequest) {
       
       // If sector filtering caused all rejections, suggest removing sector filter
       if (sectorFilteredOut > 0 && priceFilteredOut === 0) {
-        return NextResponse.json(
-          { error: 'No stocks found in the specified sector. The Finnhub API may use different sector names. Try a search without specifying sectors.' },
-          { status: 404 }
+        throw new APIError(
+          'No stocks found in the specified sector. The Finnhub API may use different sector names. Try a search without specifying sectors.',
+          404,
+          'NO_STOCKS_IN_SECTOR'
         );
       }
       
-      return NextResponse.json(
-        { error: 'No stocks found matching your criteria. Try adjusting your search prompt.' },
-        { status: 404 }
+      throw new APIError(
+        'No stocks found matching your criteria. Try adjusting your search prompt.',
+        404,
+        'NO_MATCHING_STOCKS'
       );
     }
     
@@ -207,18 +207,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
     
   } catch (error) {
-    console.error('Error in analyze-stocks-prompt API:', error);
-    
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
-    }
-    
-    return NextResponse.json(
-      { error: 'An unexpected error occurred while processing your request' },
-      { status: 500 }
-    );
+    return handleAPIError(error);
   }
 }

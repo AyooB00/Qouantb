@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -16,6 +17,8 @@ interface AgentSelectorCompactProps {
 export default function AgentSelectorCompact({ onSelectionChange, disabled }: AgentSelectorCompactProps) {
   const agents = getAllAgents();
   const [selectedAgents, setSelectedAgents] = useState<Set<AgentId>>(new Set());
+  const t = useTranslations('stockAnalysis.agents');
+  const tCommon = useTranslations('common');
 
   const toggleAgent = (agentId: AgentId) => {
     const newSelection = new Set(selectedAgents);
@@ -39,13 +42,11 @@ export default function AgentSelectorCompact({ onSelectionChange, disabled }: Ag
   };
 
   const getTimeHorizonLabel = (horizon: string) => {
-    switch (horizon) {
-      case 'short': return 'Short';
-      case 'medium': return 'Medium';
-      case 'long': return 'Long';
-      case 'very-long': return 'V.Long';
-      default: return horizon;
-    }
+    return t(`timeHorizons.${horizon}`);
+  };
+  
+  const getRiskProfileLabel = (risk: string) => {
+    return t(`riskProfiles.${risk}`);
   };
 
   return (
@@ -72,9 +73,9 @@ export default function AgentSelectorCompact({ onSelectionChange, disabled }: Ag
               {/* Header with name and checkmark */}
               <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="font-semibold text-base">{agent.name}</h4>
+                  <h4 className="font-semibold text-base">{t(`${agent.id}.name`)}</h4>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {agent.investmentStyle}
+                    {t(`${agent.id}.style`)}
                   </p>
                 </div>
                 {selectedAgents.has(agent.id) && (
@@ -96,7 +97,7 @@ export default function AgentSelectorCompact({ onSelectionChange, disabled }: Ag
               
               {/* Philosophy preview */}
               <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                {agent.philosophy}
+                {t(`${agent.id}.philosophy`)}
               </p>
               
               {/* Badges */}
@@ -105,7 +106,7 @@ export default function AgentSelectorCompact({ onSelectionChange, disabled }: Ag
                   variant={getRiskBadgeVariant(agent.riskProfile)} 
                   className="text-xs px-2 py-0.5"
                 >
-                  {agent.riskProfile}
+                  {getRiskProfileLabel(agent.riskProfile)}
                 </Badge>
                 <Badge 
                   variant="outline" 
@@ -123,7 +124,7 @@ export default function AgentSelectorCompact({ onSelectionChange, disabled }: Ag
         <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
           <Users className="h-4 w-4" />
           <span className="text-sm font-medium">
-            {selectedAgents.size} analyst{selectedAgents.size !== 1 ? 's' : ''} selected
+            {t('selectedCount', { count: selectedAgents.size })}
           </span>
         </div>
       )}

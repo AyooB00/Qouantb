@@ -19,11 +19,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DailyPortfolioInsights, PortfolioInsight } from '@/lib/types/portfolio'
 import { cn } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { formatPercentage, formatCurrency } from '@/lib/utils/formatters'
 
 export function PortfolioInsights() {
   const [insights, setInsights] = useState<DailyPortfolioInsights | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const t = useTranslations('portfolio.insights')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
 
   useEffect(() => {
     fetchInsights()
@@ -100,30 +105,30 @@ export function PortfolioInsights() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>AI Portfolio Insights</CardTitle>
+            <CardTitle>{t('title')}</CardTitle>
             <CardDescription>
-              Personalized analysis and recommendations
+              {t('subtitle')}
             </CardDescription>
           </div>
           <Button variant="outline" size="sm" onClick={fetchInsights}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            {t('refresh')}
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="insights" className="space-y-4">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-            <TabsTrigger value="performance">Performance</TabsTrigger>
-            <TabsTrigger value="watchlist">Tomorrow</TabsTrigger>
+            <TabsTrigger value="insights">{t('tabs.insights')}</TabsTrigger>
+            <TabsTrigger value="performance">{t('tabs.performance')}</TabsTrigger>
+            <TabsTrigger value="watchlist">{t('tabs.watchlist')}</TabsTrigger>
           </TabsList>
 
           {/* Insights Tab */}
           <TabsContent value="insights" className="space-y-4">
             {/* Market Summary */}
             <div className="bg-muted/50 rounded-lg p-4">
-              <h4 className="text-sm font-medium mb-2">Market Summary</h4>
+              <h4 className="text-sm font-medium mb-2">{t('marketSummary')}</h4>
               <p className="text-sm text-muted-foreground">
                 {insights.marketSummary}
               </p>
@@ -156,7 +161,7 @@ export function PortfolioInsights() {
                           {insight.actionable && insight.suggestedAction && (
                             <div className="flex items-center gap-2 mt-2">
                               <Badge variant="outline" className="text-xs">
-                                Action Required
+                                {t('actionRequired')}
                               </Badge>
                               <span className="text-xs text-primary">
                                 {insight.suggestedAction}
@@ -170,7 +175,7 @@ export function PortfolioInsights() {
                         insight.priority === 'medium' ? 'default' :
                         'secondary'
                       }>
-                        {insight.priority}
+                        {t(`priority.${insight.priority}`)}
                       </Badge>
                     </div>
                   </div>
@@ -184,30 +189,28 @@ export function PortfolioInsights() {
             {/* Daily Performance */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground mb-1">Daily Return</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('dailyReturn')}</p>
                 <p className={cn(
                   "text-2xl font-bold",
                   insights.performanceAnalysis.dailyReturn >= 0 ? "text-green-600" : "text-red-600"
                 )}>
-                  {insights.performanceAnalysis.dailyReturn >= 0 ? '+' : ''}
-                  {insights.performanceAnalysis.dailyReturn.toFixed(2)}%
+                  {formatPercentage(insights.performanceAnalysis.dailyReturn, locale)}
                 </p>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground mb-1">vs S&P 500</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('vsMarket')}</p>
                 <p className={cn(
                   "text-2xl font-bold",
                   insights.performanceAnalysis.vsMarket >= 0 ? "text-green-600" : "text-red-600"
                 )}>
-                  {insights.performanceAnalysis.vsMarket >= 0 ? '+' : ''}
-                  {insights.performanceAnalysis.vsMarket.toFixed(2)}%
+                  {formatPercentage(insights.performanceAnalysis.vsMarket, locale)}
                 </p>
               </div>
             </div>
 
             {/* Top Movers */}
             <div>
-              <h4 className="text-sm font-medium mb-3">Top Movers Today</h4>
+              <h4 className="text-sm font-medium mb-3">{t('topMovers')}</h4>
               <div className="space-y-2">
                 {insights.topMovers.map((mover, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
@@ -226,7 +229,7 @@ export function PortfolioInsights() {
                       "font-bold",
                       mover.change >= 0 ? "text-green-600" : "text-red-600"
                     )}>
-                      {mover.change >= 0 ? '+' : ''}{mover.change.toFixed(2)}%
+                      {formatPercentage(mover.change, locale)}
                     </span>
                   </div>
                 ))}
@@ -247,7 +250,7 @@ export function PortfolioInsights() {
                       </div>
                       <p className="text-sm text-muted-foreground">{item.reason}</p>
                       <p className="text-xs text-primary mt-2">
-                        Expected: {item.expectedImpact}
+                        {t('expectedImpact')}: {item.expectedImpact}
                       </p>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />

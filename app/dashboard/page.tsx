@@ -1,17 +1,16 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { MetricsOverview } from '@/components/dashboard/MetricsOverview'
 import { InsightsWidget } from '@/components/dashboard/InsightsWidget'
 import { MarketOverview } from '@/components/dashboard/MarketOverview'
 import { QuickActions } from '@/components/dashboard/QuickActions'
-import { RecentActivity } from '@/components/dashboard/RecentActivity'
 import { usePortfolioStore } from '@/lib/stores/portfolio-store'
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const { items, totalValue, initializeWithDefaults } = usePortfolioStore()
+  const t = useTranslations('dashboard')
+  const { items, initializeWithDefaults } = usePortfolioStore()
 
   useEffect(() => {
     // Initialize portfolio if empty
@@ -23,10 +22,12 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back! Here's your financial overview.
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 dark:from-teal-400 dark:to-blue-400 bg-clip-text text-transparent">
+          {t('title')}
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          {t('subtitle')}
         </p>
       </div>
 
@@ -46,9 +47,6 @@ export default function DashboardPage() {
           <MarketOverview />
         </div>
       </div>
-
-      {/* Recent Activity */}
-      <RecentActivity />
     </div>
   )
 }

@@ -3,23 +3,21 @@
 import { TradingOpportunity } from '@/lib/types/trading';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useTranslations, useLocale } from 'next-intl';
+import { formatCurrency, formatPercentage } from '@/lib/utils/formatters';
 
 interface OpportunityCardProps {
   opportunity: TradingOpportunity;
 }
 
 export default function OpportunityCard({ opportunity }: OpportunityCardProps) {
+  const t = useTranslations('swingTrading.card');
+  const locale = useLocale();
 
   const getConfidenceBadgeVariant = (confidence: number): "default" | "secondary" | "destructive" | "outline" => {
     if (confidence >= 80) return 'default';
     if (confidence >= 60) return 'secondary';
     return 'destructive';
-  };
-
-  const formatPrice = (price: number) => `$${price.toFixed(2)}`;
-  const formatPercentage = (percentage: number) => {
-    const formatted = percentage.toFixed(2);
-    return percentage > 0 ? `+${formatted}%` : `${formatted}%`;
   };
 
   return (
@@ -36,9 +34,9 @@ export default function OpportunityCard({ opportunity }: OpportunityCardProps) {
         </div>
         
         <div className="mt-3 flex items-baseline gap-3">
-          <span className="text-2xl font-bold">{formatPrice(opportunity.currentPrice)}</span>
+          <span className="text-2xl font-bold">{formatCurrency(opportunity.currentPrice, locale)}</span>
           <span className="text-sm text-muted-foreground">
-            Entry: {formatPrice(opportunity.entryPrice)}
+            {t('entryPoint')}: {formatCurrency(opportunity.entryPrice, locale)}
           </span>
         </div>
       </CardHeader>
@@ -46,19 +44,19 @@ export default function OpportunityCard({ opportunity }: OpportunityCardProps) {
       <CardContent className="space-y-3 pt-0">
         <div className="grid grid-cols-3 gap-4 text-sm">
           <div>
-            <p className="text-muted-foreground">Stop Loss</p>
-            <p className="font-semibold text-red-600">{formatPrice(opportunity.stopLoss)}</p>
-            <p className="text-xs text-muted-foreground">{formatPercentage(opportunity.stopLossPercentage)}</p>
+            <p className="text-muted-foreground">{t('stopLoss')}</p>
+            <p className="font-semibold text-red-600">{formatCurrency(opportunity.stopLoss, locale)}</p>
+            <p className="text-xs text-muted-foreground">{formatPercentage(opportunity.stopLossPercentage, locale)}</p>
           </div>
           
           <div>
-            <p className="text-muted-foreground">Target 1</p>
-            <p className="font-semibold text-green-600">{formatPrice(opportunity.takeProfit.target1)}</p>
-            <p className="text-xs text-muted-foreground">{formatPercentage(opportunity.takeProfitPercentages.target1)}</p>
+            <p className="text-muted-foreground">{t('target1')}</p>
+            <p className="font-semibold text-green-600">{formatCurrency(opportunity.takeProfit.target1, locale)}</p>
+            <p className="text-xs text-muted-foreground">{formatPercentage(opportunity.takeProfitPercentages.target1, locale)}</p>
           </div>
           
           <div>
-            <p className="text-muted-foreground">Risk/Reward</p>
+            <p className="text-muted-foreground">{t('riskReward')}</p>
             <p className="font-semibold">{opportunity.riskRewardRatio.toFixed(1)}:1</p>
           </div>
         </div>

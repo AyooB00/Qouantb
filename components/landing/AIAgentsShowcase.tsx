@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { INVESTMENT_AGENTS } from '@/lib/agents/investment-agents'
+import { useTranslations, useLocale } from 'next-intl'
 
 const agentIcons = {
   buffett: Shield,
@@ -28,9 +29,18 @@ const timeHorizonLabels = {
   'short': '6-12 months',
 }
 
+const timeHorizonLabelsAr = {
+  'very-long': '10+ سنوات',
+  'long': '5-10 سنوات',
+  'medium': '2-5 سنوات',
+  'short': '6-12 شهر',
+}
+
 export function AIAgentsShowcase() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const agents = Object.values(INVESTMENT_AGENTS)
+  const t = useTranslations('landing.aiAgents')
+  const locale = useLocale()
 
   return (
     <section className="py-16 md:py-24 lg:py-32 bg-gradient-to-b from-background to-muted/20">
@@ -38,14 +48,13 @@ export function AIAgentsShowcase() {
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4">
             <Brain className="mr-2 h-3 w-3" />
-            AI-Powered Analysis
+            {t('badge')}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Meet Your AI Investment Agents
+            {t('title')}
           </h2>
           <p className="mx-auto max-w-[700px] text-lg text-muted-foreground">
-            Our AI agents analyze hundreds of companies using the methodologies of legendary investors, 
-            identifying both short-term trading and long-term investment opportunities.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -76,43 +85,59 @@ export function AIAgentsShowcase() {
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <Badge variant="secondary" className={cn("text-xs", riskColors[agent.riskProfile])}>
-                      {agent.riskProfile}
+                      {t(`riskProfiles.${agent.riskProfile}`)}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl">{agent.name}</CardTitle>
-                  <CardDescription className="text-sm">{agent.investmentStyle}</CardDescription>
+                  <CardTitle className="text-xl">
+                    {locale === 'ar' && t.raw(`agents.${agent.id}.name`) ? t(`agents.${agent.id}.name`) : agent.name}
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    {locale === 'ar' && t.raw(`agents.${agent.id}.style`) ? t(`agents.${agent.id}.style`) : agent.investmentStyle}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">{agent.philosophy}</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {locale === 'ar' && t.raw(`agents.${agent.id}.philosophy`) ? t(`agents.${agent.id}.philosophy`) : agent.philosophy}
+                  </p>
                   
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3 text-muted-foreground" />
-                      <span>{timeHorizonLabels[agent.timeHorizon]}</span>
+                      <span>{locale === 'ar' ? t(`timeHorizons.${agent.timeHorizon}`) : timeHorizonLabels[agent.timeHorizon]}</span>
                     </div>
                     <Badge variant="outline" className="text-xs">
-                      {agent.keyMetrics.length} Key Metrics
+                      {agent.keyMetrics.length} {locale === 'ar' ? 'مؤشر' : 'Key Metrics'}
                     </Badge>
                   </div>
 
                   {isSelected && (
                     <div className="mt-4 pt-4 border-t space-y-3 animate-in slide-in-from-top-2">
                       <div>
-                        <h4 className="font-semibold text-sm mb-2">Focus Areas:</h4>
+                        <h4 className="font-semibold text-sm mb-2">{t('focusAreas')}</h4>
                         <div className="flex flex-wrap gap-1">
-                          {agent.focusAreas.map((area) => (
-                            <Badge key={area} variant="secondary" className="text-xs">
-                              {area}
-                            </Badge>
-                          ))}
+                          {agent.focusAreas.map((area, index) => {
+                            const translatedArea = locale === 'ar' && t.raw(`agents.${agent.id}.focusAreas`) 
+                              ? t.raw(`agents.${agent.id}.focusAreas`)[index] 
+                              : area;
+                            return (
+                              <Badge key={area} variant="secondary" className="text-xs">
+                                {translatedArea || area}
+                              </Badge>
+                            );
+                          })}
                         </div>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-sm mb-2">Key Metrics:</h4>
+                        <h4 className="font-semibold text-sm mb-2">{t('keyMetrics')}</h4>
                         <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-                          {agent.keyMetrics.slice(0, 4).map((metric) => (
-                            <span key={metric}>• {metric}</span>
-                          ))}
+                          {agent.keyMetrics.slice(0, 4).map((metric, index) => {
+                            const translatedMetric = locale === 'ar' && t.raw(`agents.${agent.id}.metrics`)
+                              ? t.raw(`agents.${agent.id}.metrics`)[index]
+                              : metric;
+                            return (
+                              <span key={metric}>• {translatedMetric || metric}</span>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
@@ -126,7 +151,7 @@ export function AIAgentsShowcase() {
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm">
             <Brain className="h-4 w-4 text-primary" />
-            <span>Our agents analyze <strong>500+ companies</strong> daily across <strong>11 sectors</strong></span>
+            <span>{t('dailyAnalysis')}</span>
           </div>
         </div>
       </div>
