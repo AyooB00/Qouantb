@@ -39,7 +39,7 @@ export class ComponentRegistry {
     const componentMap: ComponentRegistration[] = [
       {
         type: 'market-analysis',
-        loader: () => import('@/components/finchat/smart-cards/market-analysis-card'),
+        loader: () => import('@/components/finchat/smart-cards/market-analysis-card') as any,
         preload: true,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -50,7 +50,7 @@ export class ComponentRegistry {
       },
       {
         type: 'stock-comparison',
-        loader: () => import('@/components/finchat/smart-cards/stock-comparison-card'),
+        loader: () => import('@/components/finchat/smart-cards/stock-comparison-card') as any,
         preload: true,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -61,7 +61,7 @@ export class ComponentRegistry {
       },
       {
         type: 'technical-analysis',
-        loader: () => import('@/components/finchat/smart-cards/technical-analysis-card'),
+        loader: () => import('@/components/finchat/smart-cards/technical-analysis-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -72,7 +72,7 @@ export class ComponentRegistry {
       },
       {
         type: 'news-summary',
-        loader: () => import('@/components/finchat/smart-cards/news-summary-card'),
+        loader: () => import('@/components/finchat/smart-cards/news-summary-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -83,7 +83,7 @@ export class ComponentRegistry {
       },
       {
         type: 'portfolio-impact',
-        loader: () => import('@/components/finchat/smart-cards/portfolio-impact-card'),
+        loader: () => import('@/components/finchat/smart-cards/portfolio-impact-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -95,7 +95,7 @@ export class ComponentRegistry {
       },
       {
         type: 'risk-assessment',
-        loader: () => import('@/components/finchat/smart-cards/risk-assessment-card'),
+        loader: () => import('@/components/finchat/smart-cards/risk-assessment-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -106,7 +106,7 @@ export class ComponentRegistry {
       },
       {
         type: 'price-alert',
-        loader: () => import('@/components/finchat/smart-cards/price-alert-card'),
+        loader: () => import('@/components/finchat/smart-cards/price-alert-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -117,7 +117,7 @@ export class ComponentRegistry {
       },
       {
         type: 'earnings-summary',
-        loader: () => import('@/components/finchat/smart-cards/earnings-summary-card'),
+        loader: () => import('@/components/finchat/smart-cards/earnings-summary-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -128,7 +128,7 @@ export class ComponentRegistry {
       },
       {
         type: 'sector-analysis',
-        loader: () => import('@/components/finchat/smart-cards/sector-analysis-card'),
+        loader: () => import('@/components/finchat/smart-cards/sector-analysis-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -139,7 +139,7 @@ export class ComponentRegistry {
       },
       {
         type: 'sentiment-gauge',
-        loader: () => import('@/components/finchat/smart-cards/sentiment-gauge-card'),
+        loader: () => import('@/components/finchat/smart-cards/sentiment-gauge-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -150,7 +150,7 @@ export class ComponentRegistry {
       },
       {
         type: 'stock-quote',
-        loader: () => import('@/components/finchat/smart-cards/stock-quote-card'),
+        loader: () => import('@/components/finchat/smart-cards/stock-quote-card') as any,
         preload: true,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -161,7 +161,7 @@ export class ComponentRegistry {
       },
       {
         type: 'position-calculator',
-        loader: () => import('@/components/finchat/smart-cards/position-calculator-card'),
+        loader: () => import('@/components/finchat/smart-cards/position-calculator-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -172,7 +172,7 @@ export class ComponentRegistry {
       },
       {
         type: 'portfolio-summary',
-        loader: () => import('@/components/finchat/smart-cards/portfolio-summary-card'),
+        loader: () => import('@/components/finchat/smart-cards/portfolio-summary-card') as any,
         preload: false,
         metadata: {
           supportedLocales: ['en', 'ar'],
@@ -237,11 +237,11 @@ export class ComponentRegistry {
       if (!component) {
         // Return a fallback component
         return {
-          default: () => null
+          default: (() => null) as SmartComponentModule
         }
       }
       return { default: component }
-    })
+    }) as ComponentType<ComponentRenderProps>
   }
   
   // Preload multiple components

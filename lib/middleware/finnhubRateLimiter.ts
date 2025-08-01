@@ -18,13 +18,13 @@ interface RateLimiterOptions {
 }
 
 export class FinnhubRateLimiter extends EventEmitter {
-  private queue: QueuedRequest<unknown>[] = []
+  private queue: QueuedRequest<any>[] = []
   private processing = false
   private lastRequestTime = 0
   private requestInterval: number
   private maxRetries: number
   private enableDeduplication: boolean
-  private pendingRequests = new Map<string, QueuedRequest<unknown>>()
+  private pendingRequests = new Map<string, QueuedRequest<any>>()
 
   constructor(options: RateLimiterOptions) {
     super()

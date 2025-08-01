@@ -32,7 +32,9 @@ export default function TechnicalAnalysisCard({ data, onAction, className }: Com
         icon={Activity}
         loading={true}
         className={className}
-      />
+      >
+        <div />
+      </BaseSmartCard>
     )
   }
 

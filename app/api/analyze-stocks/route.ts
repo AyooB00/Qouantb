@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { AnalysisResult, StockData } from '@/lib/types/trading';
+import { AnalysisResult, StockData, TradingOpportunity } from '@/lib/types/trading';
 import { FinnhubClient } from '@/lib/finnhub';
 import { analyzeStocksWithAI, validateTradingOpportunity } from '@/lib/openai';
 import { withRateLimit } from '@/lib/middleware/rateLimiter';
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     const opportunities = await analyzeStocksWithAI(stocksToAnalyze, criteria);
     
     // Validate opportunities
-    const validOpportunities = [];
+    const validOpportunities: TradingOpportunity[] = [];
     for (const opportunity of opportunities) {
       if (await validateTradingOpportunity(opportunity)) {
         validOpportunities.push(opportunity);

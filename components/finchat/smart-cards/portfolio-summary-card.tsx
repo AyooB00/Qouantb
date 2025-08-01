@@ -3,7 +3,6 @@
 import { PieChart, TrendingUp, DollarSign, AlertCircle } from 'lucide-react'
 import { BaseSmartCard } from '../base-smart-card'
 import { ComponentRenderProps } from '@/lib/types/finchat'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { useTranslations } from 'next-intl'
 
@@ -53,11 +52,10 @@ export default function PortfolioSummaryCard({ data, onAction }: ComponentRender
       title={t('title')}
       icon={PieChart}
       iconColor="text-purple-600"
-      badge={
-        <Badge variant={isPositive ? 'default' : 'destructive'}>
-          {isPositive ? '+' : ''}{portfolioData.totalGainLossPercent.toFixed(2)}%
-        </Badge>
-      }
+      badge={{
+        label: `${isPositive ? '+' : ''}${portfolioData.totalGainLossPercent.toFixed(2)}%`,
+        variant: isPositive ? 'default' : 'destructive'
+      }}
       onAction={onAction}
     >
       <div className="space-y-4">

@@ -142,15 +142,15 @@ export function ChatInterface() {
                 const parsed = JSON.parse(data)
                 
                 // Handle tool status updates
-                if (parsed.status) {
-                  toolStatus = {
-                    message: parsed.status,
-                    tools: parsed.toolCalls
-                  }
-                  updateMessage(assistantMessageId, { 
-                    content: accumulatedContent
-                  })
-                }
+                // if (parsed.status) {
+                //   toolStatus = {
+                //     message: parsed.status,
+                //     tools: parsed.toolCalls
+                //   }
+                //   updateMessage(assistantMessageId, { 
+                //     content: accumulatedContent
+                //   })
+                // }
                 
                 // Handle content
                 if (parsed.content) {
@@ -171,13 +171,13 @@ export function ChatInterface() {
                 }
                 
                 // Handle context
-                if (parsed.context) {
-                  messageContext = parsed.context
-                  updateMessage(assistantMessageId, {
-                    content: accumulatedContent,
-                    metadata: {}
-                  })
-                }
+                // if (parsed.context) {
+                //   messageContext = parsed.context
+                //   updateMessage(assistantMessageId, {
+                //     content: accumulatedContent,
+                //     metadata: {}
+                //   })
+                // }
                 
                 // Handle metadata
                 if (parsed.metadata) {

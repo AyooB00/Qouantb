@@ -68,7 +68,7 @@ export function StockChart({ symbol, className, height = 200 }: StockChartProps)
         return {
           date: date.toISOString(),
           price: price,
-          displayDate: formatDate(date, locale, { dateStyle: 'medium' }).split(',')[0] // Get just month and day
+          displayDate: formatDate(date, locale).split(',')[0] // Get just month and day
         }
       })
 

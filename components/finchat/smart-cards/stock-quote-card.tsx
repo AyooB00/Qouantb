@@ -43,11 +43,11 @@ export default function StockQuoteCard({ data, onAction }: ComponentRenderProps)
       title={quoteData.symbol}
       icon={isPositive ? TrendingUp : TrendingDown}
       iconColor={isPositive ? 'text-green-600' : 'text-red-600'}
-      badge={
-        <Badge variant={isPositive ? 'default' : 'destructive'} className="gap-1">
-          {isPositive ? '+' : ''}{quoteData.change.toFixed(2)} ({isPositive ? '+' : ''}{quoteData.changePercent.toFixed(2)}%)
-        </Badge>
-      }
+      badge={{
+        label: `${isPositive ? '+' : ''}${quoteData.change.toFixed(2)} (${isPositive ? '+' : ''}${quoteData.changePercent.toFixed(2)}%)`,
+        variant: isPositive ? 'default' : 'destructive',
+        className: 'gap-1'
+      }}
       onAction={onAction}
     >
       <div className="space-y-4">

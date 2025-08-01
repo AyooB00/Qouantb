@@ -110,7 +110,7 @@ export function HowItWorks() {
 
                       {/* Features */}
                       <div className="space-y-2">
-                        {step.features.map((feature) => (
+                        {(Array.isArray(step.features) ? step.features : [step.features]).map((feature) => (
                           <div key={feature} className="flex items-center gap-2 text-sm">
                             <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                             <span className="text-muted-foreground">{feature}</span>
@@ -163,7 +163,7 @@ export function HowItWorks() {
                       <h3 className="text-lg font-bold mb-1">{step.title}</h3>
                       <p className="text-sm text-muted-foreground mb-3">{step.description}</p>
                       <div className="flex flex-wrap gap-2">
-                        {step.features.map((feature) => (
+                        {(Array.isArray(step.features) ? step.features : [step.features]).map((feature) => (
                           <Badge key={feature} variant="outline" className="text-xs">
                             {feature}
                           </Badge>

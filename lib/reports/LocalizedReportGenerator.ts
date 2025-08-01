@@ -122,7 +122,7 @@ export class LocalizedReportGenerator {
     this.pdf.text(totalValueLabel, this.margin + 5, summaryY)
     
     this.pdf.setFont('helvetica', 'normal')
-    const totalValue = formatCurrency(portfolio.totalValue, currency, locale === 'ar')
+    const totalValue = formatCurrency(portfolio.totalValue, locale)
     this.pdf.text(totalValue, this.margin + 60, summaryY)
     
     // Total Return
@@ -132,9 +132,9 @@ export class LocalizedReportGenerator {
     this.pdf.text(totalReturnLabel, this.margin + 5, returnY)
     
     this.pdf.setFont('helvetica', 'normal')
-    const returnColor = portfolio.totalProfitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
+    const returnColor: [number, number, number] = portfolio.totalProfitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
     this.pdf.setTextColor(...returnColor)
-    const totalReturn = `${formatCurrency(portfolio.totalProfitLoss, currency, locale === 'ar')} (${formatPercentage(portfolio.totalProfitLossPercent, locale === 'ar')})`
+    const totalReturn = `${formatCurrency(portfolio.totalProfitLoss, locale)} (${formatPercentage(portfolio.totalProfitLossPercent, locale)})`
     this.pdf.text(totalReturn, this.margin + 60, returnY)
     this.pdf.setTextColor(0, 0, 0)
     
@@ -204,21 +204,21 @@ export class LocalizedReportGenerator {
       xPos += columnWidths[1]
       
       // Current Price
-      this.pdf.text(formatCurrency(item.currentPrice, currency, locale === 'ar'), xPos, this.yPosition)
+      this.pdf.text(formatCurrency(item.currentPrice || 0, locale), xPos, this.yPosition)
       xPos += columnWidths[2]
       
       // Total Value
-      const totalValue = item.quantity * item.currentPrice
-      this.pdf.text(formatCurrency(totalValue, currency, locale === 'ar'), xPos, this.yPosition)
+      const totalValue = item.quantity * (item.currentPrice || 0)
+      this.pdf.text(formatCurrency(totalValue, locale), xPos, this.yPosition)
       xPos += columnWidths[3]
       
       // P&L
       const profitLoss = item.profitLoss || 0
       const profitLossPercent = item.profitLossPercent || 0
-      const plColor = profitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
+      const plColor: [number, number, number] = profitLoss >= 0 ? [0, 128, 0] : [255, 0, 0]
       this.pdf.setTextColor(...plColor)
       this.pdf.text(
-        `${formatCurrency(profitLoss, currency, locale === 'ar')} (${formatPercentage(profitLossPercent, locale === 'ar')})`,
+        `${formatCurrency(profitLoss, locale)} (${formatPercentage(profitLossPercent, locale)})`,
         xPos,
         this.yPosition
       )
@@ -230,7 +230,7 @@ export class LocalizedReportGenerator {
 
   private addFooter(generatedAt: Date, locale: string) {
     // Add page numbers
-    const pageCount = this.pdf.internal.getNumberOfPages()
+    const pageCount = (this.pdf as any).getNumberOfPages()
     for (let i = 1; i <= pageCount; i++) {
       this.pdf.setPage(i)
       this.pdf.setFontSize(10)
@@ -266,9 +266,9 @@ export class LocalizedReportGenerator {
     const rows = data.portfolio.items.map(item => [
       item.symbol,
       item.quantity.toString(),
-      item.averageCost.toFixed(2),
-      item.currentPrice.toFixed(2),
-      (item.quantity * item.currentPrice).toFixed(2),
+      item.avgCost.toFixed(2),
+      (item.currentPrice || 0).toFixed(2),
+      (item.quantity * (item.currentPrice || 0)).toFixed(2),
       (item.profitLoss || 0).toFixed(2),
       `${(item.profitLossPercent || 0).toFixed(2)}%`
     ])

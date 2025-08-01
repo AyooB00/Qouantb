@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ComponentRegistry } from '@/lib/finchat/component-registry'
+import { ComponentRegistry, SmartComponentModule } from '@/lib/finchat/component-registry'
 import { SmartComponent, QuickAction } from '@/lib/types/finchat'
 import { SmartCardSkeleton } from './smart-card-skeleton'
 import { cn } from '@/lib/utils'
@@ -17,14 +17,16 @@ export function SmartComponentRenderer({
   onAction,
   className 
 }: SmartComponentRendererProps) {
-  const [Component, setComponent] = useState<React.ComponentType<{ data: unknown; onAction?: (action: unknown) => void; className?: string }> | null>(null)
+  const [Component, setComponent] = useState<SmartComponentModule | null>(null)
   const [loading, setLoading] = useState(true)
   
   useEffect(() => {
     const loadComponent = async () => {
       const registry = ComponentRegistry.getInstance()
       const comp = await registry.getComponent(component.type)
-      setComponent(() => comp)
+      if (comp) {
+        setComponent(comp)
+      }
       setLoading(false)
     }
     loadComponent()

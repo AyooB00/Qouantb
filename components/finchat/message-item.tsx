@@ -23,7 +23,7 @@ import { useLocale } from '@/lib/locale-context'
 interface MessageItemProps {
   message: ChatMessage | EnhancedChatMessage
   isStreaming?: boolean
-  onAction?: (action: QuickAction) => void
+  onAction?: (action: any) => void
 }
 
 
@@ -167,9 +167,9 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
             )}>
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code({ node, className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '')
-                    return !inline && match ? (
+                    return match ? (
                       <SyntaxHighlighter
                         style={oneDark}
                         language={match[1]}
@@ -243,14 +243,14 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
         {!isUser && parsedComponents.length === 0 && stockSymbols.length > 0 && (
           <div className="space-y-3 mt-3 max-w-[85%]">
             {/* Show charts for up to 2 stocks to avoid cluttering */}
-            {stockSymbols.slice(0, 2).map((symbol) => (
+            {stockSymbols.slice(0, 2).map((symbol: string) => (
               <StockChart key={symbol} symbol={symbol} height={180} />
             ))}
             
             {/* Show compact cards for additional stocks */}
             {stockSymbols.length > 2 && (
               <div className="flex flex-wrap gap-2">
-                {stockSymbols.slice(2).map((symbol) => (
+                {stockSymbols.slice(2).map((symbol: string) => (
                   <StockCard key={symbol} symbol={symbol} />
                 ))}
               </div>
@@ -265,7 +265,7 @@ export function MessageItem({ message, isStreaming, onAction }: MessageItemProps
               <Button
                 key={index}
                 size="sm"
-                variant={action.variant || 'outline'}
+                variant={(action.variant === 'primary' ? 'default' : action.variant) || 'outline'}
                 onClick={() => onAction?.(action)}
                 className="text-xs"
               >

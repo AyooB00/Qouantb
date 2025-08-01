@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { useLocale } from 'next-intl'
-import { ReactNode } from 'react'
+import { ReactNode, JSX } from 'react'
 
 interface TypographyProps {
   children: ReactNode

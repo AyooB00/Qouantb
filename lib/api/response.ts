@@ -110,7 +110,7 @@ export function apiHandler<T = unknown>(
       console.error('API Handler Error:', error)
       
       if (error instanceof ApiError) {
-        return errorResponse(error)
+        return errorResponse(error) as NextResponse<ApiResponse<T>>
       }
       
       // Handle Zod validation errors
@@ -122,7 +122,7 @@ export function apiHandler<T = unknown>(
             400,
             error
           )
-        )
+        ) as NextResponse<ApiResponse<T>>
       }
       
       // Generic error
@@ -132,7 +132,7 @@ export function apiHandler<T = unknown>(
           error instanceof Error ? error.message : 'An unexpected error occurred',
           500
         )
-      )
+      ) as NextResponse<ApiResponse<T>>
     }
   }
 }

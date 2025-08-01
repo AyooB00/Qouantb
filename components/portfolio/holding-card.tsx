@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { PortfolioItem, usePortfolioStore } from '@/lib/stores/portfolio-store'
+import { usePortfolioStore } from '@/lib/stores/portfolio-store'
+import { PortfolioItem } from '@/lib/types/portfolio'
 import { cn } from '@/lib/utils'
 import { 
   AlertDialog,
@@ -102,7 +103,7 @@ export function HoldingCard({ holding }: HoldingCardProps) {
                   <div>
                     <p className="text-xs text-muted-foreground">{t('added')}</p>
                     <p className="text-sm font-medium">
-                      {formatDate(holding.addedDate, locale, { dateStyle: 'medium' })}
+                      {formatDate(holding.addedDate, locale)}
                     </p>
                   </div>
                 </div>

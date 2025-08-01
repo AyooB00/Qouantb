@@ -74,22 +74,23 @@ export const finChatTools = {
             ])
             
             // Calculate additional metrics
-            const weekRange52 = profile.yearHigh && profile.yearLow ? {
-              high: profile.yearHigh,
-              low: profile.yearLow
+            const weekRange52 = quote.h && quote.l ? {
+              high: quote.h,
+              low: quote.l
             } : undefined
             
             return {
               symbol: symbol.toUpperCase(),
               name: profile.name || symbol.toUpperCase(),
               price: quote.c,
+              currentPrice: quote.c, // Alias for compatibility
               changePercent: quote.dp,
-              volume: quote.v || 0,
+              volume: 0, // Volume not available from Finnhub basic quote
               marketCap: profile.marketCapitalization * 1000000,
-              pe: profile.pe,
-              eps: profile.pe && quote.c ? quote.c / profile.pe : undefined,
-              dividendYield: profile.dividendYield,
-              beta: profile.beta,
+              pe: undefined, // PE not available from Finnhub basic API
+              eps: undefined, // EPS not available from Finnhub basic API
+              dividendYield: undefined, // Dividend yield not available from Finnhub basic API
+              beta: undefined, // Beta not available from Finnhub basic API
               weekRange52,
               sector: profile.finnhubIndustry
             }
@@ -99,7 +100,7 @@ export const finChatTools = {
         })
       )
 
-      const validStocks = results.filter(r => r !== null) as Array<{symbol: string; name: string; currentPrice: number; changePercent: number}>
+      const validStocks = results.filter(r => r !== null) as any[]
       
       // Generate AI recommendation based on comparison
       let recommendation = ''
@@ -137,7 +138,7 @@ export const finChatTools = {
       const news = await finnhub.getCompanyNews(args.symbol.toUpperCase(), args.days || 7)
       
       // Analyze sentiment for each article (mock for demo)
-      const articles = news.slice(0, 5).map((article: {headline: string; summary: string; url: string}) => {
+      const articles = news.slice(0, 5).map((article: {headline: string; summary: string; url: string; source?: string; datetime?: number}) => {
         const headline = article.headline.toLowerCase()
         let sentiment: 'positive' | 'negative' | 'neutral' = 'neutral'
         
@@ -151,9 +152,9 @@ export const finChatTools = {
         return {
           headline: article.headline,
           summary: article.summary,
-          source: article.source,
+          source: article.source || 'Unknown',
           url: article.url,
-          publishedAt: new Date(article.datetime * 1000).toISOString(),
+          publishedAt: article.datetime ? new Date(article.datetime * 1000).toISOString() : new Date().toISOString(),
           sentiment,
           relevanceScore: Math.random() * 0.4 + 0.6 // Mock relevance score 0.6-1.0
         }
@@ -377,8 +378,8 @@ export const finChatTools = {
         })
       )
       
-      const validResults = results.filter(r => r !== null) as Array<unknown>
-      const avgChange = validResults.reduce((sum, r) => sum + r.changePercent, 0) / validResults.length
+      const validResults = results.filter(r => r !== null) as any[]
+      const avgChange = validResults.reduce((sum, r) => sum + (r.changePercent || 0), 0) / validResults.length
       
       // Mock top movers data for demonstration
       const topMovers = {

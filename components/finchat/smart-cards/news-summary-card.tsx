@@ -138,7 +138,7 @@ export default function NewsSummaryCard({ data, onAction, className }: Component
             variant="outline" 
             size="sm" 
             className="w-full"
-            onClick={() => onAction({ label: t('readMore'), action: 'more-news', data })}
+            onClick={() => onAction({ label: t('readMore'), action: 'more-news', data: data as any })}
           >
             {t('readMore')}
           </Button>

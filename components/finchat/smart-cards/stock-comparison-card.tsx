@@ -225,14 +225,14 @@ export default function StockComparisonCard({ data, onAction, className }: Compo
             <Button 
               size="sm" 
               variant="outline"
-              onClick={() => onAction({ label: 'Analyze Further', action: 'analyze', data: stockData })}
+              onClick={() => onAction({ label: 'Analyze Further', action: 'analyze', data: stockData as unknown as Record<string, unknown> })}
             >
               Analyze Further
             </Button>
             <Button 
               size="sm"
               variant="outline"
-              onClick={() => onAction({ label: 'Add to Watchlist', action: 'watchlist', data: stockData })}
+              onClick={() => onAction({ label: 'Add to Watchlist', action: 'watchlist', data: stockData as unknown as Record<string, unknown> })}
             >
               Add All to Watchlist
             </Button>

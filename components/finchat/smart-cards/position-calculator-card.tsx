@@ -37,11 +37,10 @@ export default function PositionCalculatorCard({ data, onAction }: ComponentRend
       title={t('title', { symbol: calcData.symbol })}
       icon={Calculator}
       iconColor="text-blue-600"
-      badge={
-        <Badge variant="secondary">
-          {calcData.recommendedShares} {t('shares')}
-        </Badge>
-      }
+      badge={{
+        label: `${calcData.recommendedShares} ${t('shares')}`,
+        variant: 'secondary'
+      }}
       onAction={onAction}
     >
       <div className="space-y-4">

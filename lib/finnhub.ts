@@ -241,7 +241,9 @@ export class FinnhubClient {
     const cached = stockQuoteCache.get(cacheKey);
     if (cached) {
       console.log(`Cache hit for candles: ${symbol}`);
-      return cached as T;
+      return cached as {
+        c: number[]; h: number[]; l: number[]; o: number[]; s: string; t: number[]; v: number[];
+      };
     }
 
     const data = await this.fetchFromFinnhub('/stock/candle', {
@@ -275,10 +277,11 @@ export class FinnhubClient {
       const metrics = financials?.metric || {};
       
       // Calculate analyst consensus from recommendations
-      let analystRating = undefined;
+      let analystRating: { consensus: string; targetPrice: number; numberOfAnalysts: number } | undefined = undefined;
       if (recommendations && Array.isArray(recommendations) && recommendations.length > 0) {
         const latestRecs = recommendations.slice(0, 5);
-        const avgTarget = latestRecs.reduce((sum, rec) => sum + (rec.targetMean || 0), 0) / latestRecs.length;
+        // Target mean not available in Finnhub recommendation data
+        const avgTarget = 0;
         
         // Determine consensus based on buy/sell distribution
         const buyCount = latestRecs.filter(r => r.buy > 0).length;
@@ -303,7 +306,7 @@ export class FinnhubClient {
         summary: article.summary,
         url: article.url,
         publishedAt: new Date(article.datetime * 1000).toISOString(),
-        sentiment: article.sentiment > 0 ? 'positive' as const : article.sentiment < 0 ? 'negative' as const : 'neutral' as const
+        sentiment: 'neutral' as const // Sentiment not available from Finnhub news API
       }));
 
       return {

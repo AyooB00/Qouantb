@@ -175,7 +175,7 @@ export function cached(cacheName: 'quote' | 'profile' | 'analysis', ttl?: number
                   analysisCache;
 
     descriptor.value = async function (...args: unknown[]) {
-      const cacheKey = createCacheKey(propertyKey, ...args);
+      const cacheKey = createCacheKey(propertyKey, ...(args as (string | number)[]));
       
       // Check cache first
       const cachedResult = cache.get(cacheKey);

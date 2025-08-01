@@ -233,7 +233,7 @@ export class ResponseParser {
     }
     
     // Technical indicators data
-    if ('indicators' in result && result.indicators && ('rsi' in result.indicators || 'macd' in result.indicators)) {
+    if ('indicators' in result && result.indicators && typeof result.indicators === 'object' && ('rsi' in result.indicators || 'macd' in result.indicators)) {
       return {
         type: 'technical-analysis',
         data: result as TechnicalAnalysisData,
@@ -263,7 +263,7 @@ export class ResponseParser {
     }
     
     // Position sizing data
-    if (result.recommendedShares !== undefined && result.totalCost !== undefined) {
+    if ('recommendedShares' in result && result.recommendedShares !== undefined && 'totalCost' in result && result.totalCost !== undefined) {
       return {
         type: 'position-calculator',
         data: result,
@@ -273,7 +273,7 @@ export class ResponseParser {
     }
     
     // Portfolio summary
-    if (result.mockExample && result.mockExample.totalValue) {
+    if ('mockExample' in result && result.mockExample && typeof result.mockExample === 'object' && 'totalValue' in result.mockExample) {
       return {
         type: 'portfolio-summary',
         data: result.mockExample,
@@ -325,7 +325,7 @@ export class ResponseParser {
       components.push({
         id: `auto-market-${Date.now()}`,
         type: 'market-analysis',
-        data: null, // Will be populated by the component
+        data: {} as MarketAnalysisData, // Will be populated by the component
         priority: 6,
         interactive: true,
         metadata: { source: 'auto-detected' }

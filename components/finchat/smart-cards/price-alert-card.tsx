@@ -108,7 +108,7 @@ export default function PriceAlertCard({ data, onAction, className }: ComponentR
               onClick={() => onAction({ 
                 label: isTriggered ? 'Set New Alert' : 'Edit Alert', 
                 action: 'edit-alert',
-                data
+                data: data as unknown as Record<string, unknown>
               })}
             >
               {isTriggered ? 'Set New' : 'Edit'}

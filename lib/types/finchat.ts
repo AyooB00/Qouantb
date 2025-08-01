@@ -9,6 +9,9 @@ export type SmartComponentType =
   | 'earnings-summary'
   | 'sector-analysis'
   | 'sentiment-gauge'
+  | 'stock-quote'
+  | 'position-calculator'
+  | 'portfolio-summary'
 
 export interface QuickAction {
   label: string

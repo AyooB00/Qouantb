@@ -5,12 +5,12 @@ import { SearchCriteria, StockData, TradingOpportunity } from '@/lib/types/tradi
 export class GeminiProvider extends BaseAIProvider {
   name = 'Gemini';
   private genAI: GoogleGenerativeAI;
-  private model: GenerativeModel;
+  private generativeModel: GenerativeModel;
 
   constructor(apiKey: string, modelName?: string) {
     super(apiKey, modelName || 'gemini-1.5-pro');
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: modelName || 'gemini-1.5-pro' });
+    this.generativeModel = this.genAI.getGenerativeModel({ model: modelName || 'gemini-1.5-pro' });
   }
 
   async parsePrompt(prompt: string): Promise<SearchCriteria> {
@@ -55,7 +55,7 @@ export class GeminiProvider extends BaseAIProvider {
       
       User prompt: ${prompt}`;
 
-      const result = await this.model.generateContent(systemPrompt);
+      const result = await this.generativeModel.generateContent(systemPrompt);
       const response = result.response;
       const text = response.text();
       
@@ -100,7 +100,7 @@ export class GeminiProvider extends BaseAIProvider {
     try {
       const prompt = this.createAnalysisPrompt(stocks, criteria);
       
-      const result = await this.model.generateContent(prompt);
+      const result = await this.generativeModel.generateContent(prompt);
       const response = result.response;
       const text = response.text();
       
@@ -204,7 +204,7 @@ For each opportunity, ensure:
       
       const fullPrompt = `${systemContext}\n\nUser: ${prompt}`;
       
-      const result = await this.model.generateContent(fullPrompt);
+      const result = await this.generativeModel.generateContent(fullPrompt);
       const response = result.response;
       const text = response.text();
       
